@@ -1,0 +1,127 @@
+<section _ngcontent-fed-c192="" id="login">
+    <div _ngcontent-fed-c192="" class="row auth-height full-height-vh m-0">
+        <div _ngcontent-fed-c192="" class="col-12 d-flex align-items-center justify-content-center">
+            <div _ngcontent-fed-c192="" class="card overflow-hidden">
+                <div _ngcontent-fed-c192="" class="card-content">
+                    <div _ngcontent-fed-c192="" class="card-body auth-img">
+                        <div _ngcontent-fed-c192="" class="row m-0">
+                            <div _ngcontent-fed-c192=""
+                                class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center auth-img-bg p-3">
+                                <img _ngcontent-fed-c192="" src="./assets/img/Logo-uft.png" alt="logo" width="300"
+                                    height="230" class="img-fluid"></div>
+                            <div _ngcontent-fed-c192="" class="col-lg-6 col-12 px-4 py-3">
+                                <h4 _ngcontent-fed-c192="" class="mb-2 card-title">
+                                    Iniciar sesión
+                                    <span class="float-right" *ngIf="system.isMobile">
+                                        <img _ngcontent-fed-c192="" src="./assets/img/Logo-uft.png" alt="logo" width="120"
+                                    height="120" class="img-fluid" style="top: -10px;position: relative;" >
+                                    </span>
+                                </h4>
+                                <p _ngcontent-fed-c192="">Bienvenido de nuevo, inicie sesión en su cuenta.</p>
+                                
+                                    <div _ngcontent-fed-c192="" class="form-group">
+                                        <input _ngcontent-fed-c192="" (keyup.enter)="login()"  [(ngModel)]="loginModel.username"
+                                            type="text" placeholder="Usuario"
+                                            required="" class="form-control ng-untouched ng-pristine ng-valid">
+                                        <!---->
+                                    </div>
+                                    <div _ngcontent-fed-c192="" class="form-group">
+                                        <input _ngcontent-fed-c192="" [(ngModel)]="loginModel.password" (keyup.enter)="login()" 
+                                            type="password" placeholder="Contraseña"
+                                            required="" class="form-control ng-untouched ng-pristine ng-valid">
+                                        <!---->
+                                    </div>
+                                    <div _ngcontent-fed-c192=""
+                                        class="d-sm-flex justify-content-between mb-3 font-small-2">
+                                        <div _ngcontent-fed-c192="" class="remember-me mb-2 mb-sm-0">
+                                            <div _ngcontent-fed-c192="" class="checkbox auth-checkbox">
+                                                <input [(ngModel)]="isRemenber"
+                                                    _ngcontent-fed-c192="" type="checkbox"
+                                                    formcontrolname="rememberMe" id="rememberMe"
+                                                    class="form-control ng-untouched ng-pristine ng-valid"><label
+                                                    _ngcontent-fed-c192="" for="rememberMe"><span
+                                                        _ngcontent-fed-c192=""
+                                                        class="font-small-2 mb-3 font-weight-normal">Recordarme</span></label></div>
+                                        </div>
+                                        <!-- <a _ngcontent-fed-c192=""
+                                            href="#">Forgot
+                                            Password?</a> -->
+                                    </div>
+                                    <div _ngcontent-fed-c192=""
+                                        class="d-flex justify-content-between flex-sm-row flex-column">
+                                        <a
+                                            _ngcontent-fed-c192="" class="btn bg-light-primary mb-2 mb-sm-0"
+                                             [style]="{'opacity': '0', 'cursor': 'default'}" disabled>Register</a>
+                                            <a
+                                            _ngcontent-fed-c192="" class="btn btn-primary" (click)="login()">Iniciar sesión</a></div>
+                                
+                                <hr _ngcontent-fed-c192="">
+                                <div _ngcontent-fed-c192=""
+                                    class="d-flex justify-content-between align-items-center">
+                                    <!-- <h6 _ngcontent-fed-c192="" class="text-primary m-0">Or Login With</h6> -->
+                                    <!-- <ngx-spinner _ngcontent-fed-c192="" _nghost-fed-c97="" class="ng-tns-c97-0">
+                                        
+                                    </ngx-spinner> -->
+                                    <div _ngcontent-fed-c192="" class="login-options">
+                                        <a _ngcontent-fed-c192=""
+                                            class="btn btn-sm btn-social-icon btn-facebook mr-1">
+                                            <span
+                                                _ngcontent-fed-c192="" class="fa fa-facebook"></span>
+                                            </a>
+                                            <a
+                                            _ngcontent-fed-c192=""
+                                            class="btn btn-sm btn-social-icon btn-twitter mr-1"><span
+                                                _ngcontent-fed-c192="" class="fa fa-twitter"></span>
+                                            </a>
+                                            <a
+                                            _ngcontent-fed-c192=""
+                                            class="btn btn-sm btn-social-icon btn-twitter mr-1"><span
+                                                _ngcontent-fed-c192="" class="fa fa-instagram"></span>
+                                            </a>
+                                            <a
+                                            _ngcontent-fed-c192=""
+                                            class="btn btn-sm btn-social-icon mr-1" [ngStyle]="{'background': 'red'}"><span
+                                                _ngcontent-fed-c192="" class="fa fa-youtube"></span>
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- <div [ngClass]="{'mb-auto': !canInstallApp}" class="card mx-auto mt-auto" style="min-width: 400px;" *ngIf="!system.decodedToken">
+    <div class="header text-center">
+        <img style="height: 100px;width: 125px;" src="assets/img/logo.jpg" alt="">
+    </div>
+    <div class="block">
+        <div class="form-group">
+            <label for="">Cédula/RIF</label>
+            <input (keyup.enter)="login()" autocomplete="off" type="text" [(ngModel)]="loginModel.username" class="form-control form-control-md">
+        </div>
+        <div class="form-group">
+            <label for="">Contraseña</label>
+            <input (keyup.enter)="login()" type="password" [(ngModel)]="loginModel.password" class="form-control form-control-md">
+        </div>
+        <div class="form-group" *ngIf="branchs?.length">
+            <label for="">Sucursal (Opcional)</label>
+            <select [(ngModel)]="loginModel.branch" class="form-control form-control-md">
+                    <option value="">Seleccionar</option>
+                    <option value="{{o.guid}}" *ngFor="let o of branchs">
+                        {{o.branchname}}
+                    </option>
+                </select>
+        </div>
+    </div>
+    <button (click)="login()" class="btn btn-primary">Iniciar sesión</button>
+</div>
+
+<button class="install-app" *ngIf="canInstallApp" (click)="installApp()">
+    <i class="fa fa-download mr-2"></i>Instalar Aplicacion
+</button> -->

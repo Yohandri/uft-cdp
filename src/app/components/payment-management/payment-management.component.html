@@ -1,0 +1,25 @@
+<div class="p-2">
+    <ul class="nav nav-tabs bg-white">
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{'active': tabSelect === 0}" (click)="selectTab(0)">Estado de cuenta</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{'active': tabSelect === 1}" (click)="selectTab(1)">Pagos pendientes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{'active': tabSelect === 2}" (click)="selectTab(2)">Reservacion de materias</a>
+        </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        </li> -->
+    </ul>
+    <div class="bg-white p-2 tabTranssition" *ngIf="tabSelect === 0">
+        Lemon drops pastry chocolate. Jujubes sweet roll tootsie roll. Oat cake donut bonbon chocolate croissant candy candy brownie. Wafer jelly beans jelly ice cream caramels. Cookie bonbon lemon drops cheesecake brownie cake macaroon sweet. Toffee pie icing candy ice cream croissant caramels jelly. Muffin jelly gummies icing cheesecake chocolate cake. Sweet chupa chups croissant pudding sesame snaps soufflé. Marzipan cotton candy jujubes halvah cheesecake. Cupcake wafer gummies croissant candy brownie jelly. Sweet wafer chocolate halvah. Danish sweet roll cheesecake candy canes marzipan liquorice. Sugar plum halvah lemon drops donut sesame snaps lollipop oat cake. Cake dessert topping tiramisu jelly beans. Gummies oat cake sugar plum cookie carrot cake halvah powder sesame snaps. Bear claw gummi bears marzipan powder pudding lemon drops cotton candy sweet roll chupa chups. Marzipan tootsie roll tart lemon drops gummies. Cheesecake wafer carrot cake chocolate jelly beans candy liquorice fruitcake pastry. Gummi bears cheesecake macaroon jelly beans wafer cookie. Gingerbread chocolate bar icing. Candy canes donut icing macaroon cupcake. Ice cream ice cream cake pudding gummi bears.
+    </div>
+    <div class="bg-white p-2 tabTranssition" *ngIf="tabSelect === 1">
+        Lemon drops pastry chocolate. Jujubes sweet roll tootsie roll. Oat cake donut bonbon chocolate croissant candy candy brownie. Wafer jelly beans jelly ice cream caramels. Cookie bonbon lemon drops cheesecake brownie cake macaroon sweet. Toffee pie icing candy ice cream croissant caramels jelly. Muffin jelly gummies icing cheesecake chocolate cake. Sweet chupa chups croissant pudding sesame snaps soufflé. Marzipan cotton candy jujubes halvah cheesecake. Cupcake wafer gummies croissant candy brownie jelly. Sweet wafer chocolate halvah. Danish sweet roll cheesecake candy canes marzipan liquorice. Sugar plum halvah lemon drops donut sesame snaps lollipop oat cake. Cake dessert topping tiramisu jelly beans. Gummies oat cake sugar plum cookie carrot cake halvah powder sesame snaps. Bear claw gummi bears marzipan powder pudding lemon drops cotton candy sweet roll chupa chups. Marzipan tootsie roll tart lemon drops gummies. Cheesecake wafer carrot cake chocolate jelly beans candy liquorice fruitcake pastry. Gummi bears cheesecake macaroon jelly beans wafer cookie. Gingerbread chocolate bar icing. Candy canes donut icing macaroon cupcake.
+    </div>
+    <div class="bg-white p-2 tabTranssition" *ngIf="tabSelect === 2">
+        Lemon drops pastry chocolate. Jujubes sweet roll tootsie roll. Oat cake donut bonbon chocolate croissant candy candy brownie. Wafer jelly beans jelly ice cream caramels. Cookie bonbon lemon drops cheesecake brownie cake macaroon sweet. Toffee pie icing candy ice cream croissant caramels jelly. Muffin jelly gummies icing cheesecake chocolate cake. Sweet chupa chups croissant pudding sesame snaps soufflé. Marzipan cotton candy jujubes halvah cheesecake. Cupcake wafer gummies croissant candy brownie jelly. Sweet wafer chocolate halvah. Danish sweet roll cheesecake candy canes marzipan liquorice. Sugar plum halvah lemon drops donut sesame snaps lollipop oat cake. Cake dessert topping tiramisu jelly beans. Gummies oat cake sugar plum cookie carrot cake halvah powder sesame snaps. Bear claw gummi bears marzipan powder pudding lemon drops cotton candy sweet roll chupa chups. Marzipan tootsie roll tart lemon drops gummies. Cheesecake wafer carrot cake chocolate jelly beans candy liquorice fruitcake pastry. Gummi bears cheesecake macaroon jelly beans wafer cookie. Gingerbread chocolate bar icing. 
+    </div>
+</div>

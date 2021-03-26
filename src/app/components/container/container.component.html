@@ -1,0 +1,367 @@
+<nav _ngcontent-hkb-c112="" class="navbar navbar-expand-lg navbar-light header-navbar navbar-sticky fixed-top bg-white">
+    <div _ngcontent-hkb-c112="" class="container-fluid navbar-wrapper">
+        
+        <div _ngcontent-hkb-c112="" class="navbar-header d-flex">
+            <div _ngcontent-hkb-c112="" data-toggle="collapse" class="navbar-toggle menu-toggle m-0 ml-2 mr-2 d-xl-none d-block float-left align-items-center justify-content-center">
+                <i (click)="system.btnToggleSidebar()" id="btnToggleSidebar" _ngcontent-hkb-c112="" class="btnToggleSidebar fa fa-bars"></i>
+            </div>
+            <div class="navbar-title">
+                <h5 *ngIf="system.module === ''" class="m-0 color-white"><i class="fa fa-dollar mr-2 ml-2"></i>Gestión de pagos</h5>
+                <h5 *ngIf="system.module === 'user-create'" class="m-0 color-white"><i class="fa fa-users mr-2 ml-2"></i>New user</h5>
+                <h5 *ngIf="system.module === 'user-update'" class="m-0 color-white"><i class="fa fa-users mr-2 ml-2"></i>User</h5>
+                <h5 *ngIf="system.module === 'user'" class="m-0 color-white"><i class="fa fa-users mr-2 ml-2"></i>Users</h5>
+                <h5 *ngIf="system.module === 'order'" class="m-0 color-white"><i class="fa fa-dollar mr-2 ml-2"></i>Orders</h5>
+                <h5 *ngIf="system.module === 'order-update'" class="m-0 color-white"><i class="fa fa-dollar mr-2 ml-2"></i>Order</h5>
+                <h5 *ngIf="system.module === 'product'" class="m-0 color-white"><i class="fa fa-product-hunt mr-2 ml-2"></i>Products</h5>
+                <h5 *ngIf="system.module === 'profile'" class="m-0 color-white"><i class="fa fa-user mr-2 ml-2"></i>Profile</h5>
+                <h5 *ngIf="system.module === 'drivers'" class="m-0 color-white"><i class="fa fa-id-card-o mr-2 ml-2"></i>Drivers</h5>
+            </div>
+            <!-- <h4 id="titleh4">Groceries to shop</h4> -->
+            <!-- <ul _ngcontent-hkb-c112="" class="navbar-nav">
+          <li _ngcontent-hkb-c112="" class="nav-item mr-2 d-none d-lg-block"><a _ngcontent-hkb-c112=""
+              id="navbar-fullscreen" href="javascript:;" apptogglefullscreen=""
+              class="nav-link apptogglefullscreen"><i _ngcontent-hkb-c112=""
+                class="font-medium-3 ft-maximize"></i></a></li>
+          <li _ngcontent-hkb-c112="" class="nav-item nav-search"><a _ngcontent-hkb-c112="" id="navbar-search"
+              href="javascript:" class="nav-link nav-link-search"><i _ngcontent-hkb-c112=""
+                class="ft-search font-medium-3"></i></a>
+            <div _ngcontent-hkb-c112="" class="search-input">
+              <div _ngcontent-hkb-c112="" class="search-input-icon"><i _ngcontent-hkb-c112=""
+                  class="ft-search font-medium-3"></i></div><input _ngcontent-hkb-c112="" type="text"
+                placeholder="Explore Apex..." tabindex="0" autofocus="" data-search="template-search"
+                class="input ng-untouched ng-pristine ng-valid">
+
+              <div _ngcontent-hkb-c112="" class="search-input-close"><i _ngcontent-hkb-c112=""
+                  class="ft-x font-medium-3"></i></div>
+              <app-autocomplete _ngcontent-hkb-c112="" _nghost-hkb-c110="">
+
+              </app-autocomplete>
+            </div>
+          </li>
+        </ul> -->
+            <div _ngcontent-hkb-c112="" class="navbar-brand-center">
+                <div _ngcontent-hkb-c112="" class="navbar-header">
+                    <ul _ngcontent-hkb-c112="" class="navbar-nav">
+                        <li _ngcontent-hkb-c112="" class="nav-item">
+                            <div _ngcontent-hkb-c112="" class="logo">
+                                <!---->
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div _ngcontent-hkb-c112="" class="navbar-container">
+            <div _ngcontent-hkb-c112="" id="navbarSupportedContent" class="collapse navbar-collapse d-block">
+                <ul _ngcontent-hkb-c112="" class="navbar-nav">
+                    <!-- <li _ngcontent-hkb-c112="" display="dynamic" ngbdropdown="" class="i18n-dropdown nav-item mr-2 dropdown">
+                        <a _ngcontent-hkb-c112="" aria-haspopup="true" id="dropdown-flag" href="javascript:;" data-toggle="dropdown" ngbdropdowntoggle="" class="dropdown-toggle nav-link d-flex align-items-center dropdown-language" aria-expanded="false"><img _ngcontent-hkb-c112="" alt="flag" class="langimg selected-flag" src="./assets/img/es.png"><span _ngcontent-hkb-c112="" class="selected-language d-md-flex d-none">Spanish</span></a>
+                        <div _ngcontent-hkb-c112="" ngbdropdownmenu="" aria-labelledby="dropdown-flag" class="dropdown-menu dropdown-menu-right text-left" x-placement="bottom-left">
+                            <a _ngcontent-hkb-c112="" href="javascript:;" data-language="en" class="dropdown-item"><img _ngcontent-hkb-c112="" src="./assets/img/us.png" alt="flag" class="langimg mr-2"><span _ngcontent-hkb-c112="" class="font-small-3">English</span></a>
+                            <a _ngcontent-hkb-c112="" href="javascript:;" data-language="es" class="dropdown-item"><img _ngcontent-hkb-c112="" src="./assets/img/es.png" alt="flag" class="langimg mr-2"><span _ngcontent-hkb-c112="" class="font-small-3">Spanish</span></a>
+                            <a _ngcontent-hkb-c112="" href="javascript:;" data-language="pt" class="dropdown-item"><img _ngcontent-hkb-c112="" src="./assets/img/pt.png" alt="flag" class="langimg mr-2"><span _ngcontent-hkb-c112="" class="font-small-3">Portuguese</span></a>
+                            <a _ngcontent-hkb-c112="" href="javascript:;" data-language="de" class="dropdown-item"><img _ngcontent-hkb-c112="" src="./assets/img/de.png" alt="flag" class="langimg mr-2"><span _ngcontent-hkb-c112="" class="font-small-3">German</span></a>
+                        </div>d-lg-block
+                    </li> -->
+                    <li class="nav-item mr-2 mt-1 mr-4">
+                        <div *ngIf="system.module === 'user-create' || system.module === 'user-update'" class="contents">
+                            <button class="btn btn-primary ml-auto" (click)="system.goto('user')"><i class="fa fa-arrow-left mr-1"></i>Back</button>
+                            <button class="btn btn-primary ml-2" ><i class="fa fa-save mr-1"></i>Save</button>
+                        </div>
+                        <div *ngIf="system.module === 'user'" class="contents">
+                            <button class="btn btn-primary ml-auto" (click)="system.goto('user/create')"><i class="fa fa-plus mr-1"></i>Create</button>
+                            
+                        </div>
+                        <div *ngIf="system.module === 'order-create' || system.module === 'order-update'" class="contents">
+                            <button class="btn btn-primary ml-auto" (click)="system.goto('')"><i class="fa fa-arrow-left mr-1"></i>Back</button>
+                            <button class="btn btn-primary ml-2" *ngIf="system.decodedToken.role !== 'driver'" ><i class="fa fa-save mr-1"></i>Save</button>
+                        </div>
+                        <div *ngIf="system.module === 'order'" class="contents">
+                            <button *ngIf="system.decodedToken.role === 'administrator'" class="btn btn-primary ml-auto" >Sync</button>
+                        </div>
+                        <div *ngIf="system.module === 'profile'" class="contents">
+                            <button class="btn btn-primary ml-auto" >Change password</button>
+                        </div>
+                    </li>
+                    <li _ngcontent-hkb-c112="" class="nav-item d-none mr-2 mt-1">
+                        <a _ngcontent-hkb-c112=""
+                        class="nav-link notification-sidebar-toggle">
+                        <i _ngcontent-hkb-c112=""
+                        class="fa fa-spinner"></i>
+                        </a>
+                    </li>
+                    <li _ngcontent-hkb-c112="" placement="bottom-left" display="static" ngbdropdown="" class="nav-item dropdown">
+                        <!-- <a _ngcontent-hkb-c112="" aria-haspopup="true" id="drp-notification" href="javascript:;" data-toggle="dropdown" ngbdropdowntoggle="" class="dropdown-toggle nav-link dropdown-notification p-0 mt-2" aria-expanded="false"><i
+                  _ngcontent-hkb-c112="" class="fa fa-bell-o"></i>
+                  <span _ngcontent-hkb-c112=""
+                  class="notification badge badge-pill badge-danger">4</span>
+                </a> -->
+                        <ul _ngcontent-hkb-c112="" ngbdropdownmenu="" class="notification-dropdown dropdown-menu dropdown-menu-media dropdown-menu-right m-0 overflow-hidden">
+                            <li _ngcontent-hkb-c112="" class="dropdown-menu-header">
+                                <div _ngcontent-hkb-c112="" class="dropdown-header d-flex justify-content-between m-0 px-3 py-2 white bg-primary">
+                                    <div _ngcontent-hkb-c112="" class="d-flex"><i _ngcontent-hkb-c112="" class="ft-bell font-medium-3 d-flex align-items-center mr-2"></i><span _ngcontent-hkb-c112="" class="noti-title">7 New Notification</span></div><span _ngcontent-hkb-c112="" class="text-bold-400 cursor-pointer">Mark all as read</span>
+                                </div>
+                            </li>
+                            <li _ngcontent-hkb-c112="" class="scrollable-container ps">
+                                <a _ngcontent-hkb-c112="" href="javascript:void(0)" class="d-flex justify-content-between">
+                                    <div _ngcontent-hkb-c112="" class="media d-flex align-items-center">
+                                        <div _ngcontent-hkb-c112="" class="media-left">
+                                            <div _ngcontent-hkb-c112="" class="mr-3"><img _ngcontent-hkb-c112="" src="./assets/img/avatar-s-20.png" alt="avatar" height="45" width="45" class="avatar"></div>
+                                        </div>
+                                        <div _ngcontent-hkb-c112="" class="media-body">
+                                            <h6 _ngcontent-hkb-c112="" class="m-0"><span _ngcontent-hkb-c112="">Kate
+                            Young</span><small _ngcontent-hkb-c112="" class="grey lighten-1 font-italic float-right">5 mins ago</small></h6><small _ngcontent-hkb-c112="" class="noti-text">Commented on your photo</small>
+                                            <h6 _ngcontent-hkb-c112="" class="noti-text font-small-3 m-0"> Great Shot John! Really enjoying the composition on this piece. </h6>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a _ngcontent-hkb-c112="" href="javascript:void(0)" class="d-flex justify-content-between">
+                                    <div _ngcontent-hkb-c112="" class="media d-flex align-items-center">
+                                        <div _ngcontent-hkb-c112="" class="media-left">
+                                            <div _ngcontent-hkb-c112="" class="mr-3"><img _ngcontent-hkb-c112="" src="./assets/img/avatar-s-11.png" alt="avatar" height="45" width="45" class="avatar"></div>
+                                        </div>
+                                        <div _ngcontent-hkb-c112="" class="media-body">
+                                            <h6 _ngcontent-hkb-c112="" class="m-0"><span _ngcontent-hkb-c112="">Andrew
+                            Watts</span><small _ngcontent-hkb-c112="" class="grey lighten-1 font-italic float-right">49 mins ago</small></h6><small _ngcontent-hkb-c112="" class="noti-text">Liked your album: UI/UX Inspo</small>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a _ngcontent-hkb-c112="" href="javascript:void(0)" class="d-flex justify-content-between read-notification">
+                                    <div _ngcontent-hkb-c112="" class="media d-flex align-items-center py-0 pr-0">
+                                        <div _ngcontent-hkb-c112="" class="media-left">
+                                            <div _ngcontent-hkb-c112="" class="mr-3"><img _ngcontent-hkb-c112="" src="./assets/img/sketch-mac-icon.png" alt="avatar" height="45" width="45"></div>
+                                        </div>
+                                        <div _ngcontent-hkb-c112="" class="media-body">
+                                            <h6 _ngcontent-hkb-c112="" class="m-0">Update</h6><small _ngcontent-hkb-c112="" class="noti-text">MyBook v2.0.7</small>
+                                        </div>
+                                        <div _ngcontent-hkb-c112="" class="media-right">
+                                            <div _ngcontent-hkb-c112="" class="border-left">
+                                                <div _ngcontent-hkb-c112="" class="px-4 py-2 border-bottom">
+                                                    <h6 _ngcontent-hkb-c112="" class="m-0 text-bold-600">Update</h6>
+                                                </div>
+                                                <div _ngcontent-hkb-c112="" class="px-4 py-2 text-center">
+                                                    <h6 _ngcontent-hkb-c112="" class="m-0">Close</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a _ngcontent-hkb-c112="" href="javascript:void(0)" class="d-flex justify-content-between read-notification">
+                                    <div _ngcontent-hkb-c112="" class="media d-flex align-items-center">
+                                        <div _ngcontent-hkb-c112="" class="media-left">
+                                            <div _ngcontent-hkb-c112="" class="avatar bg-primary bg-lighten-3 mr-3 p-1"><span _ngcontent-hkb-c112="" class="avatar-content font-medium-2">LD</span></div>
+                                        </div>
+                                        <div _ngcontent-hkb-c112="" class="media-body">
+                                            <h6 _ngcontent-hkb-c112="" class="m-0"><span _ngcontent-hkb-c112="">Registration
+                            done</span><small _ngcontent-hkb-c112="" class="grey lighten-1 font-italic float-right">6 hrs ago</small></h6>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div _ngcontent-hkb-c112="" class="cursor-pointer">
+                                    <div _ngcontent-hkb-c112="" class="media d-flex align-items-center justify-content-between">
+                                        <div _ngcontent-hkb-c112="" class="media-left">
+                                            <div _ngcontent-hkb-c112="" class="media-body">
+                                                <h6 _ngcontent-hkb-c112="" class="m-0">New Offers</h6>
+                                            </div>
+                                        </div>
+                                        <div _ngcontent-hkb-c112="" class="media-right">
+                                            <div _ngcontent-hkb-c112="" class="custom-switch custom-control"><input _ngcontent-hkb-c112="" type="checkbox" id="custom-switch-1111" checked="" class="custom-control-input"><label _ngcontent-hkb-c112="" for="custom-switch-1111" class="custom-control-label mr-1"></label></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div _ngcontent-hkb-c112="" class="d-flex justify-content-between cursor-pointer read-notification">
+                                    <div _ngcontent-hkb-c112="" class="media d-flex align-items-center">
+                                        <div _ngcontent-hkb-c112="" class="media-left">
+                                            <div _ngcontent-hkb-c112="" class="avatar bg-danger bg-lighten-4 mr-3 p-1"><span _ngcontent-hkb-c112="" class="avatar-content font-medium-2"><i _ngcontent-hkb-c112=""
+                              class="ft-heart text-danger"></i></span></div>
+                                        </div>
+                                        <div _ngcontent-hkb-c112="" class="media-body">
+                                            <h6 _ngcontent-hkb-c112="" class="m-0"><span _ngcontent-hkb-c112="">Application
+                            approved</span><small _ngcontent-hkb-c112="" class="grey lighten-1 font-italic float-right">18 hrs ago</small></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a _ngcontent-hkb-c112="" href="javascript:void(0)" class="d-flex justify-content-between read-notification">
+                                    <div _ngcontent-hkb-c112="" class="media d-flex align-items-center">
+                                        <div _ngcontent-hkb-c112="" class="media-left">
+                                            <div _ngcontent-hkb-c112="" class="mr-3"><img _ngcontent-hkb-c112="" src="./assets/img/avatar-s-6.png" alt="avatar" height="45" width="45" class="avatar"></div>
+                                        </div>
+                                        <div _ngcontent-hkb-c112="" class="media-body">
+                                            <h6 _ngcontent-hkb-c112="" class="m-0"><span _ngcontent-hkb-c112="">Anna Lee</span><small _ngcontent-hkb-c112="" class="grey lighten-1 font-italic float-right">27 hrs
+                            ago</small></h6><small _ngcontent-hkb-c112="" class="noti-text">Commented on your
+                          photo</small>
+                                            <h6 _ngcontent-hkb-c112="" class="noti-text font-small-3 text-bold-500 m-0"> Woah!Loving these colors! Keep it up </h6>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div _ngcontent-hkb-c112="" class="d-flex justify-content-between cursor-pointer read-notification">
+                                    <div _ngcontent-hkb-c112="" class="media d-flex align-items-center">
+                                        <div _ngcontent-hkb-c112="" class="media-left">
+                                            <div _ngcontent-hkb-c112="" class="avatar bg-info bg-lighten-4 mr-3 p-1">
+                                                <div _ngcontent-hkb-c112="" class="avatar-content font-medium-2"><i _ngcontent-hkb-c112="" class="ft-align-left text-info"></i></div>
+                                            </div>
+                                        </div>
+                                        <div _ngcontent-hkb-c112="" class="media-body">
+                                            <h6 _ngcontent-hkb-c112="" class="m-0"><span _ngcontent-hkb-c112="">Report
+                            generated</span><small _ngcontent-hkb-c112="" class="grey lighten-1 font-italic float-right">35 hrs ago</small></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a _ngcontent-hkb-c112="" href="javascript:void(0)" class="d-flex justify-content-between read-notification">
+                                    <div _ngcontent-hkb-c112="" class="media d-flex align-items-center">
+                                        <div _ngcontent-hkb-c112="" class="media-left">
+                                            <div _ngcontent-hkb-c112="" class="mr-3"><img _ngcontent-hkb-c112="" src="./assets/img/avatar-s-7.png" alt="avatar" height="45" width="45" class="avatar"></div>
+                                        </div>
+                                        <div _ngcontent-hkb-c112="" class="media-body">
+                                            <h6 _ngcontent-hkb-c112="" class="m-0"><span _ngcontent-hkb-c112="">Oliver
+                            Wright</span><small _ngcontent-hkb-c112="" class="grey lighten-1 font-italic float-right">2 days ago</small></h6><small _ngcontent-hkb-c112="" class="noti-text">Liked your album: UI/UX Inspo</small>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                    <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                                </div>
+                                <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                                    <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+                                </div>
+                            </li>
+                            <li _ngcontent-hkb-c112="" class="dropdown-menu-footer">
+                                <div _ngcontent-hkb-c112="" class="noti-footer text-center cursor-pointer primary border-top text-bold-400 py-1"> Read All Notifications </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li _ngcontent-hkb-c112="" placement="bottom-left" display="static" ngbdropdown="" class="nav-item mr-1 dropdown">
+                        <!-- <button (click)="system.getOrders()">Syncr</button> -->
+                        <a _ngcontent-hkb-c112="" aria-haspopup="true" id="dropdownBasic2" (click)="system.goto('profile')" data-toggle="dropdown" ngbdropdowntoggle="" class="dropdown-toggle nav-link user-dropdown d-flex align-items-end" aria-expanded="false">
+                            <div _ngcontent-hkb-c112="" class="user d-md-flex d-none mr-2"><span _ngcontent-hkb-c112="" class="text-right">{{system.decodedToken?.firstname}}</span><span _ngcontent-hkb-c112="" class="text-right text-muted font-small-3">{{system.decodedToken?.role}}</span></div><img _ngcontent-hkb-c112=""
+                                src="./assets/img/user.png" alt="avatar" height="35" width="35" class="avatar">
+                        </a>
+                        <div _ngcontent-hkb-c112="" aria-labelledby="dropdownBasic2" ngbdropdownmenu="" class="dropdown-menu text-left dropdown-menu-right m-0 pb-0">
+                            <a _ngcontent-hkb-c112="" routerlink="/chat" class="dropdown-item" href="https://pixinvent.com/apex-angular-4-bootstrap-admin-template/demo-1/chat">
+                                <div _ngcontent-hkb-c112="" class="d-flex align-items-center"><i _ngcontent-hkb-c112="" class="ft-message-square mr-2"></i><span _ngcontent-hkb-c112="">Chat</span></div>
+                            </a>
+                            <a _ngcontent-hkb-c112="" routerlink="/pages/profile" class="dropdown-item" href="https://pixinvent.com/apex-angular-4-bootstrap-admin-template/demo-1/pages/profile">
+                                <div _ngcontent-hkb-c112="" class="d-flex align-items-center"><i _ngcontent-hkb-c112="" class="ft-edit mr-2"></i><span _ngcontent-hkb-c112="">Edit Profile</span></div>
+                            </a>
+                            <a _ngcontent-hkb-c112="" routerlink="/inbox" class="dropdown-item" href="https://pixinvent.com/apex-angular-4-bootstrap-admin-template/demo-1/inbox">
+                                <div _ngcontent-hkb-c112="" class="d-flex align-items-center"><i _ngcontent-hkb-c112="" class="ft-mail mr-2"></i><span _ngcontent-hkb-c112="">My Inbox</span></div>
+                            </a>
+                            <div _ngcontent-hkb-c112="" class="dropdown-divider"></div>
+                            <a _ngcontent-hkb-c112="" routerlink="/pages/login" class="dropdown-item" href="https://pixinvent.com/apex-angular-4-bootstrap-admin-template/demo-1/pages/login">
+                                <div _ngcontent-hkb-c112="" class="d-flex align-items-center"><i _ngcontent-hkb-c112="" class="ft-power mr-2"></i><span _ngcontent-hkb-c112="">Logout</span></div>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+<div _ngcontent-hkb-c126="" class="wrapper">
+    <!--expanded menu-open-->
+    <div _ngcontent-hkb-c126="" appsidebar="" data-active-color="white" class="app-sidebar main-menu menu-fixed menu-native-scroll ng-star-inserted" data-background-color="man-of-steel" data-image="assets/img/sidebar-bg/04.jpg">
+        <div _ngcontent-hkb-c126="" class="ng-tns-c125-10">
+            <div class="sidebar-header ng-tns-c125-10 ng-star-inserted">
+                <div class="logo clearfix ng-tns-c125-10">
+                    <a class="logo-text float-left ng-tns-c125-10" >
+                        <div class="logo-img ng-tns-c125-10">
+                            <img alt="Logo" title="Universidad Fermin Toro" class="ng-tns-c125-10" style="width: 30px;" src="./assets/img/Logo-uft-one.png">
+                            </div>
+                        <span class="text align-middle ng-tns-c125-10 text-right"><img alt="Logo" title="Universidad Fermin Toro" class="ng-tns-c125-10" src="./assets/img/Logo-uft-one.png"></span>
+                        <!-- <span class="align-middle ng-tns-c125-10 float-right text-right d-md-none">Groceries <br> to shop</span> -->
+                    </a>
+                    <span id="sidebarClose" class="d-block ng-tns-c125-10 d-xl-none">
+                        <i (click)="system.btnToggleSidebar()" class="fa fa-times-circle sidebarClose"></i>
+                    </span>
+                    <!-- <a id="sidebarToggle" href="javascript:;"
+              class="nav-toggle d-none d-lg-none d-xl-block ng-tns-c125-10"><i
+                class="toggle-icon ng-tns-c125-10 ft-toggle-right"></i></a><a id="sidebarClose" href="javascript:;"
+              class="nav-close d-block d-lg-block d-xl-none ng-tns-c125-10"><i class="ft-x ng-tns-c125-10"></i></a> -->
+                </div>
+            </div>
+            <!---->
+            <div class="sidebar-content main-menu-content ng-tns-c125-10 ps ps--active-y">
+                <div class="nav-container ng-tns-c125-10">
+                    <ul appsidebardropdown="" class="navigation ng-tns-c125-10">
+                        <li  appsidebarlink="" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-usd"></i><span class="menu-title ng-tns-c125-10 ">Gestión de pagos</span>
+                            </a>
+                            <!--(click)="system.btnToggleSidebar()"-->
+                            <!---->
+                            <!--<span class="ng-tns-c125-10 badge badge-pill badge-danger float-right mr-1 mt-1 ng-star-inserted">2</span>-->
+                            <!-- <ul appsidebardropdown="" class="menu-content ng-tns-c125-10 ng-star-inserted">
+                  <li appsidebarlink="" class="ng-tns-c125-10 ng-star-inserted active">
+                    <a appsidebaranchortoggle="" class="ng-tns-c125-10 ng-star-inserted"
+                      href="https://pixinvent.com/apex-angular-4-bootstrap-admin-template/demo-1/dashboard/dashboard1"><i
+                        class="ng-tns-c125-10 ft-arrow-right submenu-icon"></i><span
+                        class="menu-title ng-tns-c125-10">Tablero1</span>
+                      </a>
+                  </li>
+                  <li appsidebarlink="" class="ng-tns-c125-10 ng-star-inserted">
+                    <a appsidebaranchortoggle="" class="ng-tns-c125-10 ng-star-inserted"
+                      href="https://pixinvent.com/apex-angular-4-bootstrap-admin-template/demo-1/dashboard/dashboard2"><i
+                        class="ng-tns-c125-10 ft-arrow-right submenu-icon"></i><span
+                        class="menu-title ng-tns-c125-10">Tablero2</span>
+                      </a> *ngIf="system.decodedToken.role === 'administrator'"
+                  </li>
+                </ul>(click)="system.btnToggleSidebar()" -->
+                            <!---->
+                        </li>
+                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="1" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-user"></i><span class="menu-title ng-tns-c125-10">Gestion de usuarios</span>
+                            </a>
+                        </li>
+                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="2" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-exchange"></i><span class="menu-title ng-tns-c125-10">Matching</span>
+                            </a>
+                        </li>
+                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="3" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-upload"></i><span class="menu-title ng-tns-c125-10">Cargar archivo</span>
+                            </a>
+                        </li>
+                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="4" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-handshake-o"></i><span class="menu-title ng-tns-c125-10">Planes</span>
+                            </a>
+                        </li>
+                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="5" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-cogs"></i><span class="menu-title ng-tns-c125-10">Configuración</span>
+                            </a>
+                        </li>
+                        <li  appsidebarlink="" class="ng-tns-c125-10 has-sub ng-star-inserted">
+                            <a appsidebaranchortoggle="" (click)="system.goto('login')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-sign-out"></i><span class="menu-title ng-tns-c125-10">Cerrar sesión</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                    <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                </div>
+                <div class="ps__rail-y" style="top: 0px; right: 0px; height: 538px;">
+                    <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 290px;"></div>
+                </div>
+            </div>
+        </div>
+        <div _ngcontent-hkb-c126="" class="sidebar-background ng-star-inserted" style="background-image: url(./assets/img/04.jpg);"></div>
+    </div>
+    <div _ngcontent-hkb-c126="" class="main-panel">
+        <div _ngcontent-hkb-c126="" class="main-content">
+            <div _ngcontent-hkb-c126="" class="content-overlay"></div>
+            <div _ngcontent-hkb-c126="" class="content-wrapper" [ngStyle]="{'padding-top': '60px'}">
+                <router-outlet _ngcontent-hkb-c126="" ></router-outlet>
+                
+            </div>
+        </div>
+        <div _ngcontent-hkb-c126="" _nghost-hkb-c113="">
+            <footer _ngcontent-hkb-c113="" class="footer">
+                <p _ngcontent-hkb-c113="" class="copyright clearfix text-muted m-0"> Copyright © 2021 <a _ngcontent-hkb-c113="" id="pixinventLink" href="#">App</a><span _ngcontent-hkb-c113="" class="d-none d-sm-inline-block">, All rights reserved.</span></p>
+            </footer>
+        </div>
+    </div>
+</div>
