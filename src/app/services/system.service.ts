@@ -37,8 +37,8 @@ btnToggleSidebar() {
   
 }
   get isMobile() {
-    // return window.innerWidth <= 768;
-    return window.innerWidth <= 991;
+    return window.innerWidth <= 768;
+    //return window.innerWidth <= 991;
 }
 get decodedToken() {
   try{

@@ -9486,6 +9486,7 @@ body.swal2-toast-column .swal2-toast .swal2-validation-message {
      }
      .hdmodal.hdmodal-md {
          .hdmodal-content {
+             margin-top: 48px !important;
              max-width: 90vw !important;
              width: 100% !important;
              overflow: auto;
@@ -9519,11 +9520,14 @@ body.swal2-toast-column .swal2-toast .swal2-validation-message {
 //     cursor: pointer;
 // }
 
-// .table tbody tr {
-//     &:hover {
-//         background: rgba(0, 0, 0, 0.1);
-//     }
-// }
+.table tr {
+    &.head {
+        background-color: #eee;
+    }
+    &:hover {
+        background: rgba(0, 0, 0, 0.1);
+    }
+}
 
 // .table td {
 //     border-bottom: 1px solid #d2d2d2 !important;
@@ -9637,6 +9641,7 @@ body.swal2-toast-column .swal2-toast .swal2-validation-message {
          opacity: 1 !important;
      }
      .hdmodal-content {
+         margin-top: 48px !important;
          margin: auto;
          .footer {
              border-top: 1px solid #ddd;
@@ -9666,6 +9671,10 @@ body.swal2-toast-column .swal2-toast .swal2-validation-message {
          i {
              line-height: 30px !important;
          }
+     }
+     .hdmodal-footer {
+        border-top: 1px solid #ddd;
+        padding: 15px;
      }
  }
 
@@ -9817,6 +9826,10 @@ i.fa {
         background-color: #464d5f !important;
         border-color: #464d5f !important;
     }
+    &:disabled {
+        cursor:no-drop;
+        opacity: .5;
+    }
 }
 .btn-outline-primary {
     border: 1px solid #991334;
@@ -9959,4 +9972,11 @@ body.menu-open .logo .logo-img {
 #sidebarClose {
     float: right;
     margin-right: 10px;
+}
+re-captcha div {
+    margin: auto !important;
+}
+.bg-primary {
+    background-image: linear-gradient(135deg,#991334,#464d5f);
+    color: #fff;
 }

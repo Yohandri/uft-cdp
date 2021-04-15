@@ -7,6 +7,7 @@ import { LoginComponent } from './components/login/login.component';
 import { ContainerComponent } from './components/container/container.component';
 import { FormsModule } from '@angular/forms';
 import { PaymentManagementComponent } from './components/payment-management/payment-management.component';
+import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,9 @@ import { PaymentManagementComponent } from './components/payment-management/paym
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    RecaptchaModule,
+    RecaptchaFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

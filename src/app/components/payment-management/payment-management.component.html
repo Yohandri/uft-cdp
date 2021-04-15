@@ -1,25 +1,305 @@
 <div class="p-2">
     <ul class="nav nav-tabs bg-white">
         <li class="nav-item">
-          <a class="nav-link" [ngClass]="{'active': tabSelect === 0}" (click)="selectTab(0)">Estado de cuenta</a>
+          <a  class="nav-link" [ngClass]="{'active': tabSelect === 0}" (click)="selectTab(0)">
+            <i class="fa fa-address-book" [ngClass]="{'mr-2': !system.isMobile}" aria-hidden="true"></i>
+            <span *ngIf="!system.isMobile">Estudiante</span>
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [ngClass]="{'active': tabSelect === 1}" (click)="selectTab(1)">Pagos pendientes</a>
+          <a class="nav-link" [ngClass]="{'active': tabSelect === 1}" (click)="selectTab(1)">
+            <i class="fa fa-money" [ngClass]="{'mr-2': !system.isMobile}" aria-hidden="true"></i>
+            <span *ngIf="!system.isMobile">Estado de cuenta</span>
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [ngClass]="{'active': tabSelect === 2}" (click)="selectTab(2)">Reservacion de materias</a>
+          <a class="nav-link" [ngClass]="{'active': tabSelect === 2}" (click)="selectTab(2)">
+            <i class="fa fa-asterisk" [ngClass]="{'mr-2': !system.isMobile}" aria-hidden="true"></i>
+            <span *ngIf="!system.isMobile">Reserva de materias</span>
+          </a>
         </li>
         <!-- <li class="nav-item">
           <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
         </li> -->
     </ul>
+    <h2 *ngIf="system.isMobile && tabSelect === 0" class="bg-primary mb-0">Estudiante</h2>
+    <h2 *ngIf="system.isMobile && tabSelect === 1" class="bg-primary mb-0">Estado de cuenta</h2>
+    <h2 *ngIf="system.isMobile && tabSelect === 2" class="bg-primary mb-0">Reserva de materias</h2>
     <div class="bg-white p-2 tabTranssition" *ngIf="tabSelect === 0">
-        Lemon drops pastry chocolate. Jujubes sweet roll tootsie roll. Oat cake donut bonbon chocolate croissant candy candy brownie. Wafer jelly beans jelly ice cream caramels. Cookie bonbon lemon drops cheesecake brownie cake macaroon sweet. Toffee pie icing candy ice cream croissant caramels jelly. Muffin jelly gummies icing cheesecake chocolate cake. Sweet chupa chups croissant pudding sesame snaps soufflé. Marzipan cotton candy jujubes halvah cheesecake. Cupcake wafer gummies croissant candy brownie jelly. Sweet wafer chocolate halvah. Danish sweet roll cheesecake candy canes marzipan liquorice. Sugar plum halvah lemon drops donut sesame snaps lollipop oat cake. Cake dessert topping tiramisu jelly beans. Gummies oat cake sugar plum cookie carrot cake halvah powder sesame snaps. Bear claw gummi bears marzipan powder pudding lemon drops cotton candy sweet roll chupa chups. Marzipan tootsie roll tart lemon drops gummies. Cheesecake wafer carrot cake chocolate jelly beans candy liquorice fruitcake pastry. Gummi bears cheesecake macaroon jelly beans wafer cookie. Gingerbread chocolate bar icing. Candy canes donut icing macaroon cupcake. Ice cream ice cream cake pudding gummi bears.
+        
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <h3>Información personal</h3>
+            <table>
+              <tr>
+                <td [ngClass]="{'text-right': !system.isMobile}">Nombres y apellidos: </td>
+                <th class="pl-2">Julia delgado</th>
+              </tr>
+              <tr>
+                <td [ngClass]="{'text-right': !system.isMobile}">Email: </td>
+                <th class="pl-2">julia03@gmail.com</th>
+              </tr>
+              <tr>
+                <td [ngClass]="{'text-right': !system.isMobile}">Código: </td>
+                <th class="pl-2">0151-24614931</th>
+              </tr>
+              <tr>
+                <td [ngClass]="{'text-right': !system.isMobile}">Teléfono local: </td>
+                <th class="pl-2">0251-4578963</th>
+              </tr>
+              <tr>
+                <td [ngClass]="{'text-right': !system.isMobile}">Teléfono celular: </td>
+                <th class="pl-2">0412-6345897</th>
+              </tr>
+              <tr>
+                <td [ngClass]="{'text-right': !system.isMobile}">Dirección: </td>
+                <th class="pl-2">Cabudare estado Lara</th>
+              </tr>
+            </table>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <h3>Información académica</h3>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered">
+                <tr class="head">
+                  <th>Carrera</th>
+                  <th>Lapso</th>
+                  <th>Tipo de carrera</th>
+                </tr>
+                <tr>
+                  <td>Ingeniería de Mantenimiento</td>
+                  <td>1</td>
+                  <td>Pre-grado</td>
+                </tr>
+                <tr>
+                  <td>Derecho</td>
+                  <td>1</td>
+                  <td>Post-grado</td>
+                </tr>
+                <tr>
+                  <td>Licenciatura en Administración</td>
+                  <td>1</td>
+                  <td>Curso</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
     </div>
     <div class="bg-white p-2 tabTranssition" *ngIf="tabSelect === 1">
-        Lemon drops pastry chocolate. Jujubes sweet roll tootsie roll. Oat cake donut bonbon chocolate croissant candy candy brownie. Wafer jelly beans jelly ice cream caramels. Cookie bonbon lemon drops cheesecake brownie cake macaroon sweet. Toffee pie icing candy ice cream croissant caramels jelly. Muffin jelly gummies icing cheesecake chocolate cake. Sweet chupa chups croissant pudding sesame snaps soufflé. Marzipan cotton candy jujubes halvah cheesecake. Cupcake wafer gummies croissant candy brownie jelly. Sweet wafer chocolate halvah. Danish sweet roll cheesecake candy canes marzipan liquorice. Sugar plum halvah lemon drops donut sesame snaps lollipop oat cake. Cake dessert topping tiramisu jelly beans. Gummies oat cake sugar plum cookie carrot cake halvah powder sesame snaps. Bear claw gummi bears marzipan powder pudding lemon drops cotton candy sweet roll chupa chups. Marzipan tootsie roll tart lemon drops gummies. Cheesecake wafer carrot cake chocolate jelly beans candy liquorice fruitcake pastry. Gummi bears cheesecake macaroon jelly beans wafer cookie. Gingerbread chocolate bar icing. Candy canes donut icing macaroon cupcake.
+        <div class="row">
+          <div class="col-sm-12 col-md-12">
+            <h3>Pagos pendientes</h3>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered">
+                <tr class="head">
+                  <th>Código</th>
+                  <th>Fecha</th>
+                  <th>Cuota</th>
+                  <th>Cuota monto</th>
+                  <th>Estado</th>
+                  <th></th>
+                </tr>
+                <tr>
+                  <td>0151</td>
+                  <td>27/03/2021</td>
+                  <td>10,000,000.00 Bs</td>
+                  <td>80,000,000.00 Bs</td>
+                  <td>Incompleta</td>
+                  <td class="text-center">
+                    <button class="btn btn-primary btn-sm" (click)="initPay()">
+                      Reportar pago
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>0151</td>
+                  <td>25/03/2021</td>
+                  <td>5,000,000.00 Bs</td>
+                  <td>80,000,000.00 Bs</td>
+                  <td>Incompleta</td>
+                  <td class="text-center">
+                    <i (click)="initCardPay()" class="fa fa-eye" aria-hidden="true"></i>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
     </div>
     <div class="bg-white p-2 tabTranssition" *ngIf="tabSelect === 2">
-        Lemon drops pastry chocolate. Jujubes sweet roll tootsie roll. Oat cake donut bonbon chocolate croissant candy candy brownie. Wafer jelly beans jelly ice cream caramels. Cookie bonbon lemon drops cheesecake brownie cake macaroon sweet. Toffee pie icing candy ice cream croissant caramels jelly. Muffin jelly gummies icing cheesecake chocolate cake. Sweet chupa chups croissant pudding sesame snaps soufflé. Marzipan cotton candy jujubes halvah cheesecake. Cupcake wafer gummies croissant candy brownie jelly. Sweet wafer chocolate halvah. Danish sweet roll cheesecake candy canes marzipan liquorice. Sugar plum halvah lemon drops donut sesame snaps lollipop oat cake. Cake dessert topping tiramisu jelly beans. Gummies oat cake sugar plum cookie carrot cake halvah powder sesame snaps. Bear claw gummi bears marzipan powder pudding lemon drops cotton candy sweet roll chupa chups. Marzipan tootsie roll tart lemon drops gummies. Cheesecake wafer carrot cake chocolate jelly beans candy liquorice fruitcake pastry. Gummi bears cheesecake macaroon jelly beans wafer cookie. Gingerbread chocolate bar icing. 
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <div class="form-group">
+              <label for="payCarrera">Carreras</label>
+              <select id="payCarrera" class="form-control">
+                <option value=""></option>
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="form-group">
+              <label for="payMateria">Materia</label>
+              <select id="payMateria" class="form-control">
+                <option value=""></option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="d-flex flex-row-reverse">
+              <button class="btn btn-primary">
+                Reservar
+              </button>
+            </div>
+          </div>
+        </div>
     </div>
+</div>
+
+
+<div class="hdmodal hdmodal-md" id="modal-pay">
+  <div class="hdmodal-content">
+      <div class="card p-0">
+          <h5 class="py-2 px-3 modal-title flex">
+              Reportar pago
+              <i class="fa fa-times ml-auto closer" (click)="modalPayClose()"></i>
+          </h5>
+          <div class="container p-3">
+            <h3 class="mb-0">Información del titular</h3>
+            <small>Responsable del pago</small>
+              <div class="row mt-2">
+                
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                      <label for="payName">Nombre</label>
+                      <input type="text" class="form-control" id="payName">
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                      <label for="payLastname">Apellido</label>
+                      <input type="text" class="form-control" id="payLastname">
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                      <label for="payCi">Cedula de identidad</label>
+                      <input type="text" class="form-control" id="payCi">
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                      <label for="payPhone">Teléfono</label>
+                      <input type="tel" class="form-control" id="payPhone">
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12">
+                    <hr>
+                    <h3 class="mb-0">Información del pago</h3>
+                    <small>Datos de referencia del pago</small>
+                    <div class="row">
+                      <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                          <label for="payTypepay">Forma de pago</label>
+                          <select id="payTypepay" class="form-control">
+                            <option value=""></option>
+                            <option [value]="i.value" *ngFor="let i of payment_type">{{i.key}}</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                      <label for="payBank">Banco</label>
+                      <select id="payBank" class="form-control">
+                        <option value=""></option>
+                        <option [value]="i.value" *ngFor="let i of bank">{{i.key}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                      <label for="payDate">Fecha</label>
+                      <input type="date" class="form-control" id="payDate">
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                      <label for="payReferen">Referencia</label>
+                      <input type="text" class="form-control" id="payReferen">
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group ">
+                      <label for="payAmount">Monto</label>
+                      <div class="input-group">
+                        <input type="number" class="form-control" id="payAmount" >
+                        <div class="input-group-append">
+                          <span class="input-group-text" id="basic-addon2">Bs.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+          </div>
+          <div class="hdmodal-footer">
+            <div class="row mt-2">
+              <div class="col-md-12">
+                <div class="d-flex flex-row-reverse">
+                  <button class="btn btn-primary ml-2" >Confirmar pago</button>
+                  <button class="btn btn-secundary ml-auto" (click)="modalPayClose()">Cancelar</button>
+                  
+                </div>
+              </div>
+          </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="hdmodal hdmodal-md" id="modal-cardPay">
+  <div class="hdmodal-content">
+      <div class="card p-0">
+          <h5 class="py-2 px-3 modal-title flex">
+              Ficha de pago
+              <i class="fa fa-times ml-auto closer" (click)="modalCardPayClose()"></i>
+          </h5>
+          <div class="container p-3">
+            <h3 class="mb-0">Información del titular</h3>
+            <small>Responsable del pago</small>
+              <div class="row mt-2">
+                <div class="col-md-6 col-sm-12">
+                  <table>
+                    <tr>
+                      <td class="text-left">Nombre y apellido:</td>
+                      <th>José Flores</th>
+                    </tr>
+                    <tr>
+                      <td class="text-left">Cedula de identidad:</td>
+                      <th>16789563</th>
+                    </tr>
+                    <tr>
+                      <td class="text-left">Telefono:</td>
+                      <th>+544126987456</th>
+                    </tr>
+                  </table>
+                </div>
+                  
+              </div>
+          </div>
+          <div class="hdmodal-footer">
+            <div class="row mt-2">
+              <div class="col-md-12">
+                <div class="d-flex flex-row-reverse">
+                  <button class="btn btn-primary ml-2" (click)="modalCardPayClose()">Cerrar</button>
+                  
+                </div>
+              </div>
+          </div>
+          </div>
+      </div>
+  </div>
 </div>

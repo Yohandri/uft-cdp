@@ -6,12 +6,12 @@ import { PaymentManagementComponent } from './components/payment-management/paym
 
 
 const routes: Routes = [
-  {path: "", component: ContainerComponent,
+  {path: 'gp', component: ContainerComponent,
   children: [
     {path: '', component: PaymentManagementComponent}
   ]
   },
-  {path: 'login', component: LoginComponent}
+  {path: '', component: LoginComponent}
 ];
 
 @NgModule({

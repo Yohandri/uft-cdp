@@ -9,7 +9,7 @@
                                 class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center auth-img-bg p-3">
                                 <img _ngcontent-fed-c192="" src="./assets/img/Logo-uft.png" alt="logo" width="300"
                                     height="230" class="img-fluid"></div>
-                            <div _ngcontent-fed-c192="" class="col-lg-6 col-12 px-4 py-3">
+                            <div _ngcontent-fed-c192="" class="col-lg-6 col-12 px-4 py-3" *ngIf="!isRegister">
                                 <h4 _ngcontent-fed-c192="" class="mb-2 card-title">
                                     Iniciar sesión
                                     <span class="float-right" *ngIf="system.isMobile">
@@ -17,11 +17,11 @@
                                     height="120" class="img-fluid" style="top: -10px;position: relative;" >
                                     </span>
                                 </h4>
-                                <p _ngcontent-fed-c192="">Bienvenido de nuevo, inicie sesión en su cuenta.</p>
+                                <p _ngcontent-fed-c192="">Bienvenido, inicie sesión en su cuenta.</p>
                                 
                                     <div _ngcontent-fed-c192="" class="form-group">
                                         <input _ngcontent-fed-c192="" (keyup.enter)="login()"  [(ngModel)]="loginModel.username"
-                                            type="text" placeholder="Usuario"
+                                            type="text" placeholder="Cedula de identidad"
                                             required="" class="form-control ng-untouched ng-pristine ng-valid">
                                         <!---->
                                     </div>
@@ -50,10 +50,11 @@
                                     <div _ngcontent-fed-c192=""
                                         class="d-flex justify-content-between flex-sm-row flex-column">
                                         <a
-                                            _ngcontent-fed-c192="" class="btn bg-light-primary mb-2 mb-sm-0"
-                                             [style]="{'opacity': '0', 'cursor': 'default'}" disabled>Register</a>
-                                            <a
-                                            _ngcontent-fed-c192="" class="btn btn-primary" (click)="login()">Iniciar sesión</a></div>
+                                            _ngcontent-fed-c192="" class="btn bg-outline-primary mb-2 mb-sm-0"
+                                             [style]="{'opacity': '1', 'cursor': 'pointer'}" (click)="register()" >Registrarse</a>
+                                        <a
+                                            _ngcontent-fed-c192="" class="btn btn-primary" (click)="login()">Iniciar sesión</a>
+                                    </div>
                                 
                                 <hr _ngcontent-fed-c192="">
                                 <div _ngcontent-fed-c192=""
@@ -85,6 +86,52 @@
                                             </a>
                                         </div>
                                 </div>
+                            </div>
+                            <div _ngcontent-fed-c192="" class="col-lg-6 col-12 px-4 py-3" *ngIf="isRegister">
+                                <h4 _ngcontent-fed-c192="" class="mb-2 card-title">
+                                    Registro
+                                    <span class="float-right" *ngIf="system.isMobile">
+                                        <img _ngcontent-fed-c192="" src="./assets/img/Logo-uft.png" alt="logo" width="120"
+                                    height="120" class="img-fluid" style="top: -10px;position: relative;" >
+                                    </span>
+                                </h4>
+                                <p _ngcontent-fed-c192="">Bienvenido, rellene los campos para continuar.</p>
+                                <form #captchaProtectedForm="ngForm" (ngSubmit)="registerSubmit()">
+                                    <div _ngcontent-fed-c192="" class="form-group">
+                                        <input _ngcontent-fed-c192=""
+                                        [(ngModel)]="formRegister.ci"
+                                        name="ci"
+                                            type="text" placeholder="Cedula de identidad"
+                                            required="" class="form-control ng-untouched ng-pristine ng-valid">
+                                        <!---->
+                                    </div>
+                                    <div _ngcontent-fed-c192="" class="form-group">
+                                        <input _ngcontent-fed-c192=""
+                                        [(ngModel)]="formRegister.email"
+                                        name="email"
+                                            type="email" placeholder="Correo electronico"
+                                            required="" class="form-control ng-untouched ng-pristine ng-valid">
+                                        <!---->
+                                    </div>
+                                    <div class="mb-2 text-center d-flex" [ngStyle]="{'overflow-x': 'auto', 'overflow-y': 'hidden'}" style="width: 100%;margin: auto;">
+                                        <re-captcha
+                                        style="width: 100%;text-align: center;margin: auto;"
+                                            [(ngModel)]="formRegister.captcha"
+                                            name="captcha"
+                                            required
+                                            siteKey="6LcOuyYTAAAAAHTjFuqhA52fmfJ_j5iFk5PsfXaU"
+                                            #captchaControl="ngModel"
+                                        ></re-captcha>
+                                    </div>
+                                    <div _ngcontent-fed-c192=""
+                                            class="d-flex justify-content-between flex-sm-row flex-column">
+                                            <a
+                                                _ngcontent-fed-c192="" class="btn bg-outline-primary mb-2 mb-sm-0"
+                                                 [style]="{'opacity': '1', 'cursor': 'pointer'}" (click)="registerCancel()" >Cancelar</a>
+                                            <button
+                                                _ngcontent-fed-c192="" class="btn btn-primary" type="submit" [disabled]="!captchaProtectedForm.form.valid">Registrarse</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
