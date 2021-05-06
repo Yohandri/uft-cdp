@@ -93,3 +93,58 @@ export function dateToStr(d, horas = true) {
             ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + ':' + ("0" + d.getSeconds()).slice(-2)
             : d.getFullYear() + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
 }
+export class PaginationBuild {
+    page = 1;
+    per_page = 10;
+    last_page = 0;
+    pages = [];
+    init(res) {
+      this.pages = [];
+      this.last_page = res.last_page;
+      for (let i = 1;i <= res.last_page;i++) {
+        if (this.page + 4 >= i + 2 && this.page - 4 <= i - 2) {
+          this.pages.push(i);
+        }
+      }
+      if (this.pages.length === 1) {
+        this.pages = [];
+      }
+    }
+  }
+export class SelectItem {
+    value = [];
+    isSelectAll = false;
+    init(data) {
+      for(let i = 0;i < data.length;i++) {
+        this.value[data[i].id] = {id: data[i].id, value: false};
+      }
+    }
+    selectAll() {
+      if (this.isSelectAll) {
+        this.reset();
+      } else {
+        for(let i of this.value) {
+          if (i) {
+            i.value = true;
+          }
+        }
+        this.isSelectAll = true;
+      }
+    }
+    reset() {
+      for(let i of this.value) {
+        if (i) {
+          i.value = false;
+        }
+      }
+      this.isSelectAll = false;
+    }
+    get selected() {
+      const s = this.value.filter(x => x.value);
+      let val = [];
+      for(let i = 0;i < s.length;i++) {
+        val.push(s[i].id);
+      }
+      return val;
+    }
+  }

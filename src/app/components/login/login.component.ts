@@ -19,15 +19,42 @@ export class LoginComponent implements OnInit {
 branchs = [];
 isRemenber = false;
 isRegister = false;
+isConfirm = false;
+code_confirm = null;
+newPassword = null;
 public formRegister: FormRegister = {};
   constructor(
     public system: SystemService
   ) { }
 
   ngOnInit(): void {
+    const remember = localStorage.getItem('remember');
+    const isRemenber = localStorage.getItem('isRemenber');
+    if (remember) {
+      const data = JSON.parse(window.atob(remember));
+        this.loginModel.username = data.ci;
+        this.loginModel.password = data.password;
+    }
+    if (isRemenber) {
+        this.isRemenber = JSON.parse(isRemenber);
+    }
   }
-  login() {
-    this.system.goto('gp');
+  async login() {
+    //this.system.goto('gp');
+    const body = {ci: this.loginModel.username, password: this.loginModel.password};
+    if (this.isRemenber) {
+      localStorage.setItem('remember',  window.btoa(JSON.stringify(body)));
+      localStorage.setItem('isRemenber', JSON.stringify(this.isRemenber));
+  } else {
+      localStorage.removeItem('remember');
+      localStorage.removeItem('isRemenber');
+  }
+    const res = await this.system.login(body);
+    if (res) {
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }
   }
   register() {
     this.formRegister = {};
@@ -36,8 +63,25 @@ public formRegister: FormRegister = {};
   registerCancel() {
     this.isRegister = false;
   }
-  registerSubmit() {
+  async registerSubmit() {
     console.log(this.formRegister);
+    const body = {ci: this.formRegister.ci, correo: this.formRegister.email}
+    const res = await this.system.register(body);
+    if (res) {
+      this.isRegister = false;
+      this.isConfirm = true;
+    }
+  }
+  async confirmcode() {
+    console.log(this.code_confirm);
+    const body = {code: this.code_confirm, password: this.newPassword, ci: this.formRegister.ci}
+    const res = await this.system.register(body, true);
+    if (res) {
+      this.isRegister = false;
+      this.isConfirm = false;
+      this.code_confirm = '';
+      this.newPassword = '';
+    }
   }
 
 }

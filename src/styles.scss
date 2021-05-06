@@ -9717,19 +9717,28 @@ body.swal2-toast-column .swal2-toast .swal2-validation-message {
 
 .pagination {
     li {
-        padding: 7px 10px;
+        // padding: 7px 10px;
         color: #3c3232;
         cursor: pointer;
         user-select: none;
-        padding: 4px 12px;
+        //padding: 4px 12px;
         line-height: 24px;
-        &.active {
-            background: #a169ff;
+        & a {
+            color: #991334;
+        }
+        &.active a {
+            background-color: #991334 !important;
             color: white;
             border-radius: 2px;
         }
         &.disabled {
             color: #b5b4b4;
+        }
+        & select {
+            height: 35px;
+            border: 1px solid #e0e0e0;
+            border-radius: .35rem;
+            color: #991334;
         }
     }
 }
@@ -9853,7 +9862,7 @@ i.fa {
     color: #991334!important;
 }
 
-.pagination li.active {
+.pagination li a.active {
     background-color: #991334;
 }
 
@@ -9979,4 +9988,51 @@ re-captcha div {
 .bg-primary {
     background-image: linear-gradient(135deg,#991334,#464d5f);
     color: #fff;
+}
+.mat-progress-bar {
+    top: 0 !important;
+    z-index: 2000 !important;
+}
+.mat-progress-bar-fill::after {
+    background-color: #991334;
+}
+.mat-progress-bar-buffer {
+    background-color: #464d5f !important;
+}
+.overlayCustom {
+    position: fixed; /* Sit on top of the page content */
+    display: block; /* Hidden by default */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0); /* Black background with opacity */
+    z-index: 2001; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: wait; /* Add a pointer on hover */
+}
+
+.inputFilter {
+    th {
+        padding: 0;
+        input.if, select {
+            width: 100%;
+            border: hidden;
+            height: 25px;
+            &::placeholder {
+                color: #000;
+            }
+        }
+    }
+}
+.table {
+    tr {
+        td:first-child, th:first-child {
+            text-align: center;
+        }
+    }
+}
+.cursorPointer {
+    cursor: pointer !important;
 }

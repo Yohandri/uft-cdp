@@ -1,0 +1,276 @@
+<div class="p-2"  >
+    <div class="container-fluid ">
+        <div class="row bg-white">
+            <div class="col">
+                <h3 class="mt-2">Plan<span *ngIf="!isForm">es</span>
+                    <button class="btn btn-primary float-right btn-sm" (click)="new()" [ngStyle]="{'opacity': filter.isFilter ? .6 : 1}" *ngIf="!isForm">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        Nuevo
+                    </button>
+                    <button  class="btn btn-primary float-right btn-sm ml-2" (click)="save()" *ngIf="isForm">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                        Guardar
+                    </button>
+                    <button class="btn btn-primary float-right btn-sm" (click)="cancelar()" *ngIf="isForm">
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        Regresar
+                    </button>
+                    <button class="btn btn-primary float-right btn-sm mr-2" (click)="initDelete()" *ngIf="!isForm && selected.selected.length > 0">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                        Eliminar
+                    </button>
+                    <div class="btn-group btn-group-sm float-right mr-2" role="group">
+                        <button class="btn btn-primary btn-sm" (click)="refreshData()" *ngIf="!isForm && filter.isFilter">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            Buscar
+                        </button>
+                        <button class="btn btn-secondary btn-sm" (click)="resetFilter()" *ngIf="!isForm && filter.isFilter">
+                            <i class="fa fa-filter" aria-hidden="true"></i>
+                            Limpiar
+                        </button>    
+                    </div>
+                </h3>
+                <div *ngIf="!isForm">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <tr class="inputFilter head">
+                                <th></th>
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por código" tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.guid">
+                                </th>
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por nombres" tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.nombre">
+                                </th>
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por fecha"  tabindex="-1" (change)="refreshData()" type="date" [(ngModel)]="filter.fecha_vencimiento">
+                                </th>
+                                <!-- <th>
+                                    <input class="if" placeholder="Búsqueda por tipo"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.tipo">
+                                </th> -->
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por inscripción"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.inscripcion">
+                                </th>
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por # cuotas"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.num_cuotas">
+                                </th>
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por total"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.mon_total">
+                                </th>
+                                <th>
+                                    <select name="searchService" id="searchService" (change)="refreshData()" [(ngModel)]="filter.servicio_id">
+                                        <option value="">Búsqueda por servicio</option>
+                                        <option [value]="i.id" *ngFor="let i of servicios">{{i.nombre}}</option>
+                                    </select>
+                                    <!-- <input class="if" placeholder="Búsqueda por servicio"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.servicio_id"> -->
+                                </th>
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por lapso"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.lapso_codigo">
+                                </th>
+                            </tr>
+                            <tr class="head">
+                                <th>
+                                    <input type="checkbox" (click)="selected.selectAll()" [(ngModel)]="selected.isSelectAll">
+                                </th>
+                                <th>Código</th>
+                                <th>Nombres</th>
+                                <th>Fecha de vencimiento</th>
+                                <!-- <th>Tipo</th> -->
+                                <th>Inscripción</th>
+                                <th>Numero de cuotas</th>
+                                <th>Monto total</th>
+                                <th>Servicio</th>
+                                <th>Lapso</th>
+                            </tr>
+                            <tr *ngFor="let i of data" >
+                                <td>
+                                    <input type="checkbox" [(ngModel)]="selected.value[i.id].value">
+                                </td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.guid}} </td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.nombre}} </td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.fecha_vencimiento}}</td>
+                                <!-- <td class="cursorPointer" (click)="edit(i)">{{i.tipo}}</td> -->
+                                <td class="cursorPointer" (click)="edit(i)">{{i.inscripcion === 1 ? 'Si' : 'No'}}</td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.num_cuotas}}</td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.mon_total}}</td>
+                                <td class="cursorPointer" (click)="edit(i)">{{getNameService(i.servicio_id)}}</td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.lapso_codigo}}</td>
+                            </tr>
+                            <tr *ngIf="data.length === 0">
+                                <td class="text-center" colspan="9" *ngIf="!loadData">
+                                    <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+                                </td>
+                                <td class="text-center" colspan="9" *ngIf="loadData">
+                                    No hay registros
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <!-- {{pagination | json}} -->
+                        <nav aria-label="Page navigation example">
+                            
+                            <ul class="pagination justify-content-end" >
+                              <li> Registros por pagina
+                                <select (change)="refreshData()" [(ngModel)]="pagination.per_page">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                </select>
+                              </li>
+                              <li class="page-item" *ngIf="pagination.pages.length > 1">
+                                <a class="page-link" (click)="goPage(pagination.page, '-')" aria-label="Previous">
+                                  <span aria-hidden="true">&laquo;</span>
+                                </a>
+                              </li>
+                              <li *ngFor="let i of pagination.pages" [ngClass]="{'active': pagination.page === i}" class="page-item">
+                                  <a class="page-link" (click)="goPage(i)">{{i}}</a>
+                              </li>
+                              <li class="page-item" *ngIf="pagination.pages.length > 1">
+                                <a class="page-link" (click)="goPage(pagination.page, '+')" aria-label="Next">
+                                  <span aria-hidden="true">&raquo;</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </nav>
+                    </div>
+                </div>
+                <div *ngIf="isForm">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="nombres">Nombre</label>
+                                <input type="text" (keyup.enter)="save()" class="form-control" id="nombres" [(ngModel)]="form.nombre">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="tipo">Tipo</label>
+                                <select (change)="changeTipo()" [disabled]="!isNew" class="form-control" name="tipo" id="tipo" [(ngModel)]="form.tipo">
+                                    <option value=""></option>
+                                    <option value="simple">Servicio estudiantil</option>
+                                    <option value="complejo">Carrera</option>
+                                </select>
+                                <!-- <input [disabled]="!isNew" type="text" (keyup.enter)="save()" class="form-control" id="tipo" [(ngModel)]="form.tipo"> -->
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group" *ngIf="form.tipo === 'simple'">
+                                <label for="servicio_id">Servicio</label>
+                                <select [disabled]="!isNew" name="servicio_id" id="servicio_id" class="form-control"  [(ngModel)]="form.servicio_id">
+                                    <option value=""></option>
+                                    <option [value]="i.id" *ngFor="let i of serviciosEstudiantil">{{i.nombre}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group" *ngIf="form.tipo === 'complejo'">
+                                <label for="servicio_id">Servicio</label>
+                                <select (change)="getLapso()" [disabled]="!isNew" name="servicio_id" id="servicio_id" class="form-control"  [(ngModel)]="form.servicio_id">
+                                    <option value=""></option>
+                                    <option [value]="i.id" *ngFor="let i of carreras">{{i.nombre}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'simple'">
+                            <div class="form-group">
+                                <label for="fecha_vencimiento">Fecha vencimiento</label>
+                                <input [disabled]="!isNew" type="date" (keyup.enter)="save()" class="form-control" id="fecha_vencimiento" [(ngModel)]="form.fecha_vencimiento">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'simple'">
+                            <div class="form-group">
+                                <label for="mon_total">Monto</label>
+                                <input [disabled]="!isNew" type="number" (keyup.enter)="save()" class="form-control" id="mon_total" [(ngModel)]="form.mon_total">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'complejo'">
+                            <div class="form-group">
+                                <label for="inscripcion">Inscripcion</label><br>
+                                <input (change)="cuotasUpdate()" [disabled]="!isNew" type="checkbox" (keyup.enter)="save()" class="form-controla" id="inscripcion" [(ngModel)]="form.inscripcion">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'complejo'">
+                            <div class="form-group">
+                                <label for="num_cuotas">Numero de cuotas</label>
+                                <select (change)="cuotasUpdate()" [disabled]="!isNew" name="num_cuotas" id="num_cuotas" class="form-control"  [(ngModel)]="form.num_cuotas">
+                                    <option value=""></option>
+                                    <option [value]="i" *ngFor="let i of numeroCuotas">{{i}}</option>
+                                </select>
+                                <!-- <input type="number" (keyup.enter)="save()" class="form-control" id="num_cuotas" [(ngModel)]="form.num_cuotas"> -->
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'complejo'">
+                            <div class="form-group">
+                                <label for="mon_total">Monto total</label>
+                                <input [disabled]="!isNew" type="number" (keyup.enter)="save();" (keyup)="cuotasUpdate()" class="form-control" id="mon_total" [(ngModel)]="form.mon_total">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'complejo'">
+                            <div class="form-group">
+                                <label for="lapso_codigo">Lapso</label>
+                                <select [disabled]="!isNew" (change)="cuotasUpdate()"  name="lapso_codigo" id="lapso_codigo" class="form-control"  [(ngModel)]="form.lapso_codigo">
+                                    <option value=""></option>
+                                    <option [value]="i.codigo" *ngFor="let i of lapsos">{{i.codigo}}</option>
+                                </select>
+                                <!-- <input type="text" (keyup.enter)="save()" class="form-control" id="lapso_codigo" [(ngModel)]="form.lapso_codigo"> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="cuotas.length > 0">
+                        <div class="col-sm-12 col-md-6">
+                            <table class="table table-sm table-bordered">
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Valor</th>
+                                    <th>Fecha de vencimiento</th>
+                                </tr>
+                                <tr *ngFor="let i of cuotas">
+                                    <td>
+                                        <input [disabled]="!isNew ? '' : null" type="text" class="form-control form-control-sm" [(ngModel)]="i.nombre">
+                                    </td>
+                                    <td>
+                                        <input [disabled]="!isNew ? '' : null" type="text" class="form-control form-control-sm" [(ngModel)]="i.description">
+                                    </td>
+                                    <td>
+                                        <input [disabled]="!isNew ? '' : null" type="text" class="form-control form-control-sm text-right" [(ngModel)]="i.valor">
+                                    </td>
+                                    <td>
+                                        <input [disabled]="!isNew ? '' : null" type="date" class="form-control form-control-sm" [(ngModel)]="i.fecha_vencimiento">
+                                    </td>
+                                </tr>
+                            </table>
+                            <code *ngIf="false">
+                                {{cuotas | json}}
+                            </code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hdmodal hdmodal-sm" id="modal-delete">
+    <div class="hdmodal-content">
+        <div class="card p-0">
+            <h5 class="py-2 px-3 modal-title flex">
+                Confirmación
+                <i class="fa fa-times ml-auto closer" (click)="modalDeleteClose()"></i>
+            </h5>
+            <div class="container p-3">
+              <h4 class="mb-0" *ngIf="selected.selected.length === 1">¿Desea eliminar el registro?</h4>
+              <h4 class="mb-0" *ngIf="selected.selected.length > 1">¿Desea eliminar los registros?</h4>
+            </div>
+            <div class="hdmodal-footer">
+              <div class="row mt-2">
+                <div class="col-md-12">
+                  <div class="d-flex flex-row-reverse">
+                    <button class="btn btn-primary ml-2" (click)="delete()">ELIMINAR</button>
+                    <button class="btn btn-secoundary" (click)="modalDeleteClose()">No</button>
+                  </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+  </div>

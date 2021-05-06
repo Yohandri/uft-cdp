@@ -1,0 +1,185 @@
+<div class="p-2"  >
+    <div class="container-fluid ">
+        <div class="row bg-white">
+            <div class="col">
+                <h3 class="mt-2">Usuario<span *ngIf="!isForm">s</span>
+                    <button class="btn btn-primary float-right btn-sm" (click)="new()" [ngStyle]="{'opacity': filter.isFilter ? .6 : 1}" *ngIf="!isForm">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        Nuevo
+                    </button>
+                    <button class="btn btn-primary float-right btn-sm ml-2" (click)="save()" *ngIf="isForm">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                        Guardar
+                    </button>
+                    <button class="btn btn-primary float-right btn-sm" (click)="cancelar()" *ngIf="isForm">
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        Regresar
+                    </button>
+                    <button class="btn btn-primary float-right btn-sm mr-2" (click)="initDelete()" *ngIf="!isForm && selected.selected.length > 0">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                        Eliminar
+                    </button>
+                    <div class="btn-group btn-group-sm float-right mr-2" role="group">
+                        <button class="btn btn-primary btn-sm" (click)="refreshData()" *ngIf="!isForm && filter.isFilter">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            Buscar
+                        </button>
+                        <button class="btn btn-secondary btn-sm" (click)="resetFilter()" *ngIf="!isForm && filter.isFilter">
+                            <i class="fa fa-filter" aria-hidden="true"></i>
+                            Limpiar
+                        </button>    
+                    </div>
+                </h3>
+                <div *ngIf="!isForm">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <tr class="inputFilter head">
+                                <th></th>
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por cedula" tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.cedula">
+                                </th>
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por nombres" tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.nombre">
+                                </th>
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por apellidos"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.apellido">
+                                </th>
+                                <th>
+                                    <select tabindex="-1" (change)="refreshData()" class="form-controlw" id="userType" [(ngModel)]="filter.profile_id">
+                                        <option value="">Búsqueda por tipo de usuario</option>
+                                        <option value="1">Administrador</option>
+                                        <option value="2">Administración</option>
+                                        <option value="3">Estudiante</option>
+                                      </select>
+                                </th>
+                            </tr>
+                            <tr class="head">
+                                <th>
+                                    <input type="checkbox" (click)="selected.selectAll()" [(ngModel)]="selected.isSelectAll">
+                                </th>
+                                <th>Cedula</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Tipo de usuario</th>
+                            </tr>
+                            <tr *ngFor="let i of data" >
+                                <td>
+                                    <input type="checkbox" [(ngModel)]="selected.value[i.id].value">
+                                </td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.cedula}}</td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.nombre}} </td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.apellido}}</td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.profile_id}}</td>
+                            </tr>
+                            <tr *ngIf="data.length === 0">
+                                <td class="text-center" colspan="5" *ngIf="!loadData">
+                                    <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+                                </td>
+                                <td class="text-center" colspan="5" *ngIf="loadData">
+                                    No hay registros
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <!-- {{pagination | json}} -->
+                        <nav aria-label="Page navigation example">
+                            
+                            <ul class="pagination justify-content-end" >
+                              <li> Registros por pagina
+                                <select (change)="refreshData()" [(ngModel)]="pagination.per_page">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                </select>
+                              </li>
+                              <li class="page-item" *ngIf="pagination.pages.length > 1">
+                                <a class="page-link" (click)="goPage(pagination.page, '-')" aria-label="Previous">
+                                  <span aria-hidden="true">&laquo;</span>
+                                </a>
+                              </li>
+                              <li *ngFor="let i of pagination.pages" [ngClass]="{'active': pagination.page === i}" class="page-item">
+                                  <a class="page-link" (click)="goPage(i)">{{i}}</a>
+                              </li>
+                              <li class="page-item" *ngIf="pagination.pages.length > 1">
+                                <a class="page-link" (click)="goPage(pagination.page, '+')" aria-label="Next">
+                                  <span aria-hidden="true">&raquo;</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </nav>
+                    </div>
+                </div>
+                <div *ngIf="isForm">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="cedula">Cedula</label>
+                                <input type="text" (keyup.enter)="save()" class="form-control" id="cedula" [(ngModel)]="form.cedula">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="nombres">Nombres</label>
+                                <input type="text" (keyup.enter)="save()" class="form-control" id="nombres" [(ngModel)]="form.nombre">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="apellidos">Apellidos</label>
+                                <input type="text" (keyup.enter)="save()" class="form-control" id="apellidos" [(ngModel)]="form.apellido">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="correo">Correo</label>
+                                <input type="email" (keyup.enter)="save()" class="form-control" id="correo" [(ngModel)]="form.correo">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="userType">Tipo de usuario</label>
+                                <select class="form-control" id="userType" [(ngModel)]="form.profile_id">
+                                  <option value="1">Administrador</option>
+                                  <option value="2">Administración</option>
+                                  <option value="3" disabled>Estudiante</option>
+                                </select>
+                              </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12" *ngIf="isNew">
+                            <div class="form-group">
+                                <label for="password">Contraseña</label>
+                                <input type="password" (keyup.enter)="save()" class="form-control" id="password" [(ngModel)]="form.password">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hdmodal hdmodal-sm" id="modal-delete">
+    <div class="hdmodal-content">
+        <div class="card p-0">
+            <h5 class="py-2 px-3 modal-title flex">
+                Confirmación
+                <i class="fa fa-times ml-auto closer" (click)="modalDeleteClose()"></i>
+            </h5>
+            <div class="container p-3">
+              <h4 class="mb-0" *ngIf="selected.selected.length === 1">¿Desea eliminar el registro?</h4>
+              <h4 class="mb-0" *ngIf="selected.selected.length > 1">¿Desea eliminar los registros?</h4>
+            </div>
+            <div class="hdmodal-footer">
+              <div class="row mt-2">
+                <div class="col-md-12">
+                  <div class="d-flex flex-row-reverse">
+                    <button class="btn btn-primary ml-2" (click)="delete()">ELIMINAR</button>
+                    <button class="btn btn-secoundary" (click)="modalDeleteClose()">No</button>
+                  </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+  </div>

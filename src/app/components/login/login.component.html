@@ -9,7 +9,7 @@
                                 class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center auth-img-bg p-3">
                                 <img _ngcontent-fed-c192="" src="./assets/img/Logo-uft.png" alt="logo" width="300"
                                     height="230" class="img-fluid"></div>
-                            <div _ngcontent-fed-c192="" class="col-lg-6 col-12 px-4 py-3" *ngIf="!isRegister">
+                            <div _ngcontent-fed-c192="" class="col-lg-6 col-12 px-4 py-3" *ngIf="!isRegister && !isConfirm">
                                 <h4 _ngcontent-fed-c192="" class="mb-2 card-title">
                                     Iniciar sesión
                                     <span class="float-right" *ngIf="system.isMobile">
@@ -113,7 +113,7 @@
                                             required="" class="form-control ng-untouched ng-pristine ng-valid">
                                         <!---->
                                     </div>
-                                    <div class="mb-2 text-center d-flex" [ngStyle]="{'overflow-x': 'auto', 'overflow-y': 'hidden'}" style="width: 100%;margin: auto;">
+                                    <!-- <div class="mb-2 text-center d-flex" [ngStyle]="{'overflow-x': 'auto', 'overflow-y': 'hidden'}" style="width: 100%;margin: auto;">
                                         <re-captcha
                                         style="width: 100%;text-align: center;margin: auto;"
                                             [(ngModel)]="formRegister.captcha"
@@ -122,7 +122,7 @@
                                             siteKey="6LcOuyYTAAAAAHTjFuqhA52fmfJ_j5iFk5PsfXaU"
                                             #captchaControl="ngModel"
                                         ></re-captcha>
-                                    </div>
+                                    </div> -->
                                     <div _ngcontent-fed-c192=""
                                             class="d-flex justify-content-between flex-sm-row flex-column">
                                             <a
@@ -133,6 +133,39 @@
                                     </div>
                                 </form>
                             </div>
+                            <div _ngcontent-fed-c192="" class="col-lg-6 col-12 px-4 py-3" *ngIf="isConfirm">
+                                <h4 _ngcontent-fed-c192="" class="mb-2 card-title">
+                                    Confirmar
+                                    <span class="float-right" *ngIf="system.isMobile">
+                                        <img _ngcontent-fed-c192="" src="./assets/img/Logo-uft.png" alt="logo" width="120"
+                                    height="120" class="img-fluid" style="top: -10px;position: relative;" >
+                                    </span>
+                                </h4>
+                                <p _ngcontent-fed-c192="">Le enviamos código de confirmación a su correo, por favor confirme para completar registro.</p>
+                                <div>
+                                    <div _ngcontent-fed-c192="" class="form-group">
+                                        <input _ngcontent-fed-c192=""
+                                        [(ngModel)]="code_confirm"
+                                        name="code_confirm"
+                                            type="number" placeholder="Código de confirmación"
+                                            required="" class="form-control ng-untouched ng-pristine ng-valid">
+                                        <!---->
+                                    </div>
+                                    <div _ngcontent-fed-c192="" class="form-group">
+                                        <input _ngcontent-fed-c192="" [(ngModel)]="newPassword"  
+                                            type="password" placeholder="Contraseña"
+                                            required="" class="form-control ng-untouched ng-pristine ng-valid">
+                                        </div>
+                                </div>
+                                <div _ngcontent-fed-c192=""
+                                            class="d-flex justify-content-between flex-sm-row flex-column">
+                                            <a
+                                                _ngcontent-fed-c192="" class="btn bg-outline-primary mb-2 mb-sm-0"
+                                                 [style]="{'opacity': '1', 'cursor': 'pointer'}" (click)="registerCancel()" >Cancelar</a>
+                                            <button
+                                                _ngcontent-fed-c192="" class="btn btn-primary" type="button" (click)="confirmcode()" [disabled]="code_confirm?.length > 3 && newPassword?.length > 5">Confirmar</button>
+                                    </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -140,7 +173,9 @@
         </div>
     </div>
 </section>
-
+<div class="overlayCustom" *ngIf="system.loading">
+    <mat-progress-bar  mode="indeterminate"></mat-progress-bar>
+</div>
 
 
 <!-- <div [ngClass]="{'mb-auto': !canInstallApp}" class="card mx-auto mt-auto" style="min-width: 400px;" *ngIf="!system.decodedToken">

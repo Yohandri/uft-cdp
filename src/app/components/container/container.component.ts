@@ -14,5 +14,12 @@ export class ContainerComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  logout() {
+    this.system.message('Hasta luego', 'success');
+    localStorage.removeItem('access_token');
+    setTimeout(() => {
+      location.reload();
+    }, 1000);
+  }
 
 }

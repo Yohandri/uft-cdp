@@ -6,15 +6,18 @@
                 <i (click)="system.btnToggleSidebar()" id="btnToggleSidebar" _ngcontent-hkb-c112="" class="btnToggleSidebar fa fa-bars"></i>
             </div>
             <div class="navbar-title">
-                <h5 *ngIf="system.module === ''" class="m-0 color-white"><i class="fa fa-dollar mr-2 ml-2"></i>Gestión de pagos</h5>
-                <h5 *ngIf="system.module === 'user-create'" class="m-0 color-white"><i class="fa fa-users mr-2 ml-2"></i>New user</h5>
+                <h5 class="m-0 color-white">
+                    <i class="fa fa-{{system.module.icon}} mr-2 ml-2"></i>
+                    {{system.module.name}}
+                </h5>
+                <!-- <h5 *ngIf="system.module === 'user-create'" class="m-0 color-white"><i class="fa fa-users mr-2 ml-2"></i>New user</h5>
                 <h5 *ngIf="system.module === 'user-update'" class="m-0 color-white"><i class="fa fa-users mr-2 ml-2"></i>User</h5>
                 <h5 *ngIf="system.module === 'user'" class="m-0 color-white"><i class="fa fa-users mr-2 ml-2"></i>Users</h5>
                 <h5 *ngIf="system.module === 'order'" class="m-0 color-white"><i class="fa fa-dollar mr-2 ml-2"></i>Orders</h5>
                 <h5 *ngIf="system.module === 'order-update'" class="m-0 color-white"><i class="fa fa-dollar mr-2 ml-2"></i>Order</h5>
                 <h5 *ngIf="system.module === 'product'" class="m-0 color-white"><i class="fa fa-product-hunt mr-2 ml-2"></i>Products</h5>
                 <h5 *ngIf="system.module === 'profile'" class="m-0 color-white"><i class="fa fa-user mr-2 ml-2"></i>Profile</h5>
-                <h5 *ngIf="system.module === 'drivers'" class="m-0 color-white"><i class="fa fa-id-card-o mr-2 ml-2"></i>Drivers</h5>
+                <h5 *ngIf="system.module === 'drivers'" class="m-0 color-white"><i class="fa fa-id-card-o mr-2 ml-2"></i>Drivers</h5> -->
             </div>
             <!-- <h4 id="titleh4">Groceries to shop</h4> -->
             <!-- <ul _ngcontent-hkb-c112="" class="navbar-nav">
@@ -64,7 +67,7 @@
                         </div>d-lg-block
                     </li> -->
                     <li class="nav-item mr-2 mt-1 mr-4">
-                        <div *ngIf="system.module === 'user-create' || system.module === 'user-update'" class="contents">
+                        <!-- <div *ngIf="system.module === 'user-create' || system.module === 'user-update'" class="contents">
                             <button class="btn btn-primary ml-auto" (click)="system.goto('user')"><i class="fa fa-arrow-left mr-1"></i>Back</button>
                             <button class="btn btn-primary ml-2" ><i class="fa fa-save mr-1"></i>Save</button>
                         </div>
@@ -81,7 +84,7 @@
                         </div>
                         <div *ngIf="system.module === 'profile'" class="contents">
                             <button class="btn btn-primary ml-auto" >Change password</button>
-                        </div>
+                        </div> -->
                     </li>
                     <li _ngcontent-hkb-c112="" class="nav-item d-none mr-2 mt-1">
                         <a _ngcontent-hkb-c112=""
@@ -247,8 +250,8 @@
                                 <div _ngcontent-hkb-c112="" class="d-flex align-items-center"><i _ngcontent-hkb-c112="" class="ft-mail mr-2"></i><span _ngcontent-hkb-c112="">My Inbox</span></div>
                             </a>
                             <div _ngcontent-hkb-c112="" class="dropdown-divider"></div>
-                            <a _ngcontent-hkb-c112="" routerlink="/pages/login" class="dropdown-item" href="https://pixinvent.com/apex-angular-4-bootstrap-admin-template/demo-1/pages/login">
-                                <div _ngcontent-hkb-c112="" class="d-flex align-items-center"><i _ngcontent-hkb-c112="" class="ft-power mr-2"></i><span _ngcontent-hkb-c112="">Logout</span></div>
+                            <a _ngcontent-hkb-c112="" class="dropdown-item" href="https://pixinvent.com/apex-angular-4-bootstrap-admin-template/demo-1/pages/login">
+                                <div _ngcontent-hkb-c112="" class="d-flex align-items-center"><i _ngcontent-hkb-c112="" class="ft-power mr-2"></i><span _ngcontent-hkb-c112="" (click)="logout()">Logout</span></div>
                             </a>
                         </div>
                     </li>
@@ -283,34 +286,34 @@
             <div class="sidebar-content main-menu-content ng-tns-c125-10 ps ps--active-y">
                 <div class="nav-container ng-tns-c125-10">
                     <ul appsidebardropdown="" class="navigation ng-tns-c125-10">
-                        <li  appsidebarlink="" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="" routerLinkActive="active">
+                        <!-- <li  appsidebarlink="" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-usd"></i><span class="menu-title ng-tns-c125-10 ">Gestión de pagos</span>
                             </a>
-                            <!--(click)="system.btnToggleSidebar()"-->
-                            <!---->
-                            <!--<span class="ng-tns-c125-10 badge badge-pill badge-danger float-right mr-1 mt-1 ng-star-inserted">2</span>-->
-                            <!-- <ul appsidebardropdown="" class="menu-content ng-tns-c125-10 ng-star-inserted">
-                  <li appsidebarlink="" class="ng-tns-c125-10 ng-star-inserted active">
-                    <a appsidebaranchortoggle="" class="ng-tns-c125-10 ng-star-inserted"
-                      href="https://pixinvent.com/apex-angular-4-bootstrap-admin-template/demo-1/dashboard/dashboard1"><i
-                        class="ng-tns-c125-10 ft-arrow-right submenu-icon"></i><span
-                        class="menu-title ng-tns-c125-10">Tablero1</span>
-                      </a>
-                  </li>
-                  <li appsidebarlink="" class="ng-tns-c125-10 ng-star-inserted">
-                    <a appsidebaranchortoggle="" class="ng-tns-c125-10 ng-star-inserted"
-                      href="https://pixinvent.com/apex-angular-4-bootstrap-admin-template/demo-1/dashboard/dashboard2"><i
-                        class="ng-tns-c125-10 ft-arrow-right submenu-icon"></i><span
-                        class="menu-title ng-tns-c125-10">Tablero2</span>
-                      </a> *ngIf="system.decodedToken.role === 'administrator'"
-                  </li>
-                </ul>(click)="system.btnToggleSidebar()" -->
-                            <!---->
+                        </li> -->
+                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="users" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('gp/users')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-user"></i><span class="menu-title ng-tns-c125-10">Gestión de usuarios</span>
+                            </a>
                         </li>
-                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="1" routerLinkActive="active">
-                            <a appsidebaranchortoggle="" (click)="system.goto('')" class="ng-tns-c125-10 ng-star-inserted">
-                                <i class="fa fa-user"></i><span class="menu-title ng-tns-c125-10">Gestion de usuarios</span>
+                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="services" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('gp/services')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-server" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Gestión de servicios</span>
+                            </a>
+                        </li>
+                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="planes" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('gp/planes')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-handshake-o" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Gestión de planes</span>
+                            </a>
+                        </li>
+                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="pagos" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('gp/pagos')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-usd" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Pagos</span>
+                            </a>
+                        </li>
+                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="tipopago" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('gp/tipopago')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-money" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Tipos de pago</span>
                             </a>
                         </li>
                         <!-- <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="2" routerLinkActive="active">
@@ -318,7 +321,7 @@
                                 <i class="fa fa-exchange"></i><span class="menu-title ng-tns-c125-10">Matching</span>
                             </a>
                         </li> -->
-                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="3" routerLinkActive="active">
+                        <!-- <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="3" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-upload"></i><span class="menu-title ng-tns-c125-10">Cargar archivo</span>
                             </a>
@@ -332,9 +335,9 @@
                             <a appsidebaranchortoggle="" (click)="system.goto('')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-cogs"></i><span class="menu-title ng-tns-c125-10">Configuración</span>
                             </a>
-                        </li>
+                        </li> -->
                         <li  appsidebarlink="" class="ng-tns-c125-10 has-sub ng-star-inserted">
-                            <a appsidebaranchortoggle="" (click)="system.goto('')" class="ng-tns-c125-10 ng-star-inserted">
+                            <a appsidebaranchortoggle="" (click)="logout()" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-sign-out"></i><span class="menu-title ng-tns-c125-10">Cerrar sesión</span>
                             </a>
                         </li>
@@ -364,4 +367,7 @@
             </footer>
         </div>
     </div>
+</div>
+<div class="overlayCustom" *ngIf="system.loading">
+    <mat-progress-bar  mode="indeterminate"></mat-progress-bar>
 </div>
