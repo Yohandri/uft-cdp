@@ -1,0 +1,374 @@
+<div class="container-fluid">
+    <div class="row card">
+        <div class="col-sm-12 col-md-12 mt-2">
+            <ul class="nav nav-tabs bg-white">
+                <li class="nav-item">
+                  <a  class="nav-link" [ngClass]="{'active': tabSelect === 0}" (click)="selectTab(0)">
+                    <i class="fa fa-file-o" [ngClass]="{'mr-2': !system.isMobile}" aria-hidden="true"></i>
+                    <span *ngIf="!system.isMobile">Materias</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" [ngClass]="{'active': tabSelect === 1}" (click)="selectTab(1)">
+                    <i class="fa fa-money" [ngClass]="{'mr-2': !system.isMobile}" aria-hidden="true"></i>
+                    <span *ngIf="!system.isMobile">Materias por cancelar <span *ngIf="cuotasPendientes > 0" class="badge badge-light">{{cuotasPendientes}}</span></span>
+                  </a>
+                </li>
+            </ul>
+            <h2 *ngIf="system.isMobile && tabSelect === 0" class="bg-primary mb-0">Materias</h2>
+            <h2 *ngIf="system.isMobile && tabSelect === 1" class="bg-primary mb-0">Materias por cancelar</h2>
+            <div class="bg-white p-2 tabTranssition" *ngIf="tabSelect === 0">
+                <h3>Materias</h3>
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <select name="materiaSelect" id="materiaSelect" class="form-control" [(ngModel)]="materiaSelect">
+                                <option value="">Seleccióne materia</option>
+                                <option [value]="i?.codigo" *ngFor="let i of materiasList">{{i?.nombre}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="materiaSelect !== ''">
+                            <h5>
+                                La materia <b>{{materias?.nombre}}</b> tiene un costo de <b>{{system.toBs(materias?.plan?.mon_total) | currency: ' ': ' '}} Bs</b>
+                            </h5> 
+                            <button class="btn btn-outline-primary btn-large mr-2" (click)="materiaSelect = ''">
+                                Cancelar
+                            </button>
+                            <button class="btn btn-primary btn-large" (click)="solicitar_servicio()">
+                                Confirmar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                 <!-- <code>
+                    {{materias | json}}
+                </code>  -->
+            </div>
+            <div class="bg-white p-2 tabTranssition" *ngIf="tabSelect === 1">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">
+                      <h3>Cuotas
+                        <button class="btn btn-primary float-right btn-sm mr-2" (click)="initDelete()" *ngIf="selected.selected.length > 0">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                            Eliminar
+                        </button>
+                      </h3>
+                      
+                      <div class="table-responsive">
+                        <div class="text-center" *ngIf="!displayCuotas">
+                          <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                        </div>
+                        <table class="table table-sm table-bordered" *ngIf="displayCuotas">
+                          <tr class="head">
+                            <th>
+                                <input type="checkbox" (click)="selected.selectAll()" [(ngModel)]="selected.isSelectAll">
+                            </th>
+                            <th>Servicio</th>
+                            <!-- <th>Fecha de vencimiento</th> -->
+                            <th>Estado</th>
+                            <th class="text-right">Monto</th>
+                            <th class="text-right">Resta</th>
+                            <th>
+                              <button class="float-right mr-2" nz-button nz-popover [nzPopoverTitle]="titleTemplate" [nzPopoverContent]="contentTemplate" nzPopoverPlacement="leftTop">
+                                <i class="fa fa-info"></i>
+                              </button>
+                              <ng-template #titleTemplate>Estados
+                                <!-- <i nz-icon nzType="close"></i> Title -->
+                              </ng-template>
+                              <ng-template #contentTemplate>
+                                <div class="p-1 estado-confirmado">
+                                  <i nz-icon nzType="check"></i> Confirmado
+                                </div>
+                                <div class="p-1 estado-pagado">
+                                  <i nz-icon nzType="check"></i> Por confirmar
+                                </div>
+                                <div class="p-1 estado-parcial">
+                                  <i nz-icon nzType="check"></i> Parcial
+                                </div>
+                                <div class="p-1">
+                                  <i nz-icon nzType="check"></i> Pendiente
+                                </div>
+                                <div class="p-1 estado-vencido">
+                                  <i nz-icon nzType="check"></i> Vencido
+                                </div>
+                              </ng-template>
+                            </th>
+                          </tr>
+                          <tr *ngFor="let i of cuotas" [ngClass]="{'estado-pagado': i.estado === 'pagado' && i.guid === null, 'estado-parcial': i.estado === 'parcial' && i.guid === null, 'estado-confirmado': i.guid === '1'}">
+                            <td>
+                                <input type="checkbox" [(ngModel)]="selected.value[i.id].value">
+                            </td>
+                            <td>{{i.nombre}}</td>
+                            <!-- <td>{{i.fecha_vencimiento}}</td> -->
+                            <td >{{i.estado}}</td>
+                            <td class="text-right">
+                              <h5 *ngIf="i.estado !== 'pagado'">{{system.toBs(i.monto) | currency: '': ''}} Bs / <small>{{system.toPetro(i.monto)}} P</small><small *ngIf="false">({{i.monto}})</small></h5>
+                              <h5 *ngIf="i.estado === 'pagado'">{{getTotalPagado(i.pagos) | currency: '': ''}} Bs / <small>{{system.toPetro(system.toD(getTotalPagado(i.pagos)))}} P</small><small *ngIf="false">({{i.monto}})</small></h5>
+                            </td>
+                            <td class="text-right">
+                              <h5 *ngIf="i.estado !== 'pagado'">{{system.toBs(i.monto - i.pagado) | currency: '': ''}} Bs  / <small>{{system.toPetro(i.monto - i.pagado)}} P</small><small *ngIf="false">({{i.monto - i.pagado}})</small></h5>
+                              <h5 *ngIf="i.estado === 'pagado'">0 Bs <small *ngIf="false">({{i.monto - i.pagado}})</small></h5>
+                            </td>
+                            <td class="text-center">
+                              
+                              <div class="btn-group btn-group-sm float-right mr-2" role="group">
+                                <button *ngIf="i.estado !== 'pagado'" class="btn btn-primary btn-sm" (click)="initPay(i.id)">
+                                  Reportar pago
+                                </button>
+                                <button *ngIf="i?.pagos?.length > 0" class="btn btn-secondary btn-sm" (click)="verPagos(i)">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                </button>    
+                            </div>
+                            </td>
+                          </tr>
+                          <tr *ngIf="cuotas.length === 0">
+                            <td class="text-center" colspan="6">
+                              No tiene cuotas pendiente
+                            </td>
+                          </tr>
+                          <!-- <tr>
+                            <td>0151</td>
+                            <td>27/03/2021</td>
+                            <td>10,000,000.00 Bs</td>
+                            <td>80,000,000.00 Bs</td>
+                            <td>Incompleta</td>
+                            <td class="text-center">
+                              <button class="btn btn-primary btn-sm" (click)="initPay()">
+                                Reportar pago
+                              </button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>0151</td>
+                            <td>25/03/2021</td>
+                            <td>5,000,000.00 Bs</td>
+                            <td>80,000,000.00 Bs</td>
+                            <td>Incompleta</td>
+                            <td class="text-center">
+                              <i (click)="initCardPay()" class="fa fa-eye" aria-hidden="true"></i>
+                            </td>
+                          </tr> -->
+                        </table>
+                        <!-- <code>{{cuotas | json}}</code> -->
+                      </div>
+                      <nav aria-label="Page navigation example">
+                                      
+                        <ul class="pagination justify-content-end" >
+                          <li> Registros por pagina
+                            <select (change)="refreshData()" [(ngModel)]="pagination.per_page">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                            </select>
+                          </li>
+                          <li class="page-item" *ngIf="pagination.pages.length > 1">
+                            <a class="page-link" (click)="goPage(pagination.page, '-')" aria-label="Previous">
+                              <span aria-hidden="true">&laquo;</span>
+                            </a>
+                          </li>
+                          <li *ngFor="let i of pagination.pages" [ngClass]="{'active': pagination.page === i}" class="page-item">
+                              <a class="page-link" (click)="goPage(i)">{{i}}</a>
+                          </li>
+                          <li class="page-item" *ngIf="pagination.pages.length > 1">
+                            <a class="page-link" (click)="goPage(pagination.page, '+')" aria-label="Next">
+                              <span aria-hidden="true">&raquo;</span>
+                            </a>
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
+                  </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<div class="hdmodal hdmodal-sm" id="modal-delete">
+    <div class="hdmodal-content">
+        <div class="card p-0">
+            <h5 class="py-2 px-3 modal-title flex">
+                Confirmación
+                <i class="fa fa-times ml-auto closer" (click)="modalDeleteClose()"></i>
+            </h5>
+            <div class="container p-3">
+              <h4 class="mb-0" *ngIf="selected.selected.length === 1">¿Desea eliminar el registro?</h4>
+              <h4 class="mb-0" *ngIf="selected.selected.length > 1">¿Desea eliminar los registros?</h4>
+            </div>
+            <div class="hdmodal-footer">
+              <div class="row mt-2">
+                <div class="col-md-12">
+                  <div class="d-flex flex-row-reverse">
+                    <button class="btn btn-primary ml-2" (click)="delete()">ELIMINAR</button>
+                    <button class="btn btn-secoundary" (click)="modalDeleteClose()">No</button>
+                  </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="hdmodal hdmodal-md" id="modal-pay">
+    <div class="hdmodal-content">
+        <div class="card p-0">
+            <h5 class="py-2 px-3 modal-title flex">
+                Reportar pago
+                <i class="fa fa-times ml-auto closer" (click)="modalPayClose()"></i>
+            </h5>
+            <div class="container p-3">
+              <div class="row">
+                <div class="col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label for="payTypepay">Forma de pago</label>
+                    <select (change)="changeTypePay(form.tipo_pago_id)" [(ngModel)]="form.tipo_pago_id" id="payTypepay" class="form-control">
+                      <option value=""></option>
+                      <option [value]="i.id" *ngFor="let i of tipospago">{{i.nombre}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <h3 class="mb-0" *ngIf="form.tipo_pago_id !== '2'">Información del titular</h3>
+              <small *ngIf="form.tipo_pago_id !== '2'">Responsable del pago</small>
+                <div class="row mt-2">
+                  
+                    <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
+                      <div class="form-group">
+                        <label for="payName">Nombre</label>
+                        <input [(ngModel)]="form.titular_nombre" type="text" class="form-control" id="payName">
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
+                      <div class="form-group">
+                        <label for="payLastname">Apellido</label>
+                        <input [(ngModel)]="form.titular_apellido" type="text" class="form-control" id="payLastname">
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
+                      <div class="form-group">
+                        <label for="payCi">Cedula de identidad</label>
+                        <input [(ngModel)]="form.titular_celular" type="text" class="form-control" id="payCi">
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
+                      <div class="form-group">
+                        <label for="payPhone">Teléfono</label>
+                        <input [(ngModel)]="form.titular_telefono" type="tel" class="form-control" id="payPhone">
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12">
+                      <hr>
+                      <h3 class="mb-0">Información del pago</h3>
+                      <small>Datos de referencia del pago</small>
+                      
+                    </div>
+                    <div class="col-md-12 col-sm-12" *ngIf="form.tipo_pago_id === '2'">
+                      <p>
+                        Saldo disponible: <b [ngClass]="{'text-danger': restarSaldo(system.saldo) < 0}">{{ restarSaldo(system.saldo) | currency: ' ': ' '}} Bs</b>
+                      </p>
+                    </div>
+                    <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
+                      <div class="form-group">
+                        <label for="payBank">Banco</label>
+                        <select [(ngModel)]="form.banco_id" id="payBank" class="form-control">
+                          <option value=""></option>
+                          <option [value]="i.id" *ngFor="let i of bancos">{{i.nombre}}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
+                      <div class="form-group">
+                        <label for="payDate">Fecha</label>
+                        <input [(ngModel)]="form.fecha" type="date" class="form-control" id="payDate">
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
+                      <div class="form-group">
+                        <label for="payReferen">Referencia</label>
+                        <input [(ngModel)]="form.referencia" type="text" class="form-control" id="payReferen">
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                      <div class="form-group ">
+                        <label for="payAmount">Monto </label>
+                        <div class="input-group">
+                          <input currencyMask [(ngModel)]="form.montobs" [options]="{ prefix: '', thousands: ',', decimal: '.' }" type="text" class="form-control" id="payAmount" >
+                          <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon2">Bs.</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hdmodal-footer">
+              <div class="row mt-2">
+                <div class="col-md-12">
+                  <div class="d-flex flex-row-reverse">
+                    <button *ngIf="showConfirm()" (click)="confirm()" [attr.disabled]="form.isValidated ? null : '' " class="btn btn-primary ml-2" >Confirmar pago</button>
+                    <button class="btn btn-secundary ml-auto" (click)="modalPayClose()">Cancelar</button>
+                    
+                  </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="hdmodal hdmodal-md" id="modal-pagos">
+    <div class="hdmodal-content">
+      <div class="card p-0">
+        <h5 class="py-2 px-3 modal-title flex">
+          Pagos
+          <i class="fa fa-times ml-auto closer" (click)="modalPagosClose()"></i>
+        </h5>
+        <div class="containerpl-3 pr-3 pl-3 pb-3 pt-1">
+          <div class="d-flex flex-row-reverse mb-1" [style.height]="'29px'">
+            <button (click)="PagoDelete()" *ngIf="PagosSelected.selected.length > 0" class="btn btn-primary btn-sm ml-auto">
+              Eliminar
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered" >
+              <tr class="head">
+                <th></th>
+                <th>Fecha</th>
+                <th>Banco</th>
+                <th>Referencia</th>
+                <th>Cedula</th>
+                <th>Tipo de pago</th>
+                <!-- <th>Usuario</th> -->
+                <th class="text-right">Monto</th>
+              </tr>
+              <tr *ngFor="let i of pagos" [ngClass]="{'estado-confirmado': i.montobs_confirm}">
+                <td>
+                  <input [attr.disabled]="i.montobs_confirm ? '' : null" type="checkbox" [(ngModel)]="PagosSelected.value[i.id].value">
+                </td>
+                <td class="cursorPointer2">{{i.fecha}}</td>
+                <td class="cursorPointer2">{{getBanco(i.banco_id)}} </td>
+                <td class="cursorPointer2">{{i.referencia}} </td>
+                <td class="cursorPointer2">{{i.titular_cedula}} </td>
+                <td class="cursorPointer2">{{gettipopago(i.tipo_pago_id)}}</td>
+                <!-- <td class="cursorPointer2">{{i.user_id}}</td> -->
+                <td class="cursorPointer2 text-right">{{i.montobs | currency: '': ''}} Bs</td>
+              </tr>
+            </table>
+            <div *ngIf="pagos.length > 1">
+               <b class="float-right">Monto pagado: {{getTotalPagado(pagos) | currency: '': ''}} Bs</b>
+            </div>
+          </div>
+        </div>
+        <div class="hdmodal-footer">
+          <div class="row mt-2">
+            <div class="col-md-12">
+              <div class="d-flex flex-row-reverse">
+                <button class="btn btn-primary ml-2" (click)="modalPagosClose()">Cerrar</button>
+                
+              </div>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>

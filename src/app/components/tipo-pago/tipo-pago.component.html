@@ -2,8 +2,8 @@
     <div class="container-fluid ">
         <div class="row bg-white">
             <div class="col">
-                <h3 class="mt-2">Tipo<span *ngIf="!isForm">s </span> de pago
-                    <button class="btn btn-primary float-right btn-sm" (click)="new()" [ngStyle]="{'opacity': filter.isFilter ? .6 : 1}" *ngIf="!isForm">
+                <h3 class="mt-2" style="height: 28px;"><span *ngIf="!system.isMobile">Tipo<span *ngIf="!isForm">s </span> de pago</span>
+                    <button disabled class="btn btn-primary float-right btn-sm" (click)="new()" [ngStyle]="{'opacity': filter.isFilter ? .6 : 1}" *ngIf="!isForm">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Nuevo
                     </button>
@@ -44,14 +44,14 @@
                             </tr>
                             <tr class="head">
                                 <th>
-                                    <input type="checkbox" (click)="selected.selectAll()" [(ngModel)]="selected.isSelectAll">
+                                    <input disabled type="checkbox" (click)="selected.selectAll()" [(ngModel)]="selected.isSelectAll">
                                 </th>
                                 <th>Nombres</th>
                                 <th>Descripción</th>
                             </tr>
                             <tr *ngFor="let i of data" >
                                 <td>
-                                    <input type="checkbox" [(ngModel)]="selected.value[i.id].value">
+                                    <input disabled type="checkbox" [(ngModel)]="selected.value[i.id].value">
                                 </td>
                                 <td class="cursorPointer" (click)="edit(i)">{{i.nombre}} </td>
                                 <td class="cursorPointer" (click)="edit(i)">{{i.description}}</td>

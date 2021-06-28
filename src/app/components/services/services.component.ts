@@ -42,6 +42,9 @@ export class ServicesComponent implements OnInit {
   async ngOnInit() {
     this.system.module.name = 'Gestión de servicios';
     this.system.module.icon = 'server';
+    if (this.system.isMobile) {
+      this.system.module.name = 'Servicios';
+    }
     await this.getPeriodos();
     await this.refreshData();
   }

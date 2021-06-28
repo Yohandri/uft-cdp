@@ -27,12 +27,13 @@ class FormUser {
   correo = '';
   profile_id = '';
   password = '';
+  rp_user = {profile_id: 0}
   edit(user) {
     this.cedula = user.cedula;
     this.nombre = user.nombre;
     this.apellido = user.apellido;
     this.correo = user.correo;
-    this.profile_id = user.profile_id;
+    this.rp_user.profile_id = user.rp_user.profile_id;
     this.id = user.id;
   }
   get isFilter() {
@@ -97,6 +98,9 @@ export class UsersComponent implements OnInit {
   async ngOnInit() {
     this.system.module.name = 'Gestión de usuarios';
     this.system.module.icon = 'user';
+    if (this.system.isMobile) {
+      this.system.module.name = 'Usuarios';
+    }
     await this.refreshData();
     console.log(this.data);
   }
@@ -124,7 +128,7 @@ export class UsersComponent implements OnInit {
         this.system.loading = false;
         if (res.status === 200) {
           console.log(res);
-          if (res.object === 1) {
+          if (res.object) {
             this.system.message(res.message, 'success');
           }
           if (this.isNew) {
@@ -163,7 +167,7 @@ export class UsersComponent implements OnInit {
     this.data = [];
     this.loadData = false;
     this.selected.reset();
-    return this.system.post('api/users', {pagination: this.pagination, filter: this.filter }).then(res => {
+    return this.system.post('api/users?page=' + this.pagination.page, {pagination: this.pagination, filter: this.filter }).then(res => {
       try {
         this.loadData = true;
         if (res.status === 200) {
@@ -193,5 +197,15 @@ export class UsersComponent implements OnInit {
     this.pagination.page = ctrl === '+' ? page + 1 > this.pagination.last_page ? page : page + 1 : ctrl === '-' ? page - 1 < 1 ? 1 : page -1 : page;
     this.data = await this.refreshData();
   }
-
+  getNameProfile(id) {
+    if (id === 1) {
+      return 'Administrador';
+    }
+    if (id === 2) {
+      return 'Administración';
+    }
+    if (id === 3) {
+      return 'Estudiante';
+    } 
+  }
 }

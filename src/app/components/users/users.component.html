@@ -2,7 +2,7 @@
     <div class="container-fluid ">
         <div class="row bg-white">
             <div class="col">
-                <h3 class="mt-2">Usuario<span *ngIf="!isForm">s</span>
+                <h3 class="mt-2" style="height: 28px;"><span *ngIf="!system.isMobile">Usuario<span *ngIf="!isForm">s</span></span>
                     <button class="btn btn-primary float-right btn-sm" (click)="new()" [ngStyle]="{'opacity': filter.isFilter ? .6 : 1}" *ngIf="!isForm">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Nuevo
@@ -69,7 +69,7 @@
                                 <td class="cursorPointer" (click)="edit(i)">{{i.cedula}}</td>
                                 <td class="cursorPointer" (click)="edit(i)">{{i.nombre}} </td>
                                 <td class="cursorPointer" (click)="edit(i)">{{i.apellido}}</td>
-                                <td class="cursorPointer" (click)="edit(i)">{{i.profile_id}}</td>
+                                <td class="cursorPointer" (click)="edit(i)">{{getNameProfile(i.rp_user.profile_id)}}</td>
                             </tr>
                             <tr *ngIf="data.length === 0">
                                 <td class="text-center" colspan="5" *ngIf="!loadData">
@@ -139,7 +139,7 @@
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="userType">Tipo de usuario</label>
-                                <select class="form-control" id="userType" [(ngModel)]="form.profile_id">
+                                <select [attr.disabled]="form.rp_user.profile_id === 3 ? '' : null" class="form-control" id="userType" [(ngModel)]="form.rp_user.profile_id">
                                   <option value="1">Administrador</option>
                                   <option value="2">Administración</option>
                                   <option value="3" disabled>Estudiante</option>

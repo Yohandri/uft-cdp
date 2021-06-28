@@ -233,10 +233,36 @@
                             </li>
                         </ul>
                     </li>
+                    <li _ngcontent-hkb-c112="" *ngIf="system.isStudent && !system.isMobile" placement="bottom-left" display="static" ngbdropdown="" class="nav-item mr-1 dropdown">
+                        <a class=" d-flex align-items-end" style="cursor: default;" aria-expanded="false">
+                            <div *ngIf="system.saldo" _ngcontent-hkb-c112="" class="user  mr-2" style="cursor: default;">
+                                {{system.saldo | currency: ' ': ' '}} Bs <i style="cursor: default;" class="fa fa-money"></i>
+                                <!-- <span _ngcontent-hkb-c112="" class="text-right">{{system.decodedToken?.user?.nombre}}</span>
+                                <span _ngcontent-hkb-c112="" class="text-right text-muted font-small-3">{{system.decodedToken?.user?.ci}}</span> -->
+                            </div>
+                            <div *ngIf="!system.saldo" _ngcontent-hkb-c112="" class="user  mr-2" style="cursor: default;">
+                                0 Bs <i style="cursor: default;" class="fa fa-money"></i>
+                                <!-- <span _ngcontent-hkb-c112="" class="text-right">{{system.decodedToken?.user?.nombre}}</span>
+                                <span _ngcontent-hkb-c112="" class="text-right text-muted font-small-3">{{system.decodedToken?.user?.ci}}</span> -->
+                            </div>
+                        </a>
+                    </li>
+                    <li _ngcontent-hkb-c112="" *ngIf="system.isStudent && !system.isMobile" placement="bottom-left" display="static" ngbdropdown="" class="nav-item mr-1 dropdown">
+                        <a class=" d-flex align-items-end" style="cursor: default;" aria-expanded="false">
+                            <div _ngcontent-hkb-c112="" class="user d-md-flex  mr-2" *ngIf="system.isSolvente != null">
+                                <button class="btn  btn-sm" [ngClass]="{'btn-outline-danger': !system.isSolvente, 'btn-outline-success': system.isSolvente}" style="cursor: default;">
+                                    {{system.isSolvente ? 'Solvente' : 'MOROSO'}}
+                                </button>
+                                <!-- <span _ngcontent-hkb-c112="" class="text-right">{{system.decodedToken?.user?.nombre}}</span>
+                                <span _ngcontent-hkb-c112="" class="text-right text-muted font-small-3">{{system.decodedToken?.user?.ci}}</span> -->
+                            </div>
+                        </a>
+                    </li>
                     <li _ngcontent-hkb-c112="" placement="bottom-left" display="static" ngbdropdown="" class="nav-item mr-1 dropdown">
                         <!-- <button (click)="system.getOrders()">Syncr</button> -->
-                        <a _ngcontent-hkb-c112="" aria-haspopup="true" id="dropdownBasic2" (click)="system.goto('profile')" data-toggle="dropdown" ngbdropdowntoggle="" class="dropdown-toggle nav-link user-dropdown d-flex align-items-end" aria-expanded="false">
-                            <div _ngcontent-hkb-c112="" class="user d-md-flex d-none mr-2"><span _ngcontent-hkb-c112="" class="text-right">{{system.decodedToken?.firstname}}</span><span _ngcontent-hkb-c112="" class="text-right text-muted font-small-3">{{system.decodedToken?.role}}</span></div><img _ngcontent-hkb-c112=""
+                        
+                        <a _ngcontent-hkb-c112="" aria-haspopup="true" id="dropdownBasic2" (click)="system.goto('gp/profile')" data-toggle="dropdown" ngbdropdowntoggle="" class="dropdown-toggle nav-link user-dropdown d-flex align-items-end" aria-expanded="false">
+                            <div _ngcontent-hkb-c112="" class="user d-md-flex d-none mr-2"><span _ngcontent-hkb-c112="" class="text-right">{{system.decodedToken?.user?.nombre}}</span><span _ngcontent-hkb-c112="" class="text-right text-muted font-small-3">{{system.decodedToken?.user?.ci}}</span></div><img _ngcontent-hkb-c112=""
                                 src="./assets/img/user.png" alt="avatar" height="35" width="35" class="avatar">
                         </a>
                         <div _ngcontent-hkb-c112="" aria-labelledby="dropdownBasic2" ngbdropdownmenu="" class="dropdown-menu text-left dropdown-menu-right m-0 pb-0">
@@ -291,30 +317,74 @@
                                 <i class="fa fa-usd"></i><span class="menu-title ng-tns-c125-10 ">Gestión de pagos</span>
                             </a>
                         </li> -->
-                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="users" routerLinkActive="active">
+                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="users" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('gp/users')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-user"></i><span class="menu-title ng-tns-c125-10">Gestión de usuarios</span>
                             </a>
                         </li>
-                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="services" routerLinkActive="active">
+                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="services" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('gp/services')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-server" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Gestión de servicios</span>
                             </a>
                         </li>
-                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="planes" routerLinkActive="active">
+                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="planes" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('gp/planes')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-handshake-o" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Gestión de planes</span>
                             </a>
                         </li>
-                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="pagos" routerLinkActive="active">
+                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="pagos" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('gp/pagos')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-usd" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Pagos</span>
                             </a>
                         </li>
-                        <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="tipopago" routerLinkActive="active">
+                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="tipopago" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('gp/tipopago')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-money" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Tipos de pago</span>
                             </a>
+                        </li>
+                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="estudiantes" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('gp/estudiantes')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-users" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Gestión de estudiantes</span>
+                            </a>
+                        </li>
+                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="ajustes" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('gp/ajustes')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-cogs" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Ajustes</span>
+                            </a>
+                        </li>
+
+                        <li *ngIf="system.isStudent" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="estudiante" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('gp/estudiante')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-user" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Estudiante</span>
+                            </a>
+                        </li>
+                        <li *ngIf="system.isStudent" class="ng-tns-c125-10 has-sub ng-star-inserted" id="menuEDC" >
+                            <a appsidebaranchortoggle=""  class="ng-tns-c125-10 ng-star-inserted" (click)="menuClick($event)">
+                                <i class="fa fa-check" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Estado de cuentas</span>
+                            </a>
+                            <ul appsidebardropdown="" class="menu-content ng-tns-c125-10 ng-star-inserted">
+                                <li appsidebarlink="" class="ng-tns-c125-10 ng-star-inserted" routerLink="carreras" routerLinkActive="active">
+                                  <a appsidebaranchortoggle="" (click)="system.goto('gp/carreras')" class="ng-tns-c125-10 ng-star-inserted"
+                                    ><i
+                                      class="fa fa-bookmark submenu-icon"></i><span
+                                      class="menu-title ng-tns-c125-10">Carreras</span>
+                                    </a>
+                                </li>
+                                <li appsidebarlink="" class="ng-tns-c125-10 ng-star-inserted" routerLink="servicios" routerLinkActive="active">
+                                  <a appsidebaranchortoggle="" (click)="system.goto('gp/servicios')" class="ng-tns-c125-10 ng-star-inserted"
+                                    ><i
+                                      class="fa fa-file-o submenu-icon"></i><span
+                                      class="menu-title ng-tns-c125-10">Servicios</span>
+                                    </a>
+                                </li>
+                                <li appsidebarlink="" class="ng-tns-c125-10 ng-star-inserted" routerLink="intensivos" routerLinkActive="active">
+                                    <a appsidebaranchortoggle=""  (click)="system.goto('gp/intensivos')" class="ng-tns-c125-10 ng-star-inserted"
+                                      ><i
+                                        class="fa fa-book submenu-icon"></i><span
+                                        class="menu-title ng-tns-c125-10">Intensivos</span>
+                                      </a>
+                                  </li>
+                              </ul>
                         </li>
                         <!-- <li class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="2" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('')" class="ng-tns-c125-10 ng-star-inserted">
@@ -356,14 +426,18 @@
     <div _ngcontent-hkb-c126="" class="main-panel">
         <div _ngcontent-hkb-c126="" class="main-content">
             <div _ngcontent-hkb-c126="" class="content-overlay"></div>
-            <div _ngcontent-hkb-c126="" class="content-wrapper" [ngStyle]="{'padding-top': '60px'}">
+            <div _ngcontent-hkb-c126="" class="content-wrapper" [ngStyle]="{'margin-top': '60px', 'overflow-y': 'auto','max-height': '83vh'}">
                 <router-outlet _ngcontent-hkb-c126="" ></router-outlet>
                 
             </div>
         </div>
         <div _ngcontent-hkb-c126="" _nghost-hkb-c113="">
             <footer _ngcontent-hkb-c113="" class="footer">
-                <p _ngcontent-hkb-c113="" class="copyright clearfix text-muted m-0"> Copyright © 2021 <a _ngcontent-hkb-c113="" id="pixinventLink" href="#">App</a><span _ngcontent-hkb-c113="" class="d-none d-sm-inline-block">, All rights reserved.</span></p>
+                <p _ngcontent-hkb-c113="" class="copyright clearfix text-muted m-0"> Copyright © 2021 <a _ngcontent-hkb-c113="" id="pixinventLink" href="#">App</a><span _ngcontent-hkb-c113="" class="d-none d-sm-inline-block">, All rights reserved.</span> 
+                    <button *ngIf="system.isStudent && system.isMobile" class="btn  btn-sm float-right" [ngClass]="{'btn-outline-danger': !system.isSolvente, 'btn-outline-success': system.isSolvente}" style="cursor: default;">
+                        {{system.isSolvente ? 'Solvente' : 'MOROSO'}}
+                    </button>
+                </p>
             </footer>
         </div>
     </div>

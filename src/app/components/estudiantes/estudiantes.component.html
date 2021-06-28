@@ -1,0 +1,183 @@
+<div class="container-fluid page-content with-navbar" [ngClass]="{'with-sidebar': system.sidebarOn}" *ngIf="ready">
+    <div class="row m-0 py-2">
+        <div class="col-md-12">
+            <div class="card container-fluid">
+                <div class="row mt-1">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="">Cedula del estudiante</label>
+                            <div class="input-group">
+                                <input [(ngModel)]="cedula" (keyup.enter)="search()" type="text" class="form-control form-control-md">
+                                <div class="input-group-append">
+                                    <button (click)="search()" [disabled]="cedula.length < 7" class="btn btn-primary" type="button">Buscar</button>
+                                  </div>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="user.nombre !== ''">
+                            <div class="col-md-12 col-sm-12 mb-2">
+                                Nombre: <b>{{user.nombre}}</b> <br>
+                                Apellido: <b>{{user.apellido}}</b> <br>
+                                Correo: <b>{{user.correo}}</b> <br>
+                                Solvente: <b [ngClass]="{'text-danger': !solvente, 'text-success': solvente}">{{solvente ? 'Si' : 'No'}}</b> <br>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="isSearch">
+                    <div class="col">Buscando...</div>
+                </div>
+                <div class="row" *ngIf="!isSearch">
+                    <div class="col-md-6 col-sm-12 mt-2" *ngIf="cuotas.length > 0">
+                        <h4>Cuotas vencidas 
+                            <button (click)="reportarPagoModal()" class="btn mb-2 btn-primary btn-sm float-right" *ngIf="selectedCuotasVencidas.selected.length > 0">
+                                Reportar pago
+                            </button>
+                        </h4>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered">
+                                <tr class="head">
+                                    <th>
+                                        <input type="checkbox" (click)="selectedCuotasVencidas.selectAll()" [(ngModel)]="selectedCuotasVencidas.isSelectAll">
+                                    </th>
+                                    <th>Carrera</th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Fecha de vencimiento</th>
+                                    <th class="text-right">Monto</th>
+                                </tr>
+                                <tr *ngFor="let i of cuotas">
+                                    <td>
+                                        <input type="checkbox" [(ngModel)]="selectedCuotasVencidas.value[i.id].value">
+                                    </td>
+                                    <td>{{i.c_e_lapso?.carrera?.nombre}}</td>
+                                    <td>{{i.nombre}}</td>
+                                    <td>{{i.description}}</td>
+                                    <td>{{i.fecha_vencimiento}}</td>
+                                    <td class="text-right">
+                                        <span> Bs  {{system.toBs(i.monto) | currency: ' ': ' '}}</span> 
+                                        <small> ({{i.monto}} $)</small>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12 mt-2" *ngIf="cuotas_pendientes.length > 0">
+                        <h4>Cuotas pendientes
+                            <button (click)="reportarPagoModal(1)" class="btn mb-2 btn-primary btn-sm float-right" *ngIf="selectedCuotasPendientes.selected.length > 0">
+                                Reportar pago
+                            </button>
+                        </h4>
+                        <div>
+                            <table class="table table-sm table-bordered">
+                                <tr class="head">
+                                    <th>
+                                        <input type="checkbox" (click)="selectedCuotasPendientes.selectAll()" [(ngModel)]="selectedCuotasPendientes.isSelectAll">
+                                    </th>
+                                    <th>Carrera</th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Fecha de vencimiento</th>
+                                    <th class="text-right">Monto</th>
+                                </tr>
+                                <tr *ngFor="let i of cuotas_pendientes">
+                                    <td>
+                                        <input type="checkbox" [(ngModel)]="selectedCuotasPendientes.value[i.id].value">
+                                    </td>
+                                    <td>{{i.c_e_lapso?.carrera?.nombre}}</td>
+                                    <td>{{i.nombre}}</td>
+                                    <td>{{i.description}}</td>
+                                    <td>{{i.fecha_vencimiento}}</td>
+                                    <td class="text-right">
+                                        <span> Bs {{system.toBs(i.monto) | currency: ' ': ' '}} </span>
+                                        <small> ({{i.monto}} $)</small>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hdmodal hdmodal-md" id="modal-pay">
+    <div class="hdmodal-content">
+        <div class="card p-0">
+            <h5 class="py-2 px-3 modal-title flex">
+                Reportar pago
+                <i class="fa fa-times ml-auto closer" (click)="reportarPagoCloseModal()"></i>
+            </h5>
+            <div class="container p-3">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <h5>Tipo de pago </h5>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input [(ngModel)]="tipo_pago_caja" [value]="'Debito'" type="radio" id="debito" name="tipoPagoCaja" class="custom-control-input">
+                            <label class="custom-control-label" for="debito">Debito</label>
+                          </div>
+                          <div class="custom-control custom-radio custom-control-inline">
+                            <input [(ngModel)]="tipo_pago_caja" [value]="'Credito'" type="radio" id="credito" name="tipoPagoCaja" class="custom-control-input">
+                            <label class="custom-control-label" for="credito">Credito</label>
+                          </div>
+                          <div class="custom-control custom-radio custom-control-inline">
+                            <input [(ngModel)]="tipo_pago_caja" [value]="'Efectivo'" type="radio" id="efectivo" name="tipoPagoCaja" class="custom-control-input">
+                            <label class="custom-control-label" for="efectivo">Efectivo</label>
+                          </div>
+                          <div class="custom-control custom-radio custom-control-inline">
+                              <input type="text" class="form-control" placeholder="Referencia" [(ngModel)]="description">
+                          </div>
+                      <!-- <div class="form-group">
+                        <label for="payTypepay">Forma de pago</label>
+                        <select id="payTypepay" class="form-control">
+                          <option value=""></option>
+                          <option value="debito">Debito</option>
+                          <option value="credito">Credito</option>
+                          <option value="efectivo">Efectivo</option>
+                        </select>
+                      </div> -->
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12 col-md-12 mt-2">
+                        <div class="responssive-table">
+                            <table class="table table-sm table-bordered">
+                                <tr class="head">
+                                    <th>Carrera</th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Fecha de vencimiento</th>
+                                    <th class="text-right">Monto</th>
+                                </tr>
+                                <tr *ngFor="let i of cuotasToPay">
+                                    <td>{{i.c_e_lapso?.carrera?.nombre}}</td>
+                                    <td>{{i.nombre}}</td>
+                                    <td>{{i.description}}</td>
+                                    <td>{{i.fecha_vencimiento}}</td>
+                                    <td class="text-right">
+                                        <span> Bs {{system.toBs(i.monto) | currency: ' ': ' '}} </span>
+                                        <small> ({{i.monto}} $)</small>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="float-right">
+                            Total: <b> Bs {{system.toBs(total) | currency: ' ': ' '}} <small> ({{total.toFixed(2)}} $)</small></b>
+                        </div>
+                    </div>
+                  </div>
+            </div>
+            <div class="hdmodal-footer">
+              <div class="row mt-2">
+                <div class="col-md-12">
+                  <div class="d-flex flex-row-reverse">
+                    <button class="btn btn-primary ml-2" [attr.disabled]="tipo_pago_caja === '' || description === '' ? '' : null" (click)="reportar()">REPORTAR</button>
+                    <button class="btn btn-secoundary" (click)="reportarPagoCloseModal()">Cancelar</button>
+                  </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+  </div>

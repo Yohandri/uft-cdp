@@ -10036,3 +10036,19 @@ re-captcha div {
 .cursorPointer {
     cursor: pointer !important;
 }
+.estado-pagado {
+    background-color: #FFF59D !important;
+}
+.estado-parcial {
+    background-color: #90CAF9 !important;
+}
+.estado-confirmado {
+    background-color: #A5D6A7 !important;
+}
+.estado-vencido {
+    background-color: #EF9A9A !important;
+}
+.custom-control-input:checked~.custom-control-label:before {
+    background-color: #991334;
+    border-color: #991334;
+}

@@ -23,6 +23,8 @@ isConfirm = false;
 code_confirm = null;
 newPassword = null;
 public formRegister: FormRegister = {};
+isForgetPassword = false;
+correo = '';
   constructor(
     public system: SystemService
   ) { }
@@ -37,6 +39,18 @@ public formRegister: FormRegister = {};
     }
     if (isRemenber) {
         this.isRemenber = JSON.parse(isRemenber);
+    }
+  }
+  forgetPassword() {
+    this.isForgetPassword = true;
+    this.formRegister.ci = '';
+  }
+  async sendForgetPassword() {
+    const body = {ci: this.correo};
+    const res = await this.system.forgetPassword(body);
+    if (res) {
+      this.isForgetPassword = false;
+      this.isConfirm = true;
     }
   }
   async login() {
@@ -62,6 +76,7 @@ public formRegister: FormRegister = {};
   }
   registerCancel() {
     this.isRegister = false;
+    this.isConfirm = false;
   }
   async registerSubmit() {
     console.log(this.formRegister);
@@ -74,6 +89,9 @@ public formRegister: FormRegister = {};
   }
   async confirmcode() {
     console.log(this.code_confirm);
+    if (this.formRegister.ci === '') {
+      this.formRegister.ci = this.correo;
+    }
     const body = {code: this.code_confirm, password: this.newPassword, ci: this.formRegister.ci}
     const res = await this.system.register(body, true);
     if (res) {

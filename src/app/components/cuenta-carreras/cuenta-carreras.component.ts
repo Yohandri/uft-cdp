@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { displayModal, hideModal, PaginationBuild, SelectItem } from 'src/app/services';
 import { SystemService } from 'src/app/services/system.service';
-import { displayModal, hideModal, PaginationBuild, refreshArrayPage } from 'src/app/services';
+
 @Component({
-  selector: 'app-payment-management',
-  templateUrl: './payment-management.component.html',
-  styleUrls: ['./payment-management.component.scss']
+  selector: 'app-cuenta-carreras',
+  templateUrl: './cuenta-carreras.component.html',
+  styleUrls: ['./cuenta-carreras.component.scss']
 })
-export class PaymentManagementComponent implements OnInit {
-  tabSelect = 0;
-  payment_type = [{value: 'saldo', key: 'Saldo'}, {value: 'transferencia', key: 'Transferencia'}];
-  bank = [{value: 'provincial', key: 'Provincial'}, {value: 'banesco', key: 'Banesco'}];
+export class CuentaCarrerasComponent implements OnInit {
   carreras = [];
   cuotas = [];
   bancos = [];
@@ -19,47 +17,72 @@ export class PaymentManagementComponent implements OnInit {
   pagos = [];
   displayCuotas = false;
   pagination = new PaginationBuild();
+  PagosSelected = new SelectItem();
+  selected = new SelectItem();
   constructor(
     public system: SystemService
   ) { }
 
   async  ngOnInit() {
-    this.system.module.name = 'Gestión de cuenta';
-    this.system.module.icon = 'user';
+    this.system.module.name = 'Gestión de carreras';
+    this.system.module.icon = 'bookmark';
     if (this.system.isStudent) {
       this.system.getSaldo();
     }
     this.system.getStatus();
     this.carreras = await this.getCarreras();
-    this.cuotas = await this.getCuotas();
+    await this.refreshData();
+    // this.cuotas = await this.getCuotas();
+    // this.PagosSelected.reset();
+    // const pagosSelelect = [];
     // for (let i = 0;i < this.cuotas.length;i++) {
     //   this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
     //   let montopagado = 0;
     //   for(let j of this.cuotas[i].pagos) {
+    //     pagosSelelect.push(j);
     //     console.log(parseFloat(j.monto));
     //     montopagado = montopagado + parseFloat(j.monto);
     //   }
     //   this.cuotas[i].pagado = montopagado;
     //   this.cuotas[i].monto = parseFloat(this.cuotas[i].monto);
     // }
+    // this.PagosSelected.init(pagosSelelect);
     this.displayCuotas = true;
     this.bancos = await this.getBancos();
     this.tipospago = await this.getTiposDePago();
     console.log(this.cuotas);
   }
+  showConfirm() {
+    try {
+      if (this.form.tipo_pago_id === '2') {
+        return this.restarSaldo(this.system.saldo) >= 0;
+      } else {
+        return true;
+      }
+    } catch (error) {
+      return false;
+    }
+  }
   async refreshData() {
     this.displayCuotas = false;
+    this.PagosSelected.reset();
     this.cuotas = await this.getCuotas();
+    const pagosSelelect = [];
+    this.selected.init(this.cuotas);
     for (let i = 0;i < this.cuotas.length;i++) {
       this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
       let montopagado = 0;
       for(let j of this.cuotas[i].pagos) {
+        pagosSelelect.push(j);
         console.log(parseFloat(j.monto));
         montopagado = montopagado + parseFloat(j.monto);
       }
       this.cuotas[i].pagado = montopagado;
       this.cuotas[i].monto = parseFloat(this.cuotas[i].monto);
     }
+    this.PagosSelected.init(pagosSelelect);
+    console.log(this.PagosSelected);
+    this.system.getStatus();
     this.displayCuotas = true;
   }
   async goPage(page, ctrl = '') {
@@ -138,9 +161,41 @@ async getPagos(id) {
    });
 }
 
-  selectTab(tab) {
-    this.tabSelect = tab;
+PagoDelete() {
+  const body = {ids: this.PagosSelected.selected};
+  this.system.loading = true;
+  this.system.post('api/pagos/delete' , body).then(res => {
+    try {
+      this.system.loading = false;
+      if (res.status === 200) {
+        this.refreshData();
+        this.modalPagosClose();
+        this.system.message(res.message, 'success');
+        return res;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false;
+    }
+  });
+}
+changeTypePay(tipo) {
+  if (tipo === '2') {
+    this.form.resetBanco();
+    this.system.getSaldo();
   }
+}
+restarSaldo(saldo) {
+  try {
+    return Number(saldo) - Number(this.form.montobs);
+  } catch (error) {
+    return saldo;
+  }
+}
+  // selectTab(tab) {
+  //   this.tabSelect = tab;
+  // }
   initPay(id) {
     this.selectCuota = id;
     displayModal('modal-pay');
@@ -155,32 +210,51 @@ async getPagos(id) {
     hideModal('modal-cardPay');
   }
   confirm() {
-    this.form.addCuota(this.selectCuota);
-    this.form.monto = this.system.toD(this.form.montobs);
-    this.form.montobs_cambio = this.system.dolar.valor;
-    console.log(this.form);
-    this.system.post('api/estudiante/reportarpago', this.form, true).then(async (res) => {
+    console.log(this.form.montobs);
+    const montobs = Number(this.form.montobs);
+    if (montobs !== 0 && montobs !== null ) {
+      this.form.addCuota(this.selectCuota);
+      this.form.monto = this.system.toD(this.form.montobs);
+      this.form.montobs_cambio = this.system.dolar.valor;
+      console.log(this.form);
+      this.system.post('api/estudiante/reportarpago', this.form, true).then(async (res) => {
+        try {
+          if (res.status === 200) {
+            console.log(res);
+            this.modalPayClose();
+            this.displayCuotas = false;
+            await this.refreshData();
+            //this.cuotas = await this.getCuotas();
+            this.form.reset();
+            for (let i = 0;i < this.cuotas.length;i++) {
+              this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
+              let montopagado = 0;
+              for(let j of this.cuotas[i].pagos) {
+                console.log(parseFloat(j.monto));
+                montopagado = montopagado + parseFloat(j.monto);
+              }
+              this.cuotas[i].pagado = montopagado;
+              this.cuotas[i].monto = parseFloat(this.cuotas[i].monto);
+            }
+            this.displayCuotas = true;
+          } else {
+          }
+        } catch (error) {
+        }
+      });
+    } else {
+      this.system.message('Introduzca monto', 'danger');
+    }
+    
+  }
+  restablecer(id) {
+    this.system.post('api/estudiante/restablecer', {id}, true).then(async (res) => {
       try {
         if (res.status === 200) {
-          console.log(res);
-          this.modalPayClose();
-          this.displayCuotas = false;
-          this.cuotas = await this.getCuotas();
-          this.form.reset();
-          for (let i = 0;i < this.cuotas.length;i++) {
-            this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
-            let montopagado = 0;
-            for(let j of this.cuotas[i].pagos) {
-              console.log(parseFloat(j.monto));
-              montopagado = montopagado + parseFloat(j.monto);
-            }
-            this.cuotas[i].pagado = montopagado;
-            this.cuotas[i].monto = parseFloat(this.cuotas[i].monto);
-          }
-          this.displayCuotas = true;
-        } else {
+          this.refreshData();
         }
       } catch (error) {
+        return 0;
       }
     });
   }
@@ -209,9 +283,25 @@ async getPagos(id) {
   getTotalPagado(obj) {
     let val = 0;
     for(let i of obj) {
-      val += Number(i.montobs);
+      val = val + Number(i.montobs);
     }
     return Number(val);
+  }
+  get deudaTotal() {
+    try {
+      let val = 0;
+      for (let i of this.cuotas) {
+        if ((i.estado === 'pendiente' || i.estado === 'parcial') && i.guid === null) {
+          val = val + Number(i.monto);
+        }
+        if (i.estado === 'parcial') {
+          val = val - Number(i.pagado);
+        }
+      }
+      return val;
+    } catch (error) {
+      return 0;
+    }
   }
 }
 class FormRePago {
@@ -219,7 +309,7 @@ class FormRePago {
   guid = '';
   titular_nombre = '';
   titular_apellido = '';
-  titular_cedula = '';
+  titular_celular = '';
   titular_telefono = '';
   tipo_pago_id = '';
   banco_id = '';
@@ -238,7 +328,7 @@ class FormRePago {
     this.id = user.id;
     this.titular_nombre = user.titular_nombre;
     this.titular_apellido = user.titular_apellido;
-    this.titular_cedula = user.titular_cedula;
+    this.titular_celular = user.titular_celular;
     this.titular_telefono = user.titular_telefono;
     this.tipo_pago_id = user.tipo_pago_id;
     this.banco_id = user.banco_id;
@@ -253,7 +343,7 @@ class FormRePago {
     this.id = '';
     this.titular_nombre = '';
     this.titular_apellido = '';
-    this.titular_cedula = '';
+    this.titular_celular = '';
     this.titular_telefono = '';
     this.tipo_pago_id = '';
     this.banco_id = '';
@@ -263,10 +353,24 @@ class FormRePago {
     this.monto = 0;
     this.montobs_cambio = 0;
   }
+  resetBanco() {
+    this.titular_nombre = '';
+    this.titular_apellido = '';
+    this.titular_celular = '';
+    this.titular_telefono = '';
+    this.banco_id = '';
+    this.fecha = '';
+    this.referencia = '';
+  }
   get isValidated() {
-    return this.titular_nombre !== '' && this.titular_apellido !== '' 
-    && this.titular_cedula !== '' && this.titular_telefono !== ''
+    if (this.tipo_pago_id !== '2') {
+      return this.titular_nombre !== '' && this.titular_apellido !== '' 
+    && this.titular_celular !== '' && this.titular_telefono !== ''
     && this.tipo_pago_id !== '' && this.banco_id !== ''
     && this.fecha !== '' && this.referencia !== '' && this.montobs !== ''
+    }
+    if (this.tipo_pago_id === '2') {
+      return this.montobs !== '' 
+    }
   }
 }

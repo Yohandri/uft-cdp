@@ -2,7 +2,7 @@
     <div class="container-fluid ">
         <div class="row bg-white">
             <div class="col">
-                <h3 class="mt-2">Servicio<span *ngIf="!isForm">s</span>
+                <h3 class="mt-2" style="height: 28px;"><span *ngIf="!system.isMobile">Servicio<span *ngIf="!isForm">s</span></span>
                     <button class="btn btn-primary float-right btn-sm" (click)="new()" [ngStyle]="{'opacity': filter.isFilter ? .6 : 1}" *ngIf="!isForm">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Nuevo
@@ -11,10 +11,10 @@
                         <i class="fa fa-floppy-o" aria-hidden="true"></i>
                         Guardar
                     </button>
-                    <button class="btn btn-primary float-right btn-sm mr-2" (click)="sincronizar()" *ngIf="!isForm">
+                    <!-- <button class="btn btn-primary float-right btn-sm mr-2" (click)="sincronizar()" *ngIf="!isForm">
                         <i class="fa fa-refresh" aria-hidden="true"></i>
                         Sincronizar
-                    </button>
+                    </button> -->
                     <button class="btn btn-primary float-right btn-sm" (click)="cancelar()" *ngIf="isForm">
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         Regresar
@@ -107,7 +107,7 @@
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="nombres" [(ngModel)]="form.nombre">
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-6 col-sm-12" *ngIf="false">
                             <div class="form-group">
                                 <label for="periodo">Periodo</label>
                                 <select name="periodos" id="periodos" class="form-control" [(ngModel)]="form.periodo_id">

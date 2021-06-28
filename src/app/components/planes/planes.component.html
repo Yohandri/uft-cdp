@@ -2,14 +2,43 @@
     <div class="container-fluid ">
         <div class="row bg-white">
             <div class="col">
-                <h3 class="mt-2">Plan<span *ngIf="!isForm">es</span>
+                <h3 class="mt-2" style="height: 28px;"><span *ngIf="!system.isMobile">Plan<span *ngIf="!isForm">es</span></span>
+                    <button *ngIf="!isForm" class="ml-2" nz-button nz-popover [nzPopoverTitle]="titleTemplate" [nzPopoverContent]="contentTemplate" nzPopoverPlacement="rightTop">
+                        <i class="fa fa-info"></i>
+                      </button>
+                      <ng-template #titleTemplate>Estados
+                        <!-- <i nz-icon nzType="close"></i> Title -->
+                      </ng-template>
+                      <ng-template #contentTemplate>
+                        <div class="p-1 estado-confirmado">
+                          <i nz-icon nzType="check"></i> Activo
+                        </div>
+                        <div class="p-1 estado-parcial">
+                          <i nz-icon nzType="check"></i> Inactivo
+                        </div>
+                        <div class="p-1 estado-vencido">
+                          <i nz-icon nzType="check"></i> Vencido
+                        </div>
+                      </ng-template>
                     <button class="btn btn-primary float-right btn-sm" (click)="new()" [ngStyle]="{'opacity': filter.isFilter ? .6 : 1}" *ngIf="!isForm">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Nuevo
                     </button>
-                    <button  class="btn btn-primary float-right btn-sm ml-2" (click)="save()" *ngIf="isForm">
+                    <button [attr.disabled]="form.mon_total === '' || form.nombre === '' || form.tipo === '' ? '' : null" class="btn btn-primary float-right btn-sm ml-2" (click)="save()" *ngIf="isForm">
                         <i class="fa fa-floppy-o" aria-hidden="true"></i>
                         Guardar
+                    </button>
+                    <button class="btn btn-primary float-right btn-sm ml-2" (click)="activarPlan()" *ngIf="isForm && form.estado === 'inactivo'">
+                        <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                        Activar plan
+                    </button>
+                    <button class="btn btn-primary float-right btn-sm ml-2" (click)="activarPlan()" *ngIf="isForm && form.estado === 'activo' && form.tipo !== 'complejo'">
+                        <i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
+                        Desactivar plan
+                    </button>
+                    <button  class="btn btn-primary float-right btn-sm ml-2" (click)="asignarPlan()" *ngIf="isForm && form.tipo === 'complejo' && form.estado === 'activo'">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                        Asignar plan
                     </button>
                     <button class="btn btn-primary float-right btn-sm" (click)="cancelar()" *ngIf="isForm">
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -39,6 +68,12 @@
                                     <input class="if" placeholder="Búsqueda por código" tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.guid">
                                 </th>
                                 <th>
+                                    <input class="if" placeholder="Búsqueda por estado" tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.estado">
+                                </th>
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por tipo" tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.tipo">
+                                </th>
+                                <th>
                                     <input class="if" placeholder="Búsqueda por nombres" tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.nombre">
                                 </th>
                                 <th>
@@ -47,52 +82,56 @@
                                 <!-- <th>
                                     <input class="if" placeholder="Búsqueda por tipo"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.tipo">
                                 </th> -->
-                                <th>
+                                <!-- <th>
                                     <input class="if" placeholder="Búsqueda por inscripción"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.inscripcion">
-                                </th>
+                                </th> -->
                                 <th>
                                     <input class="if" placeholder="Búsqueda por # cuotas"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.num_cuotas">
                                 </th>
                                 <th>
                                     <input class="if" placeholder="Búsqueda por total"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.mon_total">
                                 </th>
-                                <th>
+                                <!-- <th>
                                     <select name="searchService" id="searchService" (change)="refreshData()" [(ngModel)]="filter.servicio_id">
                                         <option value="">Búsqueda por servicio</option>
                                         <option [value]="i.id" *ngFor="let i of servicios">{{i.nombre}}</option>
                                     </select>
-                                    <!-- <input class="if" placeholder="Búsqueda por servicio"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.servicio_id"> -->
-                                </th>
+                                    
+                                </th> -->
                                 <th>
                                     <input class="if" placeholder="Búsqueda por lapso"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.lapso_codigo">
                                 </th>
                             </tr>
                             <tr class="head">
                                 <th>
-                                    <input type="checkbox" (click)="selected.selectAll()" [(ngModel)]="selected.isSelectAll">
+                                    <input disabled type="checkbox" (click)="selected.selectAll()" [(ngModel)]="selected.isSelectAll">
                                 </th>
                                 <th>Código</th>
+                                <th>Estado</th>
+                                <th>Tipo</th>
                                 <th>Nombres</th>
                                 <th>Fecha de vencimiento</th>
                                 <!-- <th>Tipo</th> -->
-                                <th>Inscripción</th>
+                                <!-- <th>Inscripción</th> -->
                                 <th>Numero de cuotas</th>
                                 <th>Monto total</th>
-                                <th>Servicio</th>
+                                <!-- <th>Servicio</th> -->
                                 <th>Lapso</th>
                             </tr>
-                            <tr *ngFor="let i of data" >
+                            <tr *ngFor="let i of data" [ngClass]="{'estado-parcial': i.estado === 'inactivo', 'estado-confirmado': i.estado === 'activo', 'estado-vencido': esVencido(i) }">
                                 <td>
-                                    <input type="checkbox" [(ngModel)]="selected.value[i.id].value">
+                                    <input type="checkbox" [disabled]="(i.tipo === 'complejo' && i.estado === 'activo') || i.estado === 'activo'" [(ngModel)]="selected.value[i.id].value">
                                 </td>
                                 <td class="cursorPointer" (click)="edit(i)">{{i.guid}} </td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.estado}} </td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.tipo}} </td>
                                 <td class="cursorPointer" (click)="edit(i)">{{i.nombre}} </td>
                                 <td class="cursorPointer" (click)="edit(i)">{{i.fecha_vencimiento}}</td>
                                 <!-- <td class="cursorPointer" (click)="edit(i)">{{i.tipo}}</td> -->
-                                <td class="cursorPointer" (click)="edit(i)">{{i.inscripcion === 1 ? 'Si' : 'No'}}</td>
+                                <!-- <td class="cursorPointer" (click)="edit(i)">{{i.inscripcion === 1 ? 'Si' : 'No'}}</td> -->
                                 <td class="cursorPointer" (click)="edit(i)">{{i.num_cuotas}}</td>
                                 <td class="cursorPointer" (click)="edit(i)">{{i.mon_total}}</td>
-                                <td class="cursorPointer" (click)="edit(i)">{{getNameService(i.servicio_id)}}</td>
+                                <!-- <td class="cursorPointer" (click)="edit(i)">{{getNameService(i.servicio_id)}}</td> -->
                                 <td class="cursorPointer" (click)="edit(i)">{{i.lapso_codigo}}</td>
                             </tr>
                             <tr *ngIf="data.length === 0">
@@ -147,44 +186,75 @@
                                 <label for="tipo">Tipo</label>
                                 <select (change)="changeTipo()" [disabled]="!isNew" class="form-control" name="tipo" id="tipo" [(ngModel)]="form.tipo">
                                     <option value=""></option>
-                                    <option value="simple">Servicio estudiantil</option>
                                     <option value="complejo">Carrera</option>
+                                    <option value="simple">Servicio estudiantil</option>
+                                    <option value="materia">Materia</option>
+                                    <option value="inscripcion">Inscripción</option>
                                 </select>
                                 <!-- <input [disabled]="!isNew" type="text" (keyup.enter)="save()" class="form-control" id="tipo" [(ngModel)]="form.tipo"> -->
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            <div class="form-group" *ngIf="form.tipo === 'simple'">
+                            <div class="form-group" *ngIf="form.tipo === 'simple'  || form.tipo === 'inscripcion' || form.tipo === 'inscripcion'">
                                 <label for="servicio_id">Servicio</label>
-                                <select [disabled]="!isNew" name="servicio_id" id="servicio_id" class="form-control"  [(ngModel)]="form.servicio_id">
+                                <select (change)="changeTipo()" [disabled]="!isNew" name="servicio_id" id="servicio_id" class="form-control"  [(ngModel)]="form.servicio_id">
                                     <option value=""></option>
-                                    <option [value]="i.id" *ngFor="let i of serviciosEstudiantil">{{i.nombre}}</option>
+                                    <option [value]="i.id" *ngFor="let i of serviciosE">{{i.nombre}}</option>
+                                </select>
+                            </div>
+                           <div class="form-group" *ngIf="form.tipo === 'materia'">
+                                <label for="horas">Horas</label>
+                                <select [disabled]="!isNew" name="horas" id="horas" class="form-control"  [(ngModel)]="form.horas">
+                                    <option value="0"></option>
+                                    <option [value]="i" [ngStyle]="{'background-color': disabledHora(i) ? '#dedede' : 'inherent'}" [disabled]="disabledHora(i)" *ngFor="let i of horas_materias">{{i}}</option>
                                 </select>
                             </div>
                             <div class="form-group" *ngIf="form.tipo === 'complejo'">
-                                <label for="servicio_id">Servicio</label>
-                                <select (change)="getLapso()" [disabled]="!isNew" name="servicio_id" id="servicio_id" class="form-control"  [(ngModel)]="form.servicio_id">
+                                <label for="periodo_id">Periodos</label>
+                                <select (change)="getLapso()" [disabled]="!isNew" name="periodo_id" id="periodo_id" class="form-control"  [(ngModel)]="form.periodo_id">
                                     <option value=""></option>
-                                    <option [value]="i.id" *ngFor="let i of carreras">{{i.nombre}}</option>
+                                    <option [value]="i.id" *ngFor="let i of periodos">{{i.nombre}}</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'simple'">
+                        <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'simple' || form.tipo === 'inscripcion' || form.tipo === 'materia'">
                             <div class="form-group">
                                 <label for="fecha_vencimiento">Fecha vencimiento</label>
-                                <input [disabled]="!isNew" type="date" (keyup.enter)="save()" class="form-control" id="fecha_vencimiento" [(ngModel)]="form.fecha_vencimiento">
+                                <input  type="date"  class="form-control" id="fecha_vencimiento" [(ngModel)]="form.fecha_vencimiento">
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'simple'">
+                        <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'simple'  || form.tipo === 'inscripcion' || form.tipo === 'materia'">
                             <div class="form-group">
-                                <label for="mon_total">Monto</label>
-                                <input [disabled]="!isNew" type="number" (keyup.enter)="save()" class="form-control" id="mon_total" [(ngModel)]="form.mon_total">
+                                <label for="mon_total">Monto ($)</label>
+                                <input [disabled]="!isNew" type="number"  class="form-control" id="mon_total" [(ngModel)]="form.mon_total">
+                            </div>
+                        </div>
+                        <!-- <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'complejo'">
+                            <div class="form-group">
+                                <label for="inscripcion">Inscripcion</label><br>
+                                <input (change)="cuotasUpdate()" [disabled]="!isNew" type="checkbox" (keyup.enter)="save()" class="form-controla" id="inscripcion" [(ngModel)]="form.inscripcion">
+                            </div>
+                        </div> -->
+                        <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'complejo' || form.tipo === 'inscripcion' || form.tipo === 'materia'">
+                            <div class="form-group">
+                                <label for="lapso_codigo">Lapso</label>
+                                <select [disabled]="!isNew" (change)="cuotasUpdate()"  name="lapso_codigo" id="lapso_codigo" class="form-control"  [(ngModel)]="form.lapso_codigo">
+                                    <option value=""></option>
+                                    <option [value]="i.codigo" *ngFor="let i of lapsos">{{i.codigo}}</option>
+                                </select>
+                                <!-- <input type="text" (keyup.enter)="save()" class="form-control" id="lapso_codigo" [(ngModel)]="form.lapso_codigo"> -->
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'complejo2'">
+                            <div class="form-group">
+                                <label for="mon_inscripcion">Monto inscripción ($)</label>
+                                <input [disabled]="!isNew" type="number" class="form-control" id="mon_inscripcion" [(ngModel)]="form.mon_inscripcion">
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'complejo'">
                             <div class="form-group">
-                                <label for="inscripcion">Inscripcion</label><br>
-                                <input (change)="cuotasUpdate()" [disabled]="!isNew" type="checkbox" (keyup.enter)="save()" class="form-controla" id="inscripcion" [(ngModel)]="form.inscripcion">
+                                <label for="mon_total">Monto total de cuotas ($)</label>
+                                <input [disabled]="!isNew" type="number" (keyup)="cuotasUpdate()" class="form-control" id="mon_total" [(ngModel)]="form.mon_total">
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'complejo'">
@@ -197,48 +267,55 @@
                                 <!-- <input type="number" (keyup.enter)="save()" class="form-control" id="num_cuotas" [(ngModel)]="form.num_cuotas"> -->
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'complejo'">
+                        <div class="col-md-6 col-sm-12" >
                             <div class="form-group">
-                                <label for="mon_total">Monto total</label>
-                                <input [disabled]="!isNew" type="number" (keyup.enter)="save();" (keyup)="cuotasUpdate()" class="form-control" id="mon_total" [(ngModel)]="form.mon_total">
+                                <label *ngIf="form.tipo === 'complejo'" for="fi">Fecha de inicio: <b>{{fechaV.fecha_inicio}}</b></label> <br>
+                                <label *ngIf="form.tipo === 'complejo'" for="fv">Fecha de vencimiento <b>{{fechaV.fecha_final}}</b></label>  <br>
+                                <label *ngIf="form.estado !== ''" for="fi">Plan: <b>{{form.estado}}</b></label>
+
+                                <!-- <input type="number" (keyup.enter)="save()" class="form-control" id="num_cuotas" [(ngModel)]="form.num_cuotas"> -->
                             </div>
                         </div>
                         
-                        <div class="col-md-6 col-sm-12" *ngIf="form.tipo === 'complejo'">
-                            <div class="form-group">
-                                <label for="lapso_codigo">Lapso</label>
-                                <select [disabled]="!isNew" (change)="cuotasUpdate()"  name="lapso_codigo" id="lapso_codigo" class="form-control"  [(ngModel)]="form.lapso_codigo">
-                                    <option value=""></option>
-                                    <option [value]="i.codigo" *ngFor="let i of lapsos">{{i.codigo}}</option>
-                                </select>
-                                <!-- <input type="text" (keyup.enter)="save()" class="form-control" id="lapso_codigo" [(ngModel)]="form.lapso_codigo"> -->
-                            </div>
-                        </div>
+                        
+                        
                     </div>
                     <div class="row" *ngIf="cuotas.length > 0">
                         <div class="col-sm-12 col-md-6">
-                            <table class="table table-sm table-bordered">
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Descripción</th>
-                                    <th>Valor</th>
-                                    <th>Fecha de vencimiento</th>
-                                </tr>
-                                <tr *ngFor="let i of cuotas">
-                                    <td>
-                                        <input [disabled]="!isNew ? '' : null" type="text" class="form-control form-control-sm" [(ngModel)]="i.nombre">
-                                    </td>
-                                    <td>
-                                        <input [disabled]="!isNew ? '' : null" type="text" class="form-control form-control-sm" [(ngModel)]="i.description">
-                                    </td>
-                                    <td>
-                                        <input [disabled]="!isNew ? '' : null" type="text" class="form-control form-control-sm text-right" [(ngModel)]="i.valor">
-                                    </td>
-                                    <td>
-                                        <input [disabled]="!isNew ? '' : null" type="date" class="form-control form-control-sm" [(ngModel)]="i.fecha_vencimiento">
-                                    </td>
-                                </tr>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Descripción</th>
+                                        <th>Valor ($)</th>
+                                        <th>Fecha de vencimiento</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr *ngFor="let i of cuotas;let index = index" >
+                                        <td>
+                                            <input [disabled]="i.asignado === '1' ? '' : null" type="text" class="form-control form-control-sm" [(ngModel)]="i.nombre">
+                                        </td>
+                                        <td>
+                                            <input [disabled]="i.asignado === '1' ? '' : null" type="text" class="form-control form-control-sm" [(ngModel)]="i.description">
+                                        </td>
+                                        <td>
+                                            <input [disabled]="i.asignado === '1' ? '' : null" (keyup)="changeValor(i)" type="text" class="form-control form-control-sm text-right" [(ngModel)]="i.valor">
+                                        </td>
+                                        <td>
+                                            <input [disabled]="i.asignado === '1' ? '' : null" type="date" class="form-control form-control-sm" [(ngModel)]="i.fecha_vencimiento">
+                                        </td>
+                                        <td>
+                                            <i *ngIf="!i.id" class="fa fa-trash" (click)="deleteCuota(index)"></i>
+                                            <i *ngIf="i.id" class="fa fa-trash" (click)="deleteCuotaId(i)"></i>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="">
+                                <button *ngIf="form.tipo === 'complejo'" class="btn btn-primary btn-sm float-right mb-3" (click)="addCuota()">
+                                    Agregar cuota
+                                </button>
+                            </div>
                             <code *ngIf="false">
                                 {{cuotas | json}}
                             </code>

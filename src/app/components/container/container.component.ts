@@ -13,6 +13,10 @@ export class ContainerComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.system.getStatus();
+    if (this.system.isStudent) {
+      this.system.getSaldo();
+    }
   }
   logout() {
     this.system.message('Hasta luego', 'success');
@@ -21,5 +25,15 @@ export class ContainerComponent implements OnInit {
       location.reload();
     }, 1000);
   }
+  menuClick($event) {
+    console.log($event);
+    const el = document.getElementById('menuEDC');
+    if (el.className.includes('open')) {
+      el.className = el.className.replace('open', '');
+    } else {
+      el.className = el.className + ' open';
+    }
+  }
+  
 
 }

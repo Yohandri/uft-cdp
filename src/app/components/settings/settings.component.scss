@@ -1,0 +1,14 @@
+.table-tr-inputs {
+    td {
+        padding: 0;
+        vertical-align: middle;
+        input, textarea, select {
+            width: 100%;
+            border: none;
+            margin: 0;
+            resize: none;
+            padding: 0 5px;
+            height: 32px;
+        }
+    }
+}

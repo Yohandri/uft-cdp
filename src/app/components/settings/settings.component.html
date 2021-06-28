@@ -1,0 +1,46 @@
+<div class="p-2"  >
+    <div class="container-fluid ">
+        <div class="row justify-content-md-center bg-white">
+            <div class="col-md-10">
+                <h3 class="mt-2" style="height: 28px;"><span *ngIf="!system.isMobile">Ajustes</span>
+                    <!-- <button class="btn btn-primary float-right btn-sm" (click)="new()" [ngStyle]="{'opacity': filter.isFilter ? .6 : 1}" *ngIf="!isForm">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        Nuevo
+                    </button> -->
+                    <button class="btn btn-primary float-right btn-sm ml-2" (click)="save()">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                        Guardar
+                    </button>
+                </h3>
+            </div>
+        </div>
+        <div class="row justify-content-md-center bg-white">
+            <div class="col-md-10">
+                <div>
+                    <table class="table table-sm table-bordered">
+                        <tr class="head">
+                            <th>Propiedad</th>
+                            <th>Valor</th>
+                            <th>Descripción</th>
+                        </tr>
+                        <tr class="table-tr-inputs" *ngFor="let i of settings">
+                            <td>{{i.key}}</td>
+                            <td>
+                                <input *ngIf="i.key === 'NUMERO_DIA'" [(ngModel)]="i.value" type="number">
+                                <input *ngIf="i.key !== 'NUMERO_DIA' && i.key !== 'SAIA'" [(ngModel)]="i.value" type="text">
+                                <select *ngIf="i.key === 'SAIA'" [(ngModel)]="i.value">
+                                    <option value="true">Activado</option>
+                                    <option value="false">Desactivado</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input [(ngModel)]="i.description" type="text">
+                                <!-- <textarea cols="30" rows="1"></textarea> -->
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -9,7 +9,7 @@
                                 class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center auth-img-bg p-3">
                                 <img _ngcontent-fed-c192="" src="./assets/img/Logo-uft.png" alt="logo" width="300"
                                     height="230" class="img-fluid"></div>
-                            <div _ngcontent-fed-c192="" class="col-lg-6 col-12 px-4 py-3" *ngIf="!isRegister && !isConfirm">
+                            <div _ngcontent-fed-c192="" class="col-lg-6 col-12 px-4 py-3" *ngIf="!isRegister && !isConfirm && !isForgetPassword">
                                 <h4 _ngcontent-fed-c192="" class="mb-2 card-title">
                                     Iniciar sesión
                                     <span class="float-right" *ngIf="system.isMobile">
@@ -43,9 +43,7 @@
                                                         _ngcontent-fed-c192=""
                                                         class="font-small-2 mb-3 font-weight-normal">Recordarme</span></label></div>
                                         </div>
-                                        <!-- <a _ngcontent-fed-c192=""
-                                            href="#">Forgot
-                                            Password?</a> -->
+                                        <a (click)="forgetPassword()">Olvidó su contraseña?</a> 
                                     </div>
                                     <div _ngcontent-fed-c192=""
                                         class="d-flex justify-content-between flex-sm-row flex-column">
@@ -64,23 +62,23 @@
                                         
                                     </ngx-spinner> -->
                                     <div _ngcontent-fed-c192="" class="login-options">
-                                        <a _ngcontent-fed-c192=""
+                                        <a _ngcontent-fed-c192="" target="_blank" href="https://facebook.com/UFT.VE/"
                                             class="btn btn-sm btn-social-icon btn-facebook mr-1">
                                             <span
                                                 _ngcontent-fed-c192="" class="fa fa-facebook"></span>
                                             </a>
                                             <a
-                                            _ngcontent-fed-c192=""
+                                            _ngcontent-fed-c192="" target="_blank" href="https://twitter.com/Universidaduft?s=03"
                                             class="btn btn-sm btn-social-icon btn-twitter mr-1"><span
                                                 _ngcontent-fed-c192="" class="fa fa-twitter"></span>
                                             </a>
                                             <a
-                                            _ngcontent-fed-c192=""
+                                            _ngcontent-fed-c192="" target="_blank" href="https://instagram.com/uft.ve?igshid=kkz13r1k8w6v"
                                             class="btn btn-sm btn-social-icon btn-twitter mr-1"><span
                                                 _ngcontent-fed-c192="" class="fa fa-instagram"></span>
                                             </a>
                                             <a
-                                            _ngcontent-fed-c192=""
+                                            _ngcontent-fed-c192="" target="_blank" href="https://www.youtube.com/channel/UCvcOaBULNQsmJ8NUdt7PkwQ"
                                             class="btn btn-sm btn-social-icon mr-1" [ngStyle]="{'background': 'red'}"><span
                                                 _ngcontent-fed-c192="" class="fa fa-youtube"></span>
                                             </a>
@@ -141,7 +139,7 @@
                                     height="120" class="img-fluid" style="top: -10px;position: relative;" >
                                     </span>
                                 </h4>
-                                <p _ngcontent-fed-c192="">Le enviamos código de confirmación a su correo, por favor confirme para completar registro.</p>
+                                <p _ngcontent-fed-c192="">Le enviamos código de confirmación a su correo, por favor confirme para completar operación.</p>
                                 <div>
                                     <div _ngcontent-fed-c192="" class="form-group">
                                         <input _ngcontent-fed-c192=""
@@ -164,6 +162,36 @@
                                                  [style]="{'opacity': '1', 'cursor': 'pointer'}" (click)="registerCancel()" >Cancelar</a>
                                             <button
                                                 _ngcontent-fed-c192="" class="btn btn-primary" type="button" (click)="confirmcode()" [disabled]="code_confirm?.length > 3 && newPassword?.length > 5">Confirmar</button>
+                                    </div>
+                            </div>
+                            <div _ngcontent-fed-c192="" class="col-lg-6 col-12 px-4 py-3" *ngIf="isForgetPassword">
+                                <h4 _ngcontent-fed-c192="" class="mb-2 card-title">
+                                    <span *ngIf="!system.isMobile">Recuperar contraseña</span>
+                                    <span *ngIf="system.isMobile">Recuperar <br> contraseña</span>
+                                    <span class="float-right" *ngIf="system.isMobile">
+                                        <img _ngcontent-fed-c192="" src="./assets/img/Logo-uft.png" alt="logo" width="120"
+                                    height="120" class="img-fluid" style="top: -10px;position: relative;" >
+                                    </span>
+                                </h4>
+                                <div>
+                                    <div _ngcontent-fed-c192="" class="form-group">
+                                        <label for="correo">
+                                            Introduzca su cedula 
+                                        </label>
+                                        <input _ngcontent-fed-c192=""
+                                        [(ngModel)]="correo"
+                                        name="correo" [email]="true"
+                                            type="text" placeholder="Cedula"
+                                            required="true" class="form-control ng-untouched ng-pristine ng-valid">
+                                    </div>
+                                </div>
+                                <div _ngcontent-fed-c192=""
+                                            class="d-flex justify-content-between flex-sm-row flex-column">
+                                            <a
+                                                _ngcontent-fed-c192="" class="btn bg-outline-primary mb-2 mb-sm-0"
+                                                 [style]="{'opacity': '1', 'cursor': 'pointer'}" (click)="isForgetPassword = false" >Cancelar</a>
+                                            <button
+                                                _ngcontent-fed-c192="" class="btn btn-primary" type="button" (click)="sendForgetPassword()" [disabled]="code_confirm?.length > 3 && newPassword?.length > 5">Confirmar</button>
                                     </div>
                             </div>
                         </div>

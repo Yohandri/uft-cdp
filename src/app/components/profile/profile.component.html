@@ -1,0 +1,129 @@
+<div class="container-fluid page-content with-navbar" [ngClass]="{'with-sidebar': system.sidebarOn}" *ngIf="ready">
+    <div class="row m-0 py-2">
+        <div class="col-md-12">
+            <div class="card container-fluid">
+                <!-- <div class="row">
+                    <div class="col-md-3 text-left pr-4">
+                        <div class="form-group">
+                            <label *ngIf="data.status == 1" for="">Activo</label>
+                            <label *ngIf="data.status == 0" for="">Inactivo</label><br>
+                            <div class="switch-button">
+                                <input [(ngModel)]="data.status" type="checkbox" name="switch-button" id="cisterna" class="switch-button__checkbox">
+                                <label for="cisterna" class="switch-button__label"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="row">
+                    <div class="col">
+                        <h3 class="mt-2">Usuario
+                            
+                            <button *ngIf="system.changePass.valid()" class="btn btn-primary float-right btn-sm ml-2" (click)="system.changePassword()" >
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Cambiar contraseña
+                            </button>
+                
+                        </h3>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">Nombre</label>
+                            <input readonly placeholder="Nombres" [(ngModel)]="data.user.nombre" type="text" class="form-control form-control-md">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">Apellido</label>
+                            <input readonly placeholder="Apellidos" [(ngModel)]="data.user.apellido" type="text" class="form-control form-control-md">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">Usuario</label>
+                            <input readonly placeholder="Username" [(ngModel)]="data.user.ci" type="text" class="form-control form-control-md">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">Correo</label>
+                            <input readonly placeholder="Username" [(ngModel)]="data.user.correo" type="text" class="form-control form-control-md">
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="system.isStudent && system.isMobile">
+                        <div class="form-group">
+                            <label for="">Saldo (Bs)</label><br>
+                            <label for=""><b>
+                                {{system.saldo | currency: ' ': ' '}} Bs
+                            </b></label>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">Fecha de nacimiento</label>
+                            <input placeholder="Fecha de nacimiento" [(ngModel)]="data.birthdate" type="date" class="form-control form-control-md">
+                        </div>
+                    </div> -->
+                </div>
+                <div class="row mt-1">
+                    <!-- <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">Dirección</label>
+                            <textarea placeholder="Dirección" [(ngModel)]="data.address" rows="3" class="form-control form-control-md"></textarea>
+                        </div>
+                    </div> -->
+                    <!-- <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">Teléfono</label>
+                            <input placeholder="Teléfono" [(ngModel)]="data.phone1" type="text" class="form-control form-control-md">
+                        </div>
+                    </div> 
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">Email</label>
+                            <input placeholder="Email" [(ngModel)]="data.email" type="text" class="form-control form-control-md">
+                        </div>
+                    </div>-->
+                    <!-- <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">Role</label>
+                            <select disabled [(ngModel)]="data.role_id" class="form-control form-control-md" name="" id="">
+                                <option value="">Select</option>
+                                <option [value]="i.id" *ngFor="let i of system.roles">{{i.name}}</option>
+                            </select>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="row" >
+                    <div class="col-md-12">
+                        <div class="separator mb-3"></div>
+                    </div>
+                </div>
+                <div class="row" >
+                    <div class="col-md-12">
+                        <h4>Contraseña</h4>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                        <div class="form-group">
+                            <label for="">Contraseña</label>
+                            <input placeholder="Password" [(ngModel)]="system.changePass.password" type="password" class="form-control form-control-md" >
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                        <div class="form-group">
+                            <label for="">Nueva contraseña</label>
+                            <input placeholder="New password" [(ngModel)]="system.changePass.newpassword" type="password" class="form-control form-control-md" [ngClass]="{'is-valid': system.changePass.valid(), 'is-invalid': !system.changePass.valid() && system.changePass.newpassword !== '' }">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                        <div class="form-group">
+                            <label for="">Repetir contraseña</label>
+                            <input placeholder="Repeat password" [(ngModel)]="system.changePass.repeatpassword" type="password" class="form-control form-control-md" [ngClass]="{'is-valid': system.changePass.valid(), 'is-invalid': !system.changePass.valid() && system.changePass.repeatpassword !== '' }">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

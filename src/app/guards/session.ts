@@ -25,35 +25,35 @@ export class SessionGuard implements CanActivate {
 @Injectable({
     providedIn: 'root'
 })
-export class AdminGuard implements CanActivate {
-    constructor(
-        private system: SystemService,
-        public router: Router
-    ) { }
-    canActivate(
-        next: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        if (!this.system.isLogged) {
-            this.router.navigate(['login']);
-            return false;
-        } else {
-            console.log(this.system.decodedToken.role);
-            if (this.system.decodedToken.role === 'administrator') {
-                return true;
-            } else {
-                if(this.system.decodedToken.role === 'shopper') {
-                    this.router.navigate(['product']);
-                    return false;
-                }
-                if(this.system.decodedToken.role === 'driver' || this.system.decodedToken.role === 'picker') {
-                    this.router.navigate(['orders']);
-                    return false;
-                }
-                return false;
-            }
-        }
-    }
-}
+// export class AdminGuard implements CanActivate {
+//     constructor(
+//         private system: SystemService,
+//         public router: Router
+//     ) { }
+//     canActivate(
+//         next: ActivatedRouteSnapshot,
+//         state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+//         if (!this.system.isLogged) {
+//             this.router.navigate(['login']);
+//             return false;
+//         } else {
+//             console.log(this.system.decodedToken.role);
+//             if (this.system.decodedToken.role === 'administrator') {
+//                 return true;
+//             } else {
+//                 if(this.system.decodedToken.role === 'shopper') {
+//                     this.router.navigate(['product']);
+//                     return false;
+//                 }
+//                 if(this.system.decodedToken.role === 'driver' || this.system.decodedToken.role === 'picker') {
+//                     this.router.navigate(['orders']);
+//                     return false;
+//                 }
+//                 return false;
+//             }
+//         }
+//     }
+// }
 @Injectable({
     providedIn: 'root'
 })
@@ -78,6 +78,45 @@ export class shopperGuard implements CanActivate {
                 }
                 return false;
             }
+        }
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class StudentGuard implements CanActivate {
+    constructor(
+        private system: SystemService,
+        public router: Router
+    ) { }
+    canActivate(
+        next: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+        
+        if (this.system.isStudent) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+@Injectable({
+    providedIn: 'root'
+})
+export class AdminGuard implements CanActivate {
+    constructor(
+        private system: SystemService,
+        public router: Router
+    ) { }
+    canActivate(
+        next: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+        
+        if (this.system.isAdministrator) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
