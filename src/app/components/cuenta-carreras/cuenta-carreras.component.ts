@@ -182,6 +182,7 @@ PagoDelete() {
 }
 changeTypePay(tipo) {
   if (tipo === '2') {
+    this.form.montobs = this.system.toBs(this.montoAPagar);
     this.form.resetBanco();
     this.system.getSaldo();
   }
@@ -193,14 +194,31 @@ restarSaldo(saldo) {
     return saldo;
   }
 }
+operarResta(i) {
+  try {
+    return (i.monto - i.pagado);
+  } catch (error) {
+    console.log(error);
+    return 0;
+  }
+}
   // selectTab(tab) {
   //   this.tabSelect = tab;
   // }
+  get montoAPagar() {
+    try {
+      return this.operarResta(this.cuotas.find(x => x.id === this.selectCuota));
+    } catch (error) {
+      return 0;
+    }
+  }
   initPay(id) {
     this.selectCuota = id;
+    this.changeTypePay(this.form.tipo_pago_id);
     displayModal('modal-pay');
   }
   modalPayClose() {
+    this.form.montobs = '0';
     hideModal('modal-pay');
   }
   initCardPay() {

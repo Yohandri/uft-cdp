@@ -45,6 +45,7 @@ export class CuentaServiciosComponent implements OnInit {
   }
   changeTypePay(tipo) {
     if (tipo === '2') {
+      this.form.montobs = this.system.toBs(this.montoAPagar);
       this.form.resetBanco();
       this.system.getSaldo();
     }
@@ -139,11 +140,20 @@ getTotalPagado(obj) {
     return 0;
   }
 }
+get montoAPagar() {
+  try {
+    return this.operarResta(this.cuotas.find(x => x.id === this.selectCuota));
+  } catch (error) {
+    return 0;
+  }
+}
 initPay(id) {
   this.selectCuota = id;
+  this.changeTypePay(this.form.tipo_pago_id);
   displayModal('modal-pay');
 }
 modalPayClose() {
+  this.form.montobs = '0';
   hideModal('modal-pay');
 }
 verPagos(obj) {

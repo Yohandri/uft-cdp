@@ -347,7 +347,7 @@
                             [nzHeaders]="{ 'authorization': token }"
                             (nzChange)="handleChange($event)"
                             [nzMultiple]="false"
-                            [nzShowUploadList]= "true"
+                            [nzShowUploadList]= "false"
                             [nzAccept]="'.xlsx'"
                             *ngIf="!isForm"
                             >

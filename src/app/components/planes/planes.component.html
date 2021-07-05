@@ -20,9 +20,14 @@
                           <i nz-icon nzType="check"></i> Vencido
                         </div>
                       </ng-template>
+                        
                     <button class="btn btn-primary float-right btn-sm" (click)="new()" [ngStyle]="{'opacity': filter.isFilter ? .6 : 1}" *ngIf="!isForm">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Nuevo
+                    </button>
+                    <button class="btn btn-primary float-right btn-sm mr-2" (click)="inscripcionLote()" [ngStyle]="{'opacity': filter.isFilter ? .6 : 1}" *ngIf="!isForm && !system.isMobile">
+                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                        Inscripción por lote
                     </button>
                     <button [attr.disabled]="form.mon_total === '' || form.nombre === '' || form.tipo === '' ? '' : null" class="btn btn-primary float-right btn-sm ml-2" (click)="save()" *ngIf="isForm">
                         <i class="fa fa-floppy-o" aria-hidden="true"></i>

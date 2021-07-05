@@ -332,6 +332,22 @@ export class PlanesComponent implements OnInit {
       }
     });
   }
+  inscripcionLote() {
+    this.system.post('api/planes/inscripcion_lote', {plan_id: this.form.id}, true).then(res => {
+      try {
+        if (res.status === 200) {
+          console.log(res);
+          this.system.message(res.message, 'success');
+          return true;
+        } else {
+          this.system.message(res.message, 'danger');
+          return false;
+        }
+      } catch (error) {
+        return false;
+      }
+    });
+  }
   cuotasInit() {
     for(let i = 1;i < (this.max_num_cuotas + 1);i++) {
       this.numeroCuotas.push(i);

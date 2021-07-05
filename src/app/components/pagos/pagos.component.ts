@@ -99,16 +99,20 @@ export class PagosComponent implements OnInit {
   }
   handleChange(info: NzUploadChangeParam): void {
     console.log(info);
+    this.system.loading = true;
     if (info.type === 'success') {
       const res = info.fileList[0].response;
       if (res.status === 200) {
+        this.system.loading = false;
         this.msg.success(`${info.file.name} cargado con éxito`);
       }
       if (res.status === 204) {
+        this.system.loading = false;
         this.msg.error(`${res.message}`);
       }
     }
     if (info.file.status !== 'uploading') {
+      this.system.loading = false;
       console.log(info.file, info.fileList);
     }
     // if (info.file.status === 'done') {

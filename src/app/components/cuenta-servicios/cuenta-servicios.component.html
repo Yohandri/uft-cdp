@@ -79,9 +79,9 @@
                                 <div class="p-1 estado-confirmado">
                                   <i nz-icon nzType="check"></i> Confirmado
                                 </div>
-                                <div class="p-1 estado-pagado">
+                                <!-- <div class="p-1 estado-pagado">
                                   <i nz-icon nzType="check"></i> Por confirmar
-                                </div>
+                                </div> -->
                                 <div class="p-1 estado-parcial">
                                   <i nz-icon nzType="check"></i> Parcial
                                 </div>
@@ -100,7 +100,11 @@
                             </td>
                             <td>{{i.nombre}}</td>
                             <!-- <td>{{i.fecha_vencimiento}}</td> -->
-                            <td >{{i.estado}}</td>
+                            <td >{{i.estado}}
+                              <span>
+                                {{i.guid === null && (i.estado === 'pagado' || i.estado === 'parcial'  )? ' (por confirmar)' : (i.guid === '1' && i.estado === 'pagado' ? ' (Confirmado)' : '') }}
+                              </span>
+                            </td>
                             <td class="text-right">
                               <h5 *ngIf="i.estado !== 'pagado'">{{system.toBs(i.monto) | currency: '': ''}} Bs / <small>{{system.toPetro(i.monto)}} P</small><small *ngIf="false">({{i.monto}})</small></h5>
                               <h5 *ngIf="i.estado === 'pagado'">{{getTotalPagado(i.pagos) | currency: '': ''}} Bs / <small>{{system.toPetro(system.toD(getTotalPagado(i.pagos)))}} P</small><small *ngIf="false">({{i.monto}})</small></h5>
@@ -263,8 +267,11 @@
                       
                     </div>
                     <div class="col-md-12 col-sm-12" *ngIf="form.tipo_pago_id === '2'">
-                      <p>
+                      <p class="mb-0">
                         Saldo disponible: <b [ngClass]="{'text-danger': restarSaldo(system.saldo) < 0}">{{ restarSaldo(system.saldo) | currency: ' ': ' '}} Bs</b>
+                      </p>
+                      <p class="mt-0">
+                        Saldo a pagar: <b [ngClass]="{'text-danger': restarSaldo(system.saldo) < 0}">{{ system.toBs(montoAPagar) | currency: ' ': ' '}} Bs</b>
                       </p>
                     </div>
                     <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
@@ -284,11 +291,18 @@
                     </div>
                     <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
                       <div class="form-group">
-                        <label for="payReferen">Referencia</label>
+                        <label for="payReferen">Referencia
+                          <!-- <button class="ml-2 btn btn-primary btn-sm pt-0 pb-0" nz-popover  [nzPopoverContent]="contentTemplate_" nzPopoverPlacement="leftTop">
+                            <i class="fa fa-info"></i>
+                          </button>
+                          <ng-template #contentTemplate_>
+                            Si la transferencia es de otro banco, colocar cedula del titular en la referencia.
+                          </ng-template> -->
+                        </label>
                         <input [(ngModel)]="form.referencia" type="text" class="form-control" id="payReferen">
                       </div>
                     </div>
-                    <div class="col-md-6 col-sm-12">
+                    <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
                       <div class="form-group ">
                         <label for="payAmount">Monto</label>
                         <div class="input-group">
