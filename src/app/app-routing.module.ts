@@ -17,6 +17,9 @@ import { CuentaCarrerasComponent } from './components/cuenta-carreras/cuenta-car
 import { CuentaServiciosComponent } from './components/cuenta-servicios/cuenta-servicios.component';
 import { CuentaIntensivosComponent } from './components/cuenta-intensivos/cuenta-intensivos.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { CuotasComponent } from './components/cuotas/cuotas.component';
+import { CuotasServiciosComponent } from './components/cuotas-servicios/cuotas-servicios.component';
+import { ActiveComponent } from './components/login/active/active.component';
 
 const routes: Routes = [
   {path: 'gp', component: ContainerComponent, canActivate: [SessionGuard],
@@ -33,10 +36,14 @@ const routes: Routes = [
     {path: 'servicios', component: CuentaServiciosComponent, canActivate: [StudentGuard]},
     {path: 'intensivos', component: CuentaIntensivosComponent, canActivate: [StudentGuard]},
     {path: 'ajustes', component: SettingsComponent, canActivate: [AdminGuard]},
+    {path: 'cuotas', component: CuotasComponent, canActivate: [AdminGuard]},
+    {path: 'cuotasServicios', component: CuotasServiciosComponent, canActivate: [AdminGuard]},
     {path: 'profile', component: ProfileComponent}
   ]
   },
-  {path: '', component: LoginComponent, canActivate: [LoginGuard]}
+  {path: '', component: LoginComponent, canActivate: [LoginGuard]},
+  {path: 'a/:guid', component: ActiveComponent, canActivate: [LoginGuard]},
+  {path: 'r/:guid', component: ActiveComponent, canActivate: [LoginGuard]}
 ];
 
 @NgModule({

@@ -27,8 +27,8 @@
                             <td>{{i.key}}</td>
                             <td>
                                 <input *ngIf="i.key === 'NUMERO_DIA'" [(ngModel)]="i.value" type="number">
-                                <input *ngIf="i.key !== 'NUMERO_DIA' && i.key !== 'SAIA' && i.key !== 'INSCRIPCION_LOTE'" [(ngModel)]="i.value" type="text">
-                                <select *ngIf="i.key === 'SAIA' || i.key === 'INSCRIPCION_LOTE'" [(ngModel)]="i.value">
+                                <input *ngIf="i.key !== 'NUMERO_DIA' && i.key !== 'SAIA' && i.key !== 'INSCRIPCION_LOTE' && i.key !== 'M_ULTIMA_CUOTA' && i.key !== 'DOLAR_ACTIVAR'" [(ngModel)]="i.value" type="text">
+                                <select *ngIf="i.key === 'SAIA' || i.key === 'INSCRIPCION_LOTE' || i.key === 'M_ULTIMA_CUOTA' || i.key === 'DOLAR_ACTIVAR'" [(ngModel)]="i.value">
                                     <option value="true">Activado</option>
                                     <option value="false">Desactivado</option>
                                 </select>

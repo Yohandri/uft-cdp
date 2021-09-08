@@ -292,7 +292,8 @@
                                     <tr>
                                         <th>Nombre</th>
                                         <th>Descripción</th>
-                                        <th>Valor ($)</th>
+                                        <th>Valor regular ($)</th>
+                                        <th>Valor nuevo ingreso ($)</th>
                                         <th>Fecha de vencimiento</th>
                                         <th></th>
                                     </tr>
@@ -305,6 +306,9 @@
                                         </td>
                                         <td>
                                             <input [disabled]="i.asignado === '1' ? '' : null" (keyup)="changeValor(i)" type="text" class="form-control form-control-sm text-right" [(ngModel)]="i.valor">
+                                        </td>
+                                        <td>
+                                            <input [disabled]="i.asignado === '1' ? '' : null" (keyup)="changeValor(i)" type="text" class="form-control form-control-sm text-right" [(ngModel)]="i.valor_ni">
                                         </td>
                                         <td>
                                             <input [disabled]="i.asignado === '1' ? '' : null" type="date" class="form-control form-control-sm" [(ngModel)]="i.fecha_vencimiento">

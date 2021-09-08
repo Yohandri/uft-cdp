@@ -33,6 +33,9 @@ import { CuentaIntensivosComponent } from './components/cuenta-intensivos/cuenta
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { SettingsComponent } from './components/settings/settings.component';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { CuotasComponent } from './components/cuotas/cuotas.component';
+import { CuotasServiciosComponent } from './components/cuotas-servicios/cuotas-servicios.component';
+import { ActiveComponent } from './components/login/active/active.component';
 // import localeVe from '@angular/common/locales/es-VE';
 // import { registerLocaleData } from '@angular/common';
 export function loadConfig(config: SettingsService) {
@@ -60,7 +63,10 @@ export function tokenGetter() {
     CuentaCarrerasComponent,
     CuentaServiciosComponent,
     CuentaIntensivosComponent,
-    SettingsComponent
+    SettingsComponent,
+    CuotasComponent,
+    CuotasServiciosComponent,
+    ActiveComponent
   ],
   imports: [
     BrowserModule,

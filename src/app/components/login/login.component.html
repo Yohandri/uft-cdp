@@ -7,7 +7,7 @@
                         <div _ngcontent-fed-c192="" class="row m-0">
                             <div _ngcontent-fed-c192=""
                                 class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center auth-img-bg p-3">
-                                <img _ngcontent-fed-c192="" src="./assets/img/Logo-uft.png" alt="logo" width="300"
+                                <img _ngcontent-fed-c192="" src="./assets/img/Logo-uft_2.jpg" alt="logo" width="300"
                                     height="230" class="img-fluid"></div>
                             <div _ngcontent-fed-c192="" class="col-lg-6 col-12 px-4 py-3" *ngIf="!isRegister && !isConfirm && !isForgetPassword">
                                 <h4 _ngcontent-fed-c192="" class="mb-2 card-title">
@@ -111,6 +111,16 @@
                                             required="" class="form-control ng-untouched ng-pristine ng-valid">
                                         <!---->
                                     </div>
+                                    <div _ngcontent-fed-c192="" class="form-group">
+                                        <input _ngcontent-fed-c192="" [(ngModel)]="newPassword"    [ngClass]="{'is-valid': newPassword !== '' && newPassword !== null && newPassword === newPasswordRepeat}"
+                                            type="password" placeholder="Contraseña" [ngModelOptions]="{standalone: true}"
+                                            required="" class="form-control ng-untouched ng-pristine ng-valid">
+                                    </div>
+                                    <div _ngcontent-fed-c192="" class="form-group">
+                                        <input _ngcontent-fed-c192="" [(ngModel)]="newPasswordRepeat"   [ngClass]="{'is-valid': newPassword !== '' && newPassword !== null && newPassword === newPasswordRepeat}"
+                                            type="password" placeholder="Repetir contraseña" [ngModelOptions]="{standalone: true}"
+                                            required="" class="form-control ng-untouched ng-pristine ng-valid">
+                                    </div>
                                     <!-- <div class="mb-2 text-center d-flex" [ngStyle]="{'overflow-x': 'auto', 'overflow-y': 'hidden'}" style="width: 100%;margin: auto;">
                                         <re-captcha
                                         style="width: 100%;text-align: center;margin: auto;"
@@ -127,11 +137,11 @@
                                                 _ngcontent-fed-c192="" class="btn bg-outline-primary mb-2 mb-sm-0"
                                                  [style]="{'opacity': '1', 'cursor': 'pointer'}" (click)="registerCancel()" >Cancelar</a>
                                             <button
-                                                _ngcontent-fed-c192="" class="btn btn-primary" type="submit" [disabled]="!captchaProtectedForm.form.valid">Registrarse</button>
+                                                _ngcontent-fed-c192="" class="btn btn-primary" type="submit" [disabled]="!validForm">Registrarse</button>
                                     </div>
                                 </form>
                             </div>
-                            <div _ngcontent-fed-c192="" class="col-lg-6 col-12 px-4 py-3" *ngIf="isConfirm">
+                            <div _ngcontent-fed-c192="" class="col-lg-6 col-12 px-4 py-3" *ngIf="isConfirm && false">
                                 <h4 _ngcontent-fed-c192="" class="mb-2 card-title">
                                     Confirmar
                                     <span class="float-right" *ngIf="system.isMobile">
@@ -235,3 +245,17 @@
 <button class="install-app" *ngIf="canInstallApp" (click)="installApp()">
     <i class="fa fa-download mr-2"></i>Instalar Aplicacion
 </button> -->
+
+<div class="hdmodal hdmodal-md" id="modal-tutorial">
+    <div class="hdmodal-content">
+      <div class="card p-0">
+        <h5 class="py-2 px-3 modal-title flex">
+          Registra tu pago
+          <i class="fa fa-times ml-auto closer" (click)="modalTutorialClose()"></i>
+        </h5>
+        <div class="container p-0">
+         <video id="tutorial" autoplay controls controlsList="nodownload" style="width: 100%;max-height: 420px;" src="assets/video/tutorial.mp4"></video>
+        </div>
+      </div>
+    </div>
+</div>

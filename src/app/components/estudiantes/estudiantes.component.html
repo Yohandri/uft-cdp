@@ -172,7 +172,8 @@
               <div class="row mt-2">
                 <div class="col-md-12">
                   <div class="d-flex flex-row-reverse">
-                    <button class="btn btn-primary ml-2" [attr.disabled]="tipo_pago_caja === '' || description === '' ? '' : null" (click)="reportar()">REPORTAR</button>
+                    <button *ngIf="btnConfirm" class="btn btn-primary ml-2" [attr.disabled]="tipo_pago_caja === '' || description === '' ? '' : null" (click)="reportar()">CONFIRMAR</button>
+                    <button *ngIf="!btnConfirm" class="btn btn-primary ml-2" [attr.disabled]="tipo_pago_caja === '' || description === '' ? '' : null" (click)="btnConfirm = true">REPORTAR</button>
                     <button class="btn btn-secoundary" (click)="reportarPagoCloseModal()">Cancelar</button>
                   </div>
                 </div>

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { displayModal, hideModal } from 'src/app/services';
 import { SystemService } from 'src/app/services/system.service';
 export interface FormRegister {
   ci?: string;
@@ -22,6 +24,7 @@ isRegister = false;
 isConfirm = false;
 code_confirm = null;
 newPassword = null;
+newPasswordRepeat = null;
 public formRegister: FormRegister = {};
 isForgetPassword = false;
 correo = '';
@@ -32,6 +35,10 @@ correo = '';
   ngOnInit(): void {
     const remember = localStorage.getItem('remember');
     const isRemenber = localStorage.getItem('isRemenber');
+    if (this.system.showTutorial) {
+      this.modalTutorialOpen();
+      this.system.showTutorial = false;
+    }
     if (remember) {
       const data = JSON.parse(window.atob(remember));
         this.loginModel.username = data.ci;
@@ -50,7 +57,7 @@ correo = '';
     const res = await this.system.forgetPassword(body);
     if (res) {
       this.isForgetPassword = false;
-      this.isConfirm = true;
+      this.isConfirm = false;
     }
   }
   async login() {
@@ -71,7 +78,7 @@ correo = '';
     }
   }
   register() {
-    this.formRegister = {};
+    this.formRegister = {ci: '', email: ''};
     this.isRegister = true;
   }
   registerCancel() {
@@ -80,11 +87,11 @@ correo = '';
   }
   async registerSubmit() {
     console.log(this.formRegister);
-    const body = {ci: this.formRegister.ci, correo: this.formRegister.email}
+    const body = {ci: this.formRegister.ci, correo: this.formRegister.email, password: this.newPassword}
     const res = await this.system.register(body);
     if (res) {
       this.isRegister = false;
-      this.isConfirm = true;
+      //this.isConfirm = true;
     }
   }
   async confirmcode() {
@@ -99,7 +106,23 @@ correo = '';
       this.isConfirm = false;
       this.code_confirm = '';
       this.newPassword = '';
+      this.newPasswordRepeat = '';
     }
+  }
+
+  modalTutorialOpen() {
+    displayModal('modal-tutorial');
+  }
+  modalTutorialClose() {
+    let playVideo: any = document.getElementById('tutorial');
+    playVideo.pause();
+    //document.getElementById("#tutorial").pause();
+    hideModal('modal-tutorial');
+  }
+  get validForm() {
+    console.log(this.formRegister);
+    //return this.formRegister !== null && this.formRegister.ci !== '';
+    return this.formRegister != {} && this.formRegister.ci !== '' && this.formRegister.email !== '' && this.newPassword !== '' && (this.newPassword === this.newPasswordRepeat);
   }
 
 }

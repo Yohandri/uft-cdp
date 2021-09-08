@@ -288,7 +288,7 @@
 </nav>
 <div _ngcontent-hkb-c126="" class="wrapper">
     <!--expanded menu-open-->
-    <div _ngcontent-hkb-c126="" appsidebar="" data-active-color="white" class="app-sidebar main-menu menu-fixed menu-native-scroll ng-star-inserted" data-background-color="man-of-steel" data-image="assets/img/sidebar-bg/04.jpg">
+    <div _ngcontent-hkb-c126="" appsidebar="" data-active-color="white" class="app-sidebar main-menu menu-fixed menu-native-scroll ng-star-inserted" data-background-color="man-of-steel" data-image="assets/img/04.png">
         <div _ngcontent-hkb-c126="" class="ng-tns-c125-10">
             <div class="sidebar-header ng-tns-c125-10 ng-star-inserted">
                 <div class="logo clearfix ng-tns-c125-10">
@@ -296,10 +296,10 @@
                         <div class="logo-img ng-tns-c125-10">
                             <img alt="Logo" title="Universidad Fermin Toro" class="ng-tns-c125-10" style="width: 30px;" src="./assets/img/Logo-uft-one.png">
                             </div>
-                        <span class="text align-middle ng-tns-c125-10 text-right"><img alt="Logo" title="Universidad Fermin Toro" class="ng-tns-c125-10" src="./assets/img/Logo-uft-one.png"></span>
+                        <span class="text align-middle ng-tns-c125-10 text-right" style="height: 100px;"><img alt="Logo" title="Universidad Fermin Toro"  style="width: 100%;position: absolute;left: 0;top: 0;" class="ng-tns-c125-10" src="./assets/img/LOGO.jpg"></span>
                         <!-- <span class="align-middle ng-tns-c125-10 float-right text-right d-md-none">Groceries <br> to shop</span> -->
                     </a>
-                    <span id="sidebarClose" class="d-block ng-tns-c125-10 d-xl-none">
+                    <span id="sidebarClose" class="d-block ng-tns-c125-10 d-xl-none" style="position: absolute;right: 0;">
                         <i (click)="system.btnToggleSidebar()" class="fa fa-times-circle sidebarClose"></i>
                     </span>
                     <!-- <a id="sidebarToggle" href="javascript:;"
@@ -309,7 +309,7 @@
                 </div>
             </div>
             <!---->
-            <div class="sidebar-content main-menu-content ng-tns-c125-10 ps ps--active-y">
+            <div class="sidebar-content main-menu-content ng-tns-c125-10 ps--active-y">
                 <div class="nav-container ng-tns-c125-10">
                     <ul appsidebardropdown="" class="navigation ng-tns-c125-10">
                         <!-- <li  appsidebarlink="" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="" routerLinkActive="active">
@@ -340,6 +340,16 @@
                         <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="tipopago" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('gp/tipopago')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-money" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Tipos de pago</span>
+                            </a>
+                        </li>
+                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="cuotas" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('gp/cuotas')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-archive" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Cuotas</span>
+                            </a>
+                        </li>
+                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="cuotasServicios" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('gp/cuotasServicios')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-square-o" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Cuotas de servicios</span>
                             </a>
                         </li>
                         <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="estudiantes" routerLinkActive="active">
@@ -421,7 +431,7 @@
                 </div>
             </div>
         </div>
-        <div _ngcontent-hkb-c126="" class="sidebar-background ng-star-inserted" style="background-image: url(./assets/img/04.jpg);"></div>
+        <div _ngcontent-hkb-c126="" class="sidebar-background ng-star-inserted" style="background-image: url(./assets/img/041.jpg);"></div>
     </div>
     <div _ngcontent-hkb-c126="" class="main-panel">
         <div _ngcontent-hkb-c126="" class="main-content">
@@ -445,3 +455,35 @@
 <div class="overlayCustom" *ngIf="system.loading">
     <mat-progress-bar  mode="indeterminate"></mat-progress-bar>
 </div>
+<div class="overlayCustom" *ngIf="!system.isDolar">
+    <h2 class="text-center mt-2">Contacte al administrador</h2>
+</div>
+
+<div class="hdmodal hdmodal-sm" id="modal-reload">
+    <div class="hdmodal-content">
+      <div class="card p-0">
+        <h5 class="py-2 px-3 modal-title flex">
+          Falla de conexión
+          <i class="fa fa-times ml-auto closer" (click)="system.modalReloadClose()"></i>
+        </h5>
+        <div class="container p-3 mb-2">
+         <p>Se perdió la conexión por favor presione el siguiente botón para recargar.</p>
+         <button class="btn btn-large btn-primary btn-block" (click)="system.reload()">Recargar</button>
+        </div>
+      </div>
+    </div>
+  </div> 
+  <div class="hdmodal hdmodal-sm" id="modal-reload-block">
+    <div class="hdmodal-content">
+      <div class="card p-0">
+        <h5 class="py-2 px-3 modal-title flex">
+          Falla de conexión
+          <i class="fa fa-times ml-auto closer" (click)="system.reload()"></i>
+        </h5>
+        <div class="container p-3 mb-2">
+         <p>Se perdió la conexión por favor presione el siguiente botón para recargar.</p>
+         <button class="btn btn-large btn-primary btn-block" (click)="system.reload()">Recargar</button>
+        </div>
+      </div>
+    </div>
+  </div> 

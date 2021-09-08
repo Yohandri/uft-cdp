@@ -27,9 +27,21 @@
                         <i class="fa fa-floppy-o" aria-hidden="true"></i>
                         Guardar
                     </button> -->
-                    <button class="btn btn-primary float-right btn-sm" (click)="cancelar()" *ngIf="isForm">
+                    <button class="btn btn-primary float-right btn-sm" (click)="cancelar()" *ngIf="isForm && !isEdit">
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         Regresar
+                    </button>
+                    <button class="btn btn-primary float-right btn-sm mr-2" (click)="editBtn()" *ngIf="isForm && !isEdit && form.montobs_confirm === ''">
+                        <i class="fa fa-edit" aria-hidden="true"></i>
+                        Editar
+                    </button>
+                    <button class="btn btn-primary float-right btn-sm" (click)="save()" *ngIf="isForm && isEdit">
+                        <i class="fa fa-save" aria-hidden="true"></i>
+                        Guardar
+                    </button>
+                    <button class="btn btn-primary float-right btn-sm mr-2" (click)="cancelBtn()" *ngIf="isForm && isEdit">
+                        <i class="fa fa-ban" aria-hidden="true"></i>
+                        Cancelar
                     </button>
                     <button class="btn btn-primary float-right btn-sm mr-2 mt-1" (click)="initDelete()" *ngIf="!isForm && selected.selected.length > 0">
                         <i class="fa fa-trash" aria-hidden="true"></i>
@@ -45,7 +57,7 @@
                             Limpiar
                         </button>    
                     </div>
-                    <small class="mr-2 mt-1" [ngClass]="{'float-right': !system.isMobile}">
+                    <small class="mr-2 mt-1" [ngClass]="{'float-right': !system.isMobile, 'text-danger': system.isCatchDolar}">
                         Dolar: {{system.dolar.valor | currency: 'Bs ': true}}
                     </small>
                 </h3>
@@ -114,6 +126,7 @@
                             <tr *ngFor="let i of data" [ngClass]="{'estado-confirmado': i.montobs_confirm !== '' }">
                                 <td>
                                     <input [disabled]="i.montobs_confirm ? '' : null" type="checkbox" [(ngModel)]="selected.value[i.id].value">
+                                    <!-- <input [disabled]="i.montobs_confirm ? (i.tipo_pago_caja !== null ? null : '') : null" type="checkbox" [(ngModel)]="selected.value[i.id].value"> -->
                                 </td>
                                 <td class="cursorPointer" (click)="edit(i)">{{i.fecha}}</td>
                                 <td class="cursorPointer" (click)="edit(i)">{{i.titular_nombre}} </td>
@@ -168,16 +181,16 @@
                 </div>
                 <div *ngIf="isForm">
                     <div class="row mb-2">
-                        <div class="col-md-6 col-sm-12"> 
+                        <div class="col-md-6 col-sm-12 h-52"> 
                             <div>Fecha</div>
-                            <b class="pl-2">{{form.fecha}}</b>
-                            
+                            <b *ngIf="!isEdit" class="pl-2">{{form.fecha}}</b>
+                            <input *ngIf="isEdit" type="date" class="form-control form-control-sm" id="fecha" [(ngModel)]="form.fecha">
                             <!-- <div class="form-group">
                                 <label for="referencia">Referencia</label>
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="referencia" [(ngModel)]="form.referencia">
                             </div> -->
                         </div>
-                        <div class="col-md-6 col-sm-12" *ngIf="form.titular_nombre !== null">
+                        <div class="col-md-6 col-sm-12 h-52" *ngIf="form.titular_nombre !== null">
                             <div>Nombre y apellido del titular</div>
                             <b class="pl-2">{{form.titular_nombre}} {{form.titular_apellido}}</b>
                             <!-- <div class="form-group">
@@ -185,15 +198,16 @@
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">
                             </div> -->
                         </div>
-                        <div class="col-md-6 col-sm-12" *ngIf="form.titular_cedula !== null">
+                        <div class="col-md-6 col-sm-12 h-52" *ngIf="form.titular_cedula !== null">
                             <div>Cedula del titular</div>
-                            <b class="pl-2">{{form.titular_cedula}}</b>
+                            <b *ngIf="!isEdit" class="pl-2">{{form.titular_cedula}}</b>
+                            <input *ngIf="isEdit" type="text" class="form-control form-control-sm" id="titular_cedula" [(ngModel)]="form.titular_cedula">
                             <!-- <div class="form-group">
                                 <label for="user">Usuario</label>
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="user" [(ngModel)]="form.user_id">
                             </div> -->
                         </div>
-                        <div class="col-md-6 col-sm-12" *ngIf="form.titular_telefono !== null">
+                        <div class="col-md-6 col-sm-12 h-52" *ngIf="form.titular_telefono !== null">
                             <div>Teléfono del titular</div>
                             <b class="pl-2">{{form.titular_telefono}}</b>
                             <!-- <div class="form-group">
@@ -201,7 +215,7 @@
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">
                             </div> -->
                         </div>
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-6 col-sm-12 h-52">
                             <div>nombre y apellido estudiante</div>
                             <b class="pl-2">{{form.user?.nombre}} {{form.user?.apellido}}</b>
                             <!-- <div class="form-group">
@@ -209,7 +223,7 @@
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">
                             </div> -->
                         </div>
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-6 col-sm-12 h-52">
                             <div>Cedula estudiante</div>
                             <b class="pl-2">{{form?.user?.cedula}}</b>
                             <!-- <div class="form-group">
@@ -217,7 +231,7 @@
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">
                             </div> c_c_e_lapso-->
                         </div>
-                        <div class="col-md-6 col-sm-12" *ngIf="form?.c_servicio !== null">
+                        <div class="col-md-6 col-sm-12 h-52" *ngIf="form?.c_servicio !== null">
                             <div *ngIf="form?.c_servicio?.tipo === 'servicio'">Nombre del servicio</div>
                             <div *ngIf="form?.c_servicio?.tipo === 'materia'">Nombre de materia</div>
                             <div *ngIf="form?.c_servicio?.tipo === 'inscripcion'">Nombre del servicio</div>
@@ -227,7 +241,7 @@
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">
                             </div> -->
                         </div>
-                        <div class="col-md-6 col-sm-12" *ngIf="form?.c_c_e_lapso !== null ">
+                        <div class="col-md-6 col-sm-12 h-52" *ngIf="form?.c_c_e_lapso !== null ">
                             <div>Nombre de carrera</div>
                             <b class="pl-2">{{form?.c_c_e_lapso?.c_e_lapso?.carrera?.nombre}}</b>
                             <!-- <div class="form-group">
@@ -235,7 +249,7 @@
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">
                             </div> -->
                         </div>
-                        <div class="col-md-6 col-sm-12" *ngIf="form.banco_id !== null">
+                        <div class="col-md-6 col-sm-12 h-52" *ngIf="form.banco_id !== null">
                             <div>Banco</div>
                             <b class="pl-2">{{getBanco(form.banco_id)}}</b>
                             <!-- <div class="form-group">
@@ -243,9 +257,10 @@
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="fecha" [(ngModel)]="form.fecha">
                             </div> -->
                         </div>
-                        <div class="col-md-6 col-sm-12" *ngIf="form.referencia !== null">
+                        <div class="col-md-6 col-sm-12 h-52" *ngIf="form.referencia !== null">
                             <div>Referencia</div>
-                            <b class="pl-2">{{form.referencia}}</b>
+                            <b *ngIf="!isEdit" class="pl-2">{{form.referencia}}</b>
+                            <input *ngIf="isEdit" type="text" class="form-control form-control-sm" id="referencia" [(ngModel)]="form.referencia">
                             <!-- <div class="form-group">
                                 <label for="tipo_pago_id">Tipo de pago</label>
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="tipo_pago_id" [(ngModel)]="form.tipo_pago_id">
@@ -254,15 +269,16 @@
                         
                         
                         
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-6 col-sm-12 h-52">
                             <div>Monto en Bs</div>
-                            <b class="pl-2">{{form.montobs | currency: 'Bs ': true}}</b>
+                            <b *ngIf="!isEdit" class="pl-2">{{form.montobs | currency: 'Bs ': true}}</b>
+                            <input *ngIf="isEdit" type="text" class="form-control form-control-sm" id="montobs" [(ngModel)]="form.montobs">
                             <!-- <div class="form-group">
                                 <label for="monto">Monto</label>
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">
                             </div> -->
                         </div>
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-6 col-sm-12 h-52">
                             <div>Monto ($)</div>
                             <b class="pl-2">{{form.monto | currency: '$ ' }} / {{system.toPetro(form.monto)}} (P)</b>
                             <!-- <div class="form-group">
@@ -270,7 +286,7 @@
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">
                             </div> -->
                         </div>
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-6 col-sm-12 h-52">
                             <div>Monto al cambio (Bs)</div>
                             <b class="pl-2">{{form.montobs_cambio | currency: 'Bs ' }} </b>
                             <!-- <div class="form-group">
@@ -278,7 +294,7 @@
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">
                             </div> -->
                         </div>
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-6 col-sm-12 h-52">
                             <div>Estado</div>
                             <b class="pl-2" [ngClass]="{'text-success': form.montobs_confirm != '', 'text-danger': form.montobs_confirm === ''}">{{form.montobs_confirm !== '' ? 'Confirmado' : 'No confirmado' }}</b>
                             <!-- <div class="form-group">
@@ -286,7 +302,7 @@
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">
                             </div> -->
                         </div>
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-6 col-sm-12 h-52">
                             <div>Tipo de pago</div>
                             <b class="pl-2" >{{ gettipopago(form.tipo_pago_id) === '' ? form.tipo_pago_caja : gettipopago(form.tipo_pago_id) }}</b>
                             <!-- <div class="form-group">

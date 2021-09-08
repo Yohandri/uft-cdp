@@ -44,14 +44,16 @@ class FormPlan {
 class Cuotas {
   nombre = '';
   valor = '';
+  valor_ni = '';
   fecha_vencimiento = '';
   description	= '';
   plan_id = '';
-  constructor(nombre = '',fecha_vencimiento = '', description = '', valor = '') {
+  constructor(nombre = '',fecha_vencimiento = '', description = '', valor = '', valor_ni = '') {
     this.nombre = nombre;
     this.fecha_vencimiento = fecha_vencimiento;
     this.description = description;
     this.valor = valor;
+    this.valor_ni = valor_ni;
   }
 }
 @Component({
@@ -379,7 +381,7 @@ export class PlanesComponent implements OnInit {
           j.setDate(j.getDate() - 1);
           fechaVencimiento = j.getMonth()+1 < 10 ? j.getFullYear() +"-"+ '0' + (j.getMonth()+1) +"-"+ (j.getDate() < 10 ? '0' + j.getDate() : j.getDate() ) : j.getFullYear() +"-"+ (j.getMonth()+1) +"-"+ (j.getDate() < 10 ? '0' + j.getDate() : j.getDate() );
         }
-        this.cuotas.push(new Cuotas('Cuota ' + (i + 1), fechaVencimiento, '', monXcuotas.toFixed(2)));
+        this.cuotas.push(new Cuotas('Cuota ' + (i + 1), fechaVencimiento, '', monXcuotas.toFixed(2), monXcuotas.toFixed(2)));
         //this.cuotas.push(new Cuotas('Cuota ' + (iscuota1 ? i + 2 : i + 1), fechaVencimiento, '', monXcuotas.toFixed(2)));
       }
     }
@@ -424,7 +426,7 @@ export class PlanesComponent implements OnInit {
     console.log(suma);
   }
   addCuota() {
-    this.cuotas.push(new Cuotas('Cuota nueva', '', '', ''));
+    this.cuotas.push(new Cuotas('Cuota nueva', '', '', '', ''));
     this.form.num_cuotas = String(this.cuotas.length);
   }
   deleteCuota(index) {

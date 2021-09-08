@@ -70,7 +70,7 @@ export class CuentaCarrerasComponent implements OnInit {
     const pagosSelelect = [];
     this.selected.init(this.cuotas);
     for (let i = 0;i < this.cuotas.length;i++) {
-      this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
+      //this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
       let montopagado = 0;
       for(let j of this.cuotas[i].pagos) {
         pagosSelelect.push(j);
@@ -255,7 +255,8 @@ operarResta(i) {
               this.cuotas[i].monto = parseFloat(this.cuotas[i].monto);
             }
             this.displayCuotas = true;
-          } else {
+          } else if (res.status === 204) {
+            this.system.message(res.message, 'danger', 5000);
           }
         } catch (error) {
         }
@@ -296,7 +297,7 @@ operarResta(i) {
     const month = ('0' + (fechaActual.getMonth() + 1)).slice(-2);
     const day = ('0' + fechaActual.getDate()).slice(-2);
     const fechaToday = year + '-' + month + '-' + day;
-    return new Date(obj.fecha_vencimiento).getTime() < new Date(fechaToday).getTime() && obj.estado !== 'pagado';
+    return obj.estado === 'anulado' ? false : new Date(obj.fecha_vencimiento).getTime() < new Date(fechaToday).getTime() && obj.estado !== 'pagado';
   }
   getTotalPagado(obj) {
     let val = 0;

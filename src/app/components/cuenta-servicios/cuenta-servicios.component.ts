@@ -21,6 +21,7 @@ export class CuentaServiciosComponent implements OnInit {
   bancos = [];
   tipospago = [];
   PagosSelected = new SelectItem();
+  becado_media = false;
   constructor(
     public system: SystemService
   ) { }
@@ -28,6 +29,7 @@ export class CuentaServiciosComponent implements OnInit {
   async ngOnInit() {
     this.system.module.name = 'Gestión de servicios';
     this.system.module.icon = 'file-o';
+    this.becado_media = this.system.decodedToken?.user?.becado_media || false;
     if (this.system.isMobile) {
       this.system.module.name = 'Servicios';
     }
@@ -74,6 +76,11 @@ export class CuentaServiciosComponent implements OnInit {
          return [];
        }
      });
+     if (this.becado_media) {
+       for(let i of this.serviciosList) {
+         i.mon_total = Number(i.mon_total) / 2;
+       }
+     }
  }
  async getCuotas() {
   this.cuotas = [];
@@ -93,7 +100,7 @@ export class CuentaServiciosComponent implements OnInit {
    });
    
    for (let i = 0;i < this.cuotas.length;i++) {
-    this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
+    //this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
     let montopagado = 0;
     for(let j of this.cuotas[i].pagos) {
       console.log(parseFloat(j.monto));
@@ -200,7 +207,8 @@ confirm() {
         
         this.form.reset();
         await this.refreshData();
-      } else {
+      } else if (res.status === 204) {
+        this.system.message(res.message, 'danger', 5000);
       }
     } catch (error) {
     }
@@ -262,7 +270,7 @@ delete() {
  async solicitar_servicio() {
    const planSelect = this.serviciosList.find(x => x?.servicio?.id === Number(this.servicioSelect));
    //console.log(this.serviciosList, planSelect);
-   const body = {codigo: planSelect?.lapso_codigo, servicio: this.servicioSelect, tipo: planSelect?.tipo === 'inscripcion' ? 'inscripcion' : 'servicio'};
+   const body = {becado_mdeia: this.becado_media, codigo: planSelect?.lapso_codigo, servicio: this.servicioSelect, tipo: planSelect?.tipo === 'inscripcion' ? 'inscripcion' : 'servicio'};
    //console.log(body);
   await this.system.post('api/estudiante/solicitar_servicio', body, true).then(res => {
      try {

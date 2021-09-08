@@ -92,7 +92,7 @@ export class CuentaIntensivosComponent implements OnInit {
      }
    });
    for (let i = 0;i < this.cuotas.length;i++) {
-    this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
+    //this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
     let montopagado = 0;
     for(let j of this.cuotas[i].pagos) {
       console.log(parseFloat(j.monto));
@@ -206,7 +206,8 @@ confirm() {
         
         this.form.reset();
         await this.refreshData();
-      } else {
+      } if (res.status === 204) {
+        this.system.message(res.message, 'danger', 5000);
       }
     } catch (error) {
     }

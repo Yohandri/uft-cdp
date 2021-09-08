@@ -79,6 +79,7 @@ export class PagosComponent implements OnInit {
   to = '';
   confirm = '';
   type = '';
+  isEdit = false;
   constructor(
     public system: SystemService,
     private msg: NzMessageService
@@ -94,7 +95,7 @@ export class PagosComponent implements OnInit {
   }
   changeBank() {
     setTimeout(() => {
-      this.urlUpload = this.system.settingsService.Settings.endpoint + 'api/planes/import_' + (this.banco_id === '1' ? 'provincial' : (this.banco_id === '2' ?  'banesco' : 'mercantil'));
+      this.urlUpload = this.system.settingsService.Settings.endpoint + 'api/planes/import_' + (this.banco_id === '1' ? 'provincial' : (this.banco_id === '2' || this.banco_id === '5' ?  'banesco' : 'mercantil'));
     }, 100);
   }
   handleChange(info: NzUploadChangeParam): void {
@@ -126,6 +127,15 @@ export class PagosComponent implements OnInit {
     this.isForm = true;
     this.isNew = true;
   }
+  editBtn() {
+    this.isEdit = true;
+  }
+  saveBtn() {
+    this.isEdit = false;
+  }
+  cancelBtn() {
+    this.isEdit = false;
+  }
   async cancelar() {
     this.form = new FormPago();
     this.loadData = false;
@@ -140,14 +150,13 @@ export class PagosComponent implements OnInit {
   save() {
     console.log(this.form);
     this.system.loading = true;
-    this.system.post(this.isNew ? 'api/pagos/create' : 'api/pagos/update' , this.form).then(res => {
+    this.system.post(this.isNew ? 'api/pagos/update' : 'api/pagos/update' , this.form).then(res => {
       try {
         this.system.loading = false;
         if (res.status === 200) {
           console.log(res);
-          if (res.object === 1) {
-            this.system.message(res.message, 'success');
-          }
+          this.system.message(res.message, 'success');
+          this.saveBtn();
           if (this.isNew) {
             this.edit(res.object);
             this.system.message(res.message, 'success');

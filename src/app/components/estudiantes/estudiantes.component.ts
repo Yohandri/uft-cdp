@@ -26,6 +26,7 @@ export class EstudiantesComponent implements OnInit {
   isSearch = false;
   buscado = false;
   description = '';
+  btnConfirm = false;
   constructor(
     public system: SystemService
   ) { }
@@ -56,18 +57,20 @@ export class EstudiantesComponent implements OnInit {
           this.cuotas_pendientes = res.object.cuotas_pendientes;
 
           for (let i = 0;i < this.cuotas.length;i++) {
-            this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
+            //this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
             let montopagado = 0;
             for(let j of this.cuotas[i].pagos) {
-              console.log(parseFloat(j.monto));
-              montopagado = montopagado + parseFloat(j.monto);
+              if (j.montobs_confirm !== '') {
+                console.log(parseFloat(j.monto));
+                montopagado = montopagado + parseFloat(j.monto);
+              }
             }
             this.cuotas[i].pagado = montopagado;
             this.cuotas[i].monto = (parseFloat(this.cuotas[i].monto) - this.cuotas[i].pagado).toFixed(2);
           }
 
           for (let i = 0;i < this.cuotas_pendientes.length;i++) {
-            this.cuotas_pendientes[i].pagos = await this.getPagos(this.cuotas_pendientes[i].id);
+            //this.cuotas_pendientes[i].pagos = await this.getPagos(this.cuotas_pendientes[i].id);
             let montopagado = 0;
             for(let j of this.cuotas_pendientes[i].pagos) {
               console.log(parseFloat(j.monto));
@@ -108,6 +111,7 @@ export class EstudiantesComponent implements OnInit {
   }
   reportarPagoModal(pendientes = 0) {
     this.cuotasToPay = [];
+    this.btnConfirm = false;
     if (pendientes === 0) {
       for (let i of this.selectedCuotasVencidas.selected) {
         for (let j of this.cuotas) {
@@ -144,6 +148,7 @@ export class EstudiantesComponent implements OnInit {
     displayModal('modal-pay');
   }
   reportarPagoCloseModal() {
+    this.btnConfirm = false;
     hideModal('modal-pay');
   }
  async reportar() {

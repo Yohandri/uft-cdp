@@ -248,7 +248,7 @@
                     <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
                       <div class="form-group">
                         <label for="payCi">Cedula de identidad</label>
-                        <input [(ngModel)]="form.titular_celular" type="text" class="form-control" id="payCi">
+                        <input [(ngModel)]="form.titular_celular" type="number" class="form-control" id="payCi">
                       </div>
                     </div>
                     <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
@@ -296,7 +296,7 @@
                             Si la transferencia es de otro banco, colocar cedula del titular en la referencia.
                           </ng-template> -->
                         </label>
-                        <input [(ngModel)]="form.referencia" type="text" class="form-control" id="payReferen">
+                        <input [(ngModel)]="form.referencia" type="number" class="form-control" id="payReferen">
                       </div>
                     </div>
                     <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">

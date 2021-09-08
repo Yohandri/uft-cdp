@@ -17,6 +17,7 @@
               <tr class="head">
                 <!-- <th></th> -->
                 <th>Carrera</th>
+                <th>Cuota</th>
                 <th>Fecha de vencimiento</th>
                 <th>Estado</th>
                 <th class="text-right">Monto</th>
@@ -44,11 +45,12 @@
                   </ng-template>
                 </th>
               </tr>
-              <tr *ngFor="let i of cuotas" [ngClass]="{'estado-pagado': i.estado === 'pagado' && i.guid === null, 'estado-parcial': i.estado === 'parcial' && i.guid === null, 'estado-confirmado': i.guid === '1', 'estado-vencido': esVencido(i)}">
+              <tr *ngFor="let i of cuotas" [ngClass]="{'estado-pagado': i.estado === 'pagado' && i.guid === null, 'estado-parcial': i.estado === 'parcial' && i.guid === null, 'estado-confirmado': i.guid === '1', 'estado-vencido': esVencido(i), 'estado-anulado': i.estado === 'anulado' && i.guid === 1}">
                 <!-- <td>
                   <input [attr.disabled]="i.montobs_confirm ? '' : null"  type="checkbox" [(ngModel)]="selected.value[i.id].value">
                 </td> -->
                 <td>{{i.rp_carreraestudiante_lapso?.carrera?.nombre}}</td>
+                <td>{{i.nombre}}</td>
                 <td>{{i.fecha_vencimiento}}</td>
                 <td >{{i.estado}}
                   <span>
@@ -56,16 +58,16 @@
                   </span>
                 </td>
                 <td class="text-right">
-                  <h5 *ngIf="i.estado !== 'pagado'">{{system.toBs(i.monto) | currency: '': ''}} Bs  / <small>{{system.toPetro(i.monto)}} P</small><small *ngIf="false">({{i.monto}})</small></h5>
+                  <h5 *ngIf="i.estado !== 'pagado' && i.estado !== 'anulado'">{{system.toBs(i.monto) | currency: '': ''}} Bs  / <small>{{system.toPetro(i.monto)}} P</small><small *ngIf="false">({{i.monto}})</small></h5>
                   <h5 *ngIf="i.estado === 'pagado'">{{getTotalPagado(i.pagos) | currency: '': ''}} Bs / <small>{{system.toPetro(system.toD(getTotalPagado(i.pagos)))}} P</small><small *ngIf="false">({{i.monto}})</small></h5>
                 </td>
                 <td class="text-right">
-                  <h5 *ngIf="i.estado !== 'pagado'">{{system.toBs(i.monto - i.pagado) | currency: '': ''}} Bs  / <small>{{system.toPetro(i.monto - i.pagado)}} P</small><small *ngIf="false">({{i.monto - i.pagado}})</small></h5>
+                  <h5 *ngIf="i.estado !== 'pagado' && i.estado !== 'anulado'">{{system.toBs(i.monto - i.pagado) | currency: '': ''}} Bs  / <small>{{system.toPetro(i.monto - i.pagado)}} P</small><small *ngIf="false">({{i.monto - i.pagado}})</small></h5>
                   <h5 *ngIf="i.estado === 'pagado'">0 Bs <small *ngIf="false">({{i.monto - i.pagado}})</small></h5>
                 </td>
                 <td class="text-center">
                   
-                  <div class="btn-group btn-group-sm float-right mr-2" role="group">
+                  <div *ngIf="i.estado !== 'anulado'" class="btn-group btn-group-sm float-right mr-2" role="group">
                     <button *ngIf="i.estado !== 'pagado'" class="btn btn-primary btn-sm" (click)="initPay(i.id)">
                       Reportar pago
                     </button>
@@ -79,7 +81,7 @@
                 </td>
               </tr>
               <tr *ngIf="cuotas.length === 0">
-                <td class="text-center" colspan="6">
+                <td class="text-center" colspan="7">
                   No tiene cuotas pendiente
                 </td>
               </tr>
@@ -175,7 +177,7 @@
                   <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
                     <div class="form-group">
                       <label for="payCi">Cedula de identidad</label>
-                      <input [(ngModel)]="form.titular_celular" type="text" class="form-control" id="payCi">
+                      <input [(ngModel)]="form.titular_celular" type="number" class="form-control" id="payCi">
                     </div>
                   </div>
                   <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
@@ -223,7 +225,7 @@
                           Si la transferencia es de otro banco, colocar cedula del titular en la referencia.
                         </ng-template> -->
                       </label>
-                      <input [(ngModel)]="form.referencia" type="text" class="form-control" id="payReferen">
+                      <input [(ngModel)]="form.referencia" type="number" class="form-control" id="payReferen">
                     </div>
                   </div>
                   <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">

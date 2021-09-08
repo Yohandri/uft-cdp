@@ -1,0 +1,75 @@
+<section _ngcontent-fed-c192="" id="login">
+    <div _ngcontent-fed-c192="" class="row auth-height full-height-vh m-0">
+        <div _ngcontent-fed-c192="" class="col-12 d-flex align-items-center justify-content-center">
+            <div _ngcontent-fed-c192="" class="card overflow-hidden">
+                <div _ngcontent-fed-c192="" class="card-content">
+                    <div _ngcontent-fed-c192="" class="card-body auth-img">
+                        <div _ngcontent-fed-c192="" class="row m-0">
+                            <div _ngcontent-fed-c192=""
+                                class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center auth-img-bg p-3">
+                                <img _ngcontent-fed-c192="" src="./assets/img/Logo-uft_2.jpg" alt="logo" width="300"
+                                    height="230" class="img-fluid"></div>
+                           
+                            <div _ngcontent-fed-c192="" class="col-lg-6 col-12 px-4 py-3" *ngIf="!isForgetPassword">
+                                <h4 _ngcontent-fed-c192="" class="mb-2 card-title">
+                                    <span *ngIf="!load && !isForgetPassword">Confirmando... </span>
+                                    <span class="float-right" *ngIf="system.isMobile">
+                                        <img _ngcontent-fed-c192="" src="./assets/img/Logo-uft.png" alt="logo" width="120"
+                                    height="120" class="img-fluid" style="top: -10px;position: relative;" >
+                                    </span>
+                                </h4>
+                                <!-- <p _ngcontent-fed-c192="">Correo confirmado</p> -->
+                                <div _ngcontent-fed-c192="" *ngIf="load && !isForgetPassword"
+                                            class="d-flex justify-content-between flex-sm-row flex-column">
+                                         
+                                            <button
+                                                _ngcontent-fed-c192="" class="btn btn-primary" type="button" (click)="system.goto('')" >Iniciar sesión</button>
+                                    </div>
+                            </div>
+                            <div _ngcontent-fed-c192="" class="col-lg-6 col-12 px-4 py-3" *ngIf="isForgetPassword">
+                                <h4 _ngcontent-fed-c192="" class="mb-2 card-title">
+                                    Cambiar contraseña
+                                    <span class="float-right" *ngIf="system.isMobile">
+                                        <img _ngcontent-fed-c192="" src="./assets/img/Logo-uft.png" alt="logo" width="120"
+                                    height="120" class="img-fluid" style="top: -10px;position: relative;" >
+                                    </span>
+                                </h4>
+                                <div _ngcontent-fed-c192="" class="form-group" *ngIf="!load"> 
+                                    <input _ngcontent-fed-c192="" [(ngModel)]="newPassword"    [ngClass]="{'is-valid': newPassword !== '' && newPassword !== null && newPassword === newPasswordRepeat}"
+                                        type="password" placeholder="Contraseña" [ngModelOptions]="{standalone: true}"
+                                        required="" class="form-control ng-untouched ng-pristine ng-valid">
+                                </div>
+                                <div _ngcontent-fed-c192="" class="form-group" *ngIf="!load">
+                                    <input _ngcontent-fed-c192="" [(ngModel)]="newPasswordRepeat"   [ngClass]="{'is-valid': newPassword !== '' && newPassword !== null && newPassword === newPasswordRepeat}"
+                                        type="password" placeholder="Repetir contraseña" [ngModelOptions]="{standalone: true}"
+                                        required="" class="form-control ng-untouched ng-pristine ng-valid">
+                                </div>
+                                <div _ngcontent-fed-c192="" *ngIf="!load"
+                                            class="d-flex justify-content-between flex-sm-row flex-column">
+                                            <!-- <a
+                                                _ngcontent-fed-c192="" class="btn bg-outline-primary mb-2 mb-sm-0"
+                                                 [style]="{'opacity': '1', 'cursor': 'pointer'}"  >Cancelar</a> -->
+                                            <button
+                                                _ngcontent-fed-c192="" class="btn btn-primary" type="button" (click)="confirmcode()" [attr.disabled]="(newPassword !== '' && newPassword !== null && newPassword === newPasswordRepeat) ? null : ''" >Cambiar</button>
+                                    </div>
+                                    <div _ngcontent-fed-c192="" *ngIf="load && isForgetPassword"
+                                            class="d-flex justify-content-between flex-sm-row flex-column">
+                                         
+                                            <button
+                                                _ngcontent-fed-c192="" class="btn btn-primary" type="button" (click)="system.goto('')" >Iniciar sesión</button>
+                                    </div>
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="overlayCustom" *ngIf="system.loading">
+    <mat-progress-bar  mode="indeterminate"></mat-progress-bar>
+</div>
+
+

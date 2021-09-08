@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import jwtDecode  from 'jwt-decode';
 import { SettingsService } from './config.service';
+import { displayModal, hideModal } from '.';
 @Injectable({
   providedIn: 'root'
 })
@@ -19,6 +20,11 @@ export class SystemService {
   dolar = new DolarStatus();
   isSolvente = false;
   saldo = '';
+  isDolar = true;
+  showTutorial = true;
+  isBlock = false;
+  isModalReload = false;
+  isCatchDolar = false;
   constructor(
     public router: Router,
     private http: HttpClient,
@@ -26,20 +32,43 @@ export class SystemService {
     public settingsService: SettingsService
   ) {
     if (this.isLogged) {
-      this.getFile({resource: 'https://s3.amazonaws.com/dolartoday/data.json'}).then(((res) => {
-            try {
-                if (res) {
-                  const data = JSON.parse(res) as any;
-                    // this.settings = JSON.parse(res) as any;
-                    // this.endpoint = this.settings.InertiaApiUrl;
-                    console.log(data);
-                    this.dolar.setUSD(data.USD);
-                }
-            }  catch (ex) {
-                return ex;
-            } finally {
+      // this.getFile({resource: 'https://s3.amazonaws.com/dolartoday/data.json'}).then(((res) => {
+      //       try {
+      //           if (res) {
+      //             const data = JSON.parse(res) as any;
+      //               // this.settings = JSON.parse(res) as any;
+      //               // this.endpoint = this.settings.InertiaApiUrl;
+      //               console.log(data);
+      //               this.dolar.setUSD(data.USD);
+      //           }
+      //       }  catch (ex) {
+      //           return ex;
+      //       } finally {
+      //       }
+      //   }).bind(this));
+        this.http.get(this.settingsService.Settings.endpoint + 'api/dolar').toPromise().then((res:any) => {
+          try {
+            console.log(res);
+            if (res.status === 200) {
+              this.dolar.setUSD(res.object, parseFloat(res.error));
             }
-        }).bind(this));
+            if (res.status === 204) {
+              this.dolar.setUSD(0);
+              this.isDolar = false;
+              this.isCatchDolar = true;
+            }
+
+          } catch (error) {
+            this.loading = true;
+            this.isCatchDolar = true;
+            displayModal('modal-reload-block');
+            console.log(error);
+          }
+        }).catch(error => {
+            this.loading = true;
+            this.isCatchDolar = true;
+            displayModal('modal-reload-block');
+        });
     }
   }
 
@@ -96,10 +125,10 @@ async register(body, confirm = false) {
   return this.http.post(this.settingsService.Settings.endpoint + (confirm ? 'api/active' : 'api/register'), body, {headers: this.headers}).toPromise().then((res: any) => {
     this.loading = false;
     if (res.status === 200) {
-      this.message(res.message, 'success');
+      this.message(res.message, 'success', 7000);
       return true;
     } else {
-      this.message(res.message, 'danger');
+      this.message(res.message, 'danger', 7000);
       return false;
     }
   }).catch((res: any) => {
@@ -159,13 +188,17 @@ async getFile({resource}) {
       xhr.send();
   });
 }
-public async post(path: string = '', body: any, loading = true) {
+public async post(path: string = '', body: any, loading = true, block = false) {
   this.loading = loading ? true : false;
+  this.isBlock = block;
   const headers = new HttpHeaders().append('Authorization', 'Bearer ' + localStorage.getItem('access_token'));
   return this.http.post(this.settingsService.Settings.endpoint + path, body, {headers: headers}).toPromise().then(res => {
     this.loading = false;
     return this.calculateRequest(res);
   }).catch((res: any) => {
+    if (!this.isBlock) {
+      this.loading = false;
+    }
     return this.handlerError(res)
   });
 }
@@ -194,6 +227,29 @@ downLoadFile(data: any, type: string, body) {
   var link=document.createElement('a');
   link.href=window.URL.createObjectURL(blob);
   link.download="Pagos_" + body.from + '_' + body.to +".xlsx";
+  link.click();
+
+  
+
+  // if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
+  //     alert( 'Please disable your Pop-up blocker and try again.');
+  // }
+}
+public async getDownloadFile_cuota(path: string = '',body: any, loading = true) {
+  this.loading = loading ? true : false;
+  const headers = new HttpHeaders().append('Authorization', 'Bearer ' + localStorage.getItem('access_token')).append('Accept','application/xlsx').append('responseType','blob');
+  this.http.get(`${this.settingsService.Settings.endpoint + path}`,{
+    responseType: 'arraybuffer', headers:headers} 
+   ).subscribe(response => this.downLoadFile_cuota(response, "application/ms-excel", body));
+}
+downLoadFile_cuota(data: any, type: string, body) {
+  this.loading = false;
+  let blob = new Blob([data], { type: type});
+  // let url = window.URL.createObjectURL(blob);
+  // let pwa = window.open(url);
+  var link=document.createElement('a');
+  link.href=window.URL.createObjectURL(blob);
+  link.download="Cuotas_" + new Date().getTime() + ".xlsx";
   link.click();
 
   
@@ -231,9 +287,23 @@ private calculateRequest(res: any) {
               location.reload();
           }, 3000);
       } else {
-        this.message('No hay conexión', 'danger');
+        //this.message('No hay conexión', 'danger');
+        if (!this.isBlock) {
+          this.loading = false;
+        }
+        this.isModalReload = true;
+        displayModal('modal-reload');
+        setTimeout(() => {
+          this.isModalReload = false;
+        }, 7000);
       }
       return res;
+  }
+  modalReloadClose() {
+    hideModal('modal-reload');
+  }
+  reload() {
+    location.reload();
   }
   getStatus() {
     console.log(this?.decodedToken);
@@ -304,7 +374,7 @@ toD(bs) {
 }
 toPetro(dolar) {
   try {
-    return (dolar / 60).toFixed(2);
+    return (dolar / this.dolar.petro).toFixed(2);
   } catch (error) {
     return dolar;
   }
@@ -375,15 +445,17 @@ interface USD {
   sicad2?:number;
 }
 class DolarStatus {
-  public USD: USD = {};
+  public USD: number = 0;
   public valor = 0;
+  public petro: number = 60;
   constructor() {}
-  setUSD(data) {
+  setUSD(data, petro: number = 60) {
     try {
       this.USD = data;
-      this.valor = this.USD?.sicad2;
+      this.valor = this.USD;
+      this.petro = petro;
     } catch (error) {
-      this.USD = {};
+      this.USD = 0;
       this.valor = 0;
     }
   }
