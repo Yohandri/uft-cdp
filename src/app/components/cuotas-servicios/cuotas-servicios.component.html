@@ -19,7 +19,7 @@
                     
                     <button class="btn btn-primary float-right btn-sm mr-2 mt-1" (click)="initDelete()" *ngIf="!isForm && selected.selected.length > 0">
                         <i class="fa fa-trash" aria-hidden="true"></i>
-                        Anular
+                        Eliminar
                     </button>
                     <div class="btn-group btn-group-sm float-right mr-2 mt-1" role="group">
                         <button class="btn btn-primary btn-sm" (click)="refreshData()" *ngIf="!isForm && filter.isFilter">
@@ -76,7 +76,7 @@
                             </tr>
                             <tr *ngFor="let i of data" [ngClass]="{'estado-confirmado': i.estado === 'pagado', 'estado-parcial': i.estado === 'anulado' }">
                                 <td>
-                                    <input [disabled]="true ? '' : null" type="checkbox" [(ngModel)]="selected.value[i.id].value">
+                                    <input [disabled]="i.estado !== 'pendiente' ? '' : null" type="checkbox" [(ngModel)]="selected.value[i.id].value">
                                 </td>
                                 <td class="" (click)="edit(i)">{{i.created_at.split('T')[0]}}</td>
                                 <td class="" (click)="edit(i)">{{i.cedula}} </td>
@@ -134,7 +134,7 @@
     </div>
 </div>
 
-<!-- <div class="hdmodal hdmodal-sm" id="modal-delete">
+<div class="hdmodal hdmodal-sm" id="modal-delete">
     <div class="hdmodal-content">
         <div class="card p-0">
             <h5 class="py-2 px-3 modal-title flex">
@@ -142,14 +142,14 @@
                 <i class="fa fa-times ml-auto closer" (click)="modalDeleteClose()"></i>
             </h5>
             <div class="container p-3">
-              <h4 class="mb-0" *ngIf="selected.selected.length === 1">¿Desea anular el registro?</h4>
-              <h4 class="mb-0" *ngIf="selected.selected.length > 1">¿Desea anular los registros?</h4>
+              <h4 class="mb-0" *ngIf="selected.selected.length === 1">¿Desea eliminar el registro?</h4>
+              <h4 class="mb-0" *ngIf="selected.selected.length > 1">¿Desea eliminar los registros?</h4>
             </div>
             <div class="hdmodal-footer">
               <div class="row mt-2">
                 <div class="col-md-12">
                   <div class="d-flex flex-row-reverse">
-                    <button class="btn btn-primary ml-2" (click)="delete()">ANULAR</button>
+                    <button class="btn btn-primary ml-2" (click)="delete()">ELIMINAR</button>
                     <button class="btn btn-secoundary" (click)="modalDeleteClose()">No</button>
                   </div>
                 </div>
@@ -157,4 +157,4 @@
             </div>
         </div>
     </div>
-  </div> -->
+  </div>

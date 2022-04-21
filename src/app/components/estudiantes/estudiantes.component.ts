@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { displayModal, hideModal, SelectItem } from 'src/app/services';
+import { displayModal, hideModal, SelectItem, dateToStr } from 'src/app/services';
 import { SystemService } from 'src/app/services/system.service';
 class User {
   nombre = '';
@@ -27,6 +27,8 @@ export class EstudiantesComponent implements OnInit {
   buscado = false;
   description = '';
   btnConfirm = false;
+  formCuota = new FormCuota();
+  today = null;
   constructor(
     public system: SystemService
   ) { }
@@ -38,6 +40,7 @@ export class EstudiantesComponent implements OnInit {
       this.system.module.name = 'Estudiante';
     }
     this.ready = true;
+    this.today = dateToStr(new Date(), false);
     //this.search();
   }
   async search() {
@@ -88,6 +91,11 @@ export class EstudiantesComponent implements OnInit {
           }
         }
         this.isSearch = false;
+        if (res.status === 202) {
+          this.user = res.object.estudiante !== null ? res.object.estudiante : new User() ;
+          this.solvente = true;
+          this.system.message(res.message, 'danger');
+        }
         if (res.status === 204) {
           this.user = new User();
           this.system.message(res.message, 'danger');
@@ -177,15 +185,78 @@ export class EstudiantesComponent implements OnInit {
       console.log(error);
     }
   }
-get total() {
-  try {
-    let val = 0;
-    for (let i of this.cuotasToPay) {
-      val += Number(i.monto);
+  nuevaCuotaModalOpen() {
+    this.formCuota.u_cedula = this.cedula;
+    displayModal('modal-nueva-cuota');
+  }
+  nuevaCuotaModalClose() {
+    hideModal('modal-nueva-cuota');
+    this.formCuota = new FormCuota();
+  }
+  nuevaCuota() {
+    console.log(this.formCuota);
+    this.system.post('api/cuotas/nuevaCuota',this.formCuota, true).then(res => {
+      try {
+        console.log(res);
+        if (res.status === 200) {
+          this.system.message(res.message, 'success', 5000);
+          this.nuevaCuotaModalClose();
+          this.search();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  }
+  get total() {
+    try {
+      let val = 0;
+      for (let i of this.cuotasToPay) {
+        val += Number(i.monto);
+      }
+      return val;
+    } catch (error) {
+      return 0;
     }
-    return val;
-  } catch (error) {
-    return 0;
+  }
+  get enabledBtn() {
+    try {
+      return this.formCuota.enabled;
+    } catch (error) {
+      return false;
+    }
   }
 }
+
+// array(
+//   'nombre' => $cuotasPlan[$j]['nombre'],
+//   'monto' => $cuotasPlan[$j]['valor'],
+//   'fecha_vencimiento' => $cuotasPlan[$j]['fecha_vencimiento'],
+//   'description' => $cuotasPlan[$j]['description'],
+//   'estado' => 'pendiente',
+//   'tipo' => 'cuota',
+//   'c_e_lapso' => $RpCel->id,
+//   'cedula' => $RpCel->estudiante
+// )
+
+class FormCuota {
+  nombre = '';
+  monto = '';
+  fecha_vencimiento = '';
+  description = '';
+  estado = 'pendiente';
+  tipo = 'cuota';
+  c_e_lapso = null;
+  cedula = '';
+  constructor() {}
+  get enabled() {
+    try {
+      return this.nombre !== '' && this.monto !== '' && this.monto !== null && this.description !== '' && this.fecha_vencimiento !== '' && this.cedula !== '';
+    } catch (error) {
+      return false;
+    }
+  }
+  set u_cedula(cedula) {
+    this.cedula = cedula;
+  }
 }

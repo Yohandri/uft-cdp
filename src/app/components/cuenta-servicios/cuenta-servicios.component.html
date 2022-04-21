@@ -48,10 +48,14 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-12">
                       <h3>Cuotas 
+                        <button *ngIf="selected.selected.length > 0" class="btn btn-primary btn-sm float-right" (click)="initPay(selected.selected)">
+                          Reportar pago
+                        </button>
                         <button class="btn btn-primary float-right btn-sm mr-2" (click)="initDelete()" *ngIf="selected.selected.length > 0">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                             Eliminar
                         </button>
+                        
                       </h3>
                       
                       <div class="table-responsive">
@@ -96,7 +100,7 @@
                           </tr>
                           <tr *ngFor="let i of cuotas" [ngClass]="{'estado-pagado': i.estado === 'pagado' && i.guid === null, 'estado-parcial': i.estado === 'parcial' && i.guid === null, 'estado-confirmado': i.guid === '1'}">
                             <td>
-                                <input type="checkbox" [disabled]="i.guid === null ? null : ''" [(ngModel)]="selected.value[i.id].value">
+                                <input type="checkbox" [disabled]="i.guid === null ? (!isPayCuota(i.estado !== 'pagado') && i.estado !== 'pagado') ? '' : null : ''" [(ngModel)]="selected.value[i.id].value">
                             </td>
                             <td>{{i.nombre}}</td>
                             <!-- <td>{{i.fecha_vencimiento}}</td> -->
@@ -106,19 +110,25 @@
                               </span>
                             </td>
                             <td class="text-right">
-                              <h5 *ngIf="i.estado !== 'pagado'">{{system.toBs(i.monto) | currency: '': ''}} Bs / <small>{{system.toPetro(i.monto)}} P</small><small *ngIf="false">({{i.monto}})</small></h5>
-                              <h5 *ngIf="i.estado === 'pagado'">{{getTotalPagado(i.pagos) | currency: '': ''}} Bs / <small>{{system.toPetro(system.toD(getTotalPagado(i.pagos)))}} P</small><small *ngIf="false">({{i.monto}})</small></h5>
+                              <h5 *ngIf="i.estado !== 'pagado'" >{{system.toBs(i.monto) | currency: '': ''}} Bs / <small>{{system.toPetro(i.monto)}} P</small><small *ngIf="false">({{i.monto}})</small></h5>
+                              <h5 *ngIf="i.estado === 'pagado'" >{{getTotalPagado(i.pagos) | currency: '': ''}} Bs / <small>{{system.toPetro(system.toD(getTotalPagado(i.pagos)))}} P</small><small *ngIf="false">({{i.monto}})</small></h5>
                             </td>
                             <td class="text-right">
-                              <h5 *ngIf="i.estado !== 'pagado'">{{system.toBs(operarResta(i)) | currency: '': ''}} Bs / <small>{{system.toPetro(operarResta(i))}} P</small><small *ngIf="false">({{i.monto - i.pagado}}) {{i.monto}} - {{i.pagado}} = {{operarResta(i)}}</small></h5>
+                              <h5 *ngIf="i.estado !== 'pagado'" >{{system.toBs(operarResta(i)) | currency: '': ''}} Bs / <small>{{system.toPetro(operarResta(i))}} P</small><small *ngIf="false">({{i.monto - i.pagado}}) {{i.monto}} - {{i.pagado}} = {{operarResta(i)}}</small></h5>
                               <h5 *ngIf="i.estado === 'pagado'">0 Bs <small *ngIf="false">({{i.monto - i.pagado}})</small></h5>
                             </td>
                             <td class="text-center">
-                              
+
                               <div class="btn-group btn-group-sm float-right mr-2" role="group">
-                                <button *ngIf="i.estado !== 'pagado'" class="btn btn-primary btn-sm" (click)="initPay(i.id)">
+                                <!-- <button *ngIf="isPayCuota(i.estado !== 'pagado')" class="btn btn-primary btn-sm" (click)="initPay(i.id)">
                                   Reportar pago
+                                </button> -->
+                                <button *ngIf="!isPayCuota(i.estado !== 'pagado') && i.estado !== 'pagado'" class="float-right" nz-button nz-popover  [nzPopoverContent]="contentTemplate2" nzPopoverPlacement="leftTop">
+                                  <i class="fa fa-info"></i>
                                 </button>
+                                <ng-template #contentTemplate2>
+                                  <small class="text-danger" >Si esta <b>MOROSO</b> no puede cancelar servicios</small>
+                                </ng-template>
                                 <button *ngIf="i?.pagos?.length > 0" class="btn btn-secondary btn-sm" (click)="verPagos(i)">
                                     <i class="fa fa-eye" aria-hidden="true"></i>
                                 </button>    
@@ -268,11 +278,29 @@
                     </div>
                     <div class="col-md-12 col-sm-12" *ngIf="form.tipo_pago_id === '2'">
                       <p class="mb-0">
-                        Saldo disponible: <b [ngClass]="{'text-danger': restarSaldo(system.saldo) < 0}">{{ restarSaldo(system.saldo) | currency: ' ': ' '}} Bs</b>
+                        Saldo disponible: <b [ngClass]="{'text-danger': restarSaldo(system.saldo) < 0}" >{{ system.saldo | currency: ' ': ' '}} Bs</b>
+                      </p>
+                      <p class="mb-0">
+                        Monto a pagar: <b [ngClass]="{'text-danger': restarSaldo(system.saldo) < 0, 'text-success': n_c_pagar >= system.toBs(monto_pagar)}" >{{ system.toBs(monto_pagar) | currency: ' ': ' '}} Bs</b>
                       </p>
                       <p class="mt-0">
-                        Saldo a pagar: <b [ngClass]="{'text-danger': restarSaldo(system.saldo) < 0}">{{ system.toBs(montoAPagar) | currency: ' ': ' '}} Bs</b>
+                        Saldo a pagar: <b [ngClass]="{'text-danger': restarSaldo(system.saldo) < 0}" >{{ n_c_pagar  | currency: ' ': ' '}} Bs</b>
                       </p>
+                      <span *ngFor="let i of nota_credito" class="m-3">
+                        <b class="mr-1">{{i.montobs}} Bs</b>
+                        <i (click)="selectDelete(i)" class="fa fa-trash-o"></i>
+                      </span>
+                      <div class="mt-3" *ngIf="nota_credito.length !== system.nota_credito.length || nota_credito.length === 0">
+                        <div class="input-group">
+                          <select class="form-control" [(ngModel)]="selectNotaCredito" [attr.disabled]="n_c_pagar > system.toBs(monto_pagar) ? '' : null">
+                            <option [value]="0">Seleccióne</option>
+                            <option [disabled]="isSelectDisabled(i)" [ngStyle]="{'color': isSelectDisabled(i) ? 'red' : null, 'text-decoration': isSelectDisabled(i) ? 'line-through' : null}" [value]="i.id" *ngFor="let i of system.nota_credito" [innerHTML]="i.montobs + ' Bs'"></option>
+                          </select>
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="addNotaCredito()">Agregar</button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
                       <div class="form-group">
@@ -305,10 +333,10 @@
                     <div class="col-md-6 col-sm-12" *ngIf="form.tipo_pago_id !== '2'">
                       <div class="form-group ">
                         <label for="payAmount">Monto</label>
-                        <div class="input-group">
+                        <div class="input-group" >
                           <input currencyMask [(ngModel)]="form.montobs" [options]="{ prefix: '', thousands: ',', decimal: '.' }" type="text" class="form-control" id="payAmount" >
                           <div class="input-group-append">
-                            <span class="input-group-text" id="basic-addon2">Bs.</span>
+                            <span class="input-group-text" id="basic-addon2">Bs</span>
                           </div>
                         </div>
                       </div>
@@ -319,7 +347,7 @@
               <div class="row mt-2">
                 <div class="col-md-12">
                   <div class="d-flex flex-row-reverse">
-                    <button *ngIf="showConfirm()" (click)="confirm()" [attr.disabled]="form.isValidated ? null : '' " class="btn btn-primary ml-2" >Confirmar pago</button>
+                    <button  (click)="confirm()" [attr.disabled]="showConfirm() ? null : ''" class="btn btn-primary ml-2" >Confirmar pago</button>
                     <button class="btn btn-secundary ml-auto" (click)="modalPayClose()">Cancelar</button>
                     
                   </div>
@@ -356,21 +384,21 @@
                 <!-- <th>Usuario</th> -->
                 <th class="text-right">Monto</th>
               </tr>
-              <tr *ngFor="let i of pagos" [ngClass]="{'estado-confirmado': i.montobs_confirm}">
+              <tr *ngFor="let i of pagos" [ngClass]="{'estado-confirmado': i.pagos.montobs_confirm}">
                 <td>
-                  <input [attr.disabled]="i.montobs_confirm ? '' : null" type="checkbox" [(ngModel)]="PagosSelected.value[i.id].value">
+                  <input [attr.disabled]="i.montobs_confirm ? '' : ''" type="checkbox" [(ngModel)]="PagosSelected.value[i.id].value">
                 </td>
-                <td class="cursorPointer2">{{i.fecha}}</td>
-                <td class="cursorPointer2">{{getBanco(i.banco_id)}} </td>
-                <td class="cursorPointer2">{{i.referencia}} </td>
-                <td class="cursorPointer2">{{i.titular_cedula}} </td>
-                <td class="cursorPointer2">{{gettipopago(i.tipo_pago_id)}}</td>
+                <td class="cursorPointer2">{{i.pagos.fecha}}</td>
+                <td class="cursorPointer2">{{getBanco(i.pagos.banco_id)}} </td>
+                <td class="cursorPointer2">{{i.pagos.referencia}} </td>
+                <td class="cursorPointer2">{{i.pagos.titular_cedula}} </td>
+                <td class="cursorPointer2">{{gettipopago(i.pagos.tipo_pago_id)}}</td>
                 <!-- <td class="cursorPointer2">{{i.user_id}}</td> -->
-                <td class="cursorPointer2 text-right">{{i.montobs | currency: '': ''}} Bs</td>
+                <td class="cursorPointer2 text-right" >{{i.montobs | currency: '': ''}} Bs</td>
               </tr>
             </table>
             <div *ngIf="pagos.length > 1">
-               <b class="float-right">Monto pagado: {{getTotalPagado(pagos) | currency: '': ''}} Bs</b>
+               <b class="float-right" >Monto pagado: {{getTotalPagado(pagos) | currency: '': ''}} Bs</b>
             </div>
           </div>
         </div>

@@ -50,8 +50,8 @@
                                         <a
                                             _ngcontent-fed-c192="" class="btn bg-outline-primary mb-2 mb-sm-0"
                                              [style]="{'opacity': '1', 'cursor': 'pointer'}" (click)="register()" >Registrarse</a>
-                                        <a
-                                            _ngcontent-fed-c192="" class="btn btn-primary" (click)="login()">Iniciar sesión</a>
+                                        <button [disabled]="(loginModel.password !== '' && loginModel.username !== '' && loginModel.username.length > 4) ? false : true"
+                                            _ngcontent-fed-c192="" class="btn btn-primary" (click)="login()">Iniciar sesión</button>
                                     </div>
                                 
                                 <hr _ngcontent-fed-c192="">

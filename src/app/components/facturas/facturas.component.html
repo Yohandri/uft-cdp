@@ -1,0 +1,646 @@
+<div class="p-2"  >
+    <div class="container-fluid ">
+        <div class="row bg-white">
+            <div class="col">
+                <h3 class="mt-2 mb-4" style="height: 28px;"><span *ngIf="!system.isMobile">Factura<span *ngIf="!isForm">s</span></span>
+                    <button class="btn btn-primary float-right btn-sm ml-2 mt-1" (click)="refreshData()" [ngStyle]="{'opacity': filter.isFilter ? .6 : 1}" *ngIf="!isForm">
+                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn-primary float-right btn-sm mt-1" (click)="new()" *ngIf="!isForm && !isEdit">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        Nuevo
+                    </button>
+                   
+                    <button class="btn btn-primary float-right btn-sm" (click)="cancelar()" *ngIf="isForm && !isEdit">
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        Regresar
+                    </button>
+                    <div class="btn-group btn-group-sm float-right mr-2 mt-1" role="group">
+                        <button class="btn btn-primary btn-sm" (click)="refreshData()" *ngIf="!isForm && filter.isFilter">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            Buscar
+                        </button>
+                        <button class="btn btn-secondary btn-sm" (click)="resetFilter()" *ngIf="!isForm && filter.isFilter">
+                            <i class="fa fa-filter" aria-hidden="true"></i>
+                            Limpiar
+                        </button>    
+                    </div>
+                </h3>
+                <div *ngIf="!isForm">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <tr class="inputFilter head">
+                                <th></th>
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por codigo"  tabindex="-1" (change)="refreshData()" type="search" [(ngModel)]="filter.codigo">
+                                </th>
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por fecha"  tabindex="-1" (change)="refreshData()" type="date" [(ngModel)]="filter.created_at">
+                                </th>
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por cedula" tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.cedula">
+                                </th>
+                                
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por estado" tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.estado">
+                                </th>
+                                
+                                
+                                <!-- <th>
+                                    <input class="if" placeholder="Búsqueda por usuario"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.user_id">
+                                </th> -->
+                                <th>
+                                    <input class="if" placeholder="Búsqueda por monto"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.monto">
+                                </th>
+                            </tr>
+                            <tr class="head">
+                                <th>
+                                    <input disabled type="checkbox" (click)="selected.selectAll()" [(ngModel)]="selected.isSelectAll">
+                                </th>
+                                
+                                <th>Codigo</th>
+                                <th>Fecha</th>
+                                <th>Cedula</th>
+                                <th>Estado</th>
+                                <!-- <th>Usuario</th> -->
+                                <th class="text-right">Monto</th>
+                            </tr>
+                            <tr *ngFor="let i of data" [ngClass]="{'estado-confirmado': i.estado === 'pagado', 'estado-parcial': i.estado === 'anulado' }">
+                                <td>
+                                    <input [disabled]="i.estado === 'pagado' || i.estado === 'anulado' ? '' : null" type="checkbox" [(ngModel)]="selected.value[i.id].value">
+                                </td>
+                                <td class="" (click)="edit(i)">{{i.codigo}}</td>
+                                <td class="" (click)="edit(i)">{{i.created_at | date: 'YYYY-MM-dd'}}</td>
+                                <td class="" (click)="edit(i)">{{i.estudiante_cedula}} </td>
+                                <td class="" (click)="edit(i)">{{i.estado}} </td>
+                                <td class=" text-right"  (click)="edit(i)">{{ toFixed(i.mon_total) }} $ / {{system.toPetro(toFixed(i.mon_total))}} (P)</td>
+                            </tr>
+                            <tr *ngIf="data.length === 0">
+                                <td class="text-center" colspan="10" *ngIf="!loadData">
+                                    <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+                                </td>
+                                <td class="text-center" colspan="10" *ngIf="loadData">
+                                    No hay registros
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <!-- {{pagination | json}} -->
+                        <nav aria-label="Page navigation example">
+                            
+                            <ul class="pagination justify-content-end" >
+                              <li> Registros por pagina
+                                <select (change)="refreshData()" [(ngModel)]="pagination.per_page">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                </select>
+                              </li>
+                              <li class="page-item" *ngIf="pagination.pages.length > 1">
+                                <a class="page-link" (click)="goPage(pagination.page, '-')" aria-label="Previous">
+                                  <span aria-hidden="true">&laquo;</span>
+                                </a>
+                              </li>
+                              <li *ngFor="let i of pagination.pages" [ngClass]="{'active': pagination.page === i}" class="page-item">
+                                  <a class="page-link" (click)="goPage(i)">{{i}}</a>
+                              </li>
+                              <li class="page-item" *ngIf="pagination.pages.length > 1">
+                                <a class="page-link" (click)="goPage(pagination.page, '+')" aria-label="Next">
+                                  <span aria-hidden="true">&raquo;</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </nav>
+                    </div>
+                </div>
+                <div *ngIf="isForm && false">
+                    <div class="row mb-2">
+                     
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hdmodal hdmodal-md" id="modal-new-facture">
+    <div class="hdmodal-content">
+        <div class="card p-0">
+            <h5 class="py-2 px-3 modal-title flex">
+                Factura
+                <i class="fa fa-times ml-auto closer" (click)="modalFactureClose()"></i>
+            </h5>
+            <div class="container p-3">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                    <table >
+                        <tr>
+                            <td>
+                                <span>
+                                    <img src="http://200.6.152.109/rp/assets/img/Logo-uft-one.png" atl="Logo">
+                                </span>
+                            </td>
+                            <td>
+                                <span>
+                                    <em style="padding-left:20px;">Universidad Fermín Toro</em> <br>
+                                    <em style="padding-left:20px;">Educación para los Valores Humano</em> <br>
+                                    <p style="padding-left:20px;">
+                                        <small>Calle principal, Centro Comercial Chucho Briceño, N S/N Sector Cabudare. Lara.</small>
+                                    </p>
+                
+                                </span>
+                            </td>       
+                        </tr>
+                    </table>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="cedula">Cedula</label>
+                        <input type="search" nz-input [(ngModel)]="inputValue" [nzAutocomplete]="auto" (ngModelChange)="onChange($event)"  class="form-control" id="cedula" >
+                        <nz-autocomplete #auto >
+                            <nz-auto-option *ngFor="let option of filteredOptions" [nzValue]="option" [nzLabel]="option.cedula">
+                              {{ option.cedula }} {{option.nombre}} {{option.apellido}}
+                            </nz-auto-option>
+                          </nz-autocomplete>
+                          <!-- <nz-autocomplete [nzDataSource]="filteredOptions" #auto></nz-autocomplete> -->
+                    </div>
+                  </div>
+                  <!-- <div class="col-6">
+                      {{inputValue | json}}
+                  </div> -->
+                  
+                  
+                  <div class="col-md-6">
+                    <table *ngIf="inputValue.correo">
+                        <tr>
+                            <td>Nombres y apellidos:</td>
+                            <td>
+                                <b>{{inputValue?.nombres}} {{inputValue?.apellidos}}</b>
+                            </td>
+                        </tr>
+                        <tr>
+                          <td>Correo:</td>
+                          <td>
+                              <b>{{inputValue?.correo}} </b>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Direccion:</td>
+                          <td>
+                              <b>{{inputValue?.direccion}} </b>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Telefono celular:</td>
+                          <td>
+                              <b>{{inputValue?.telefono_celular}} </b>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Telefono local:</td>
+                          <td>
+                              <b>{{inputValue?.telefono_local}} </b>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Saldo</td>
+                          <td>
+                              <b>{{saldo_estudiante}} Bs</b>
+                          </td>
+                      </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group" *ngIf="inputValue.correo && false">
+                        <label for="servicio">Servicio</label>
+                        <input type="search" (keyup.enter)="onSelectServicio()" nz-input [(ngModel)]="servicioSelect" [nzAutocomplete]="autoServicios" (ngModelChange)="onChangeServicios($event)"  class="form-control" id="servicio" >
+                        <nz-autocomplete #autoServicios >
+                            <nz-auto-option *ngFor="let option of filteredOptionsServicios" [nzValue]="option" [nzLabel]="option.nombre">
+                              {{ option.nombre }}
+                            </nz-auto-option>
+                          </nz-autocomplete>
+                          <!-- <nz-autocomplete [nzDataSource]="filteredOptions" #auto></nz-autocomplete> -->
+                    </div>
+                </div>
+              </div>
+              <div class="row">
+                  <div class="col">
+                      <!-- {{listService | json}} style="height: 170px;overflow-y: auto;"-->
+                      <div *ngIf="inputValue.correo">
+                          <table class="table table-sm table-bordered2 mt-2">
+                            <tr>
+                                <td></td>
+                                
+                                <td colspan="2">
+                                    <div >
+                                        <input type="search" placeholder="Buscar servicios" (keyup.enter)="onSelectServicio()" nz-input [(ngModel)]="servicioSelect" [nzAutocomplete]="autoServicios2" (ngModelChange)="onChangeServicios($event)"  class="form-control"  >
+                                        <nz-autocomplete #autoServicios2 >
+                                            <nz-auto-option *ngFor="let option of filteredOptionsServicios" [nzValue]="option" [nzLabel]="option.nombre">
+                                            {{ option.nombre }}
+                                            </nz-auto-option>
+                                        </nz-autocomplete>
+                                    </div>
+                                    <!-- <div *ngIf="isPay">
+                                        <input type="search" (keyup.enter)="onSelectServicio()" nz-input [(ngModel)]="servicioSelect" [nzAutocomplete]="autoServicios3" (ngModelChange)="onChangeServicios($event)"  class="form-control"  >
+                                        <nz-autocomplete #autoServicios3 >
+                                            <nz-auto-option *ngFor="let option of filteredOptionCuotas" [nzValue]="option" [nzLabel]="option.nombre">
+                                            {{ option.nombre }}
+                                            </nz-auto-option>
+                                        </nz-autocomplete>
+                                    </div> -->
+                                </td>
+                                <td>
+                                    <input type="checkbox" id="servicio_pago" [(ngModel)]="isPay"> <label for="servicio_pago" class="ml-2">Servicios pendientes</label>
+                                </td>
+                            </tr>
+                          </table>
+                        <table class="table table-sm table-bordered mt-2" >
+                            <tbody>
+                                <tr class="head">
+                                    <th>
+                                        
+                                    </th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Estado</th>
+                                    <th>
+                                        <div class="float-right">Monto</div>
+                                    </th>
+                                    <th>
+                                        <div class="float-right">Total</div>
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                
+                                <tr *ngFor="let i of listService">
+                                    <td>
+                                        <i (click)="deleteSelectService(i)" class="fa fa-trash-o"></i>
+                                    </td>
+                                    <td>
+                                        <div *ngIf="i.nombre !== '' && i.nombre !== null && i.nombre !== undefined">
+                                            {{i.nombre}}
+                                        </div>
+                                    </td>
+                                    <td>{{i.description ? i.description : i?.c_e_lapso?.carrera?.nombre}}</td>
+                                    <td>{{i.estado ? i.estado : 'pendiente *'}}</td>
+                                    <td (click)="reportarPago(i.estado === 'pendiente' || i.estado === undefined)" [ngClass]="{'text-white': i.estado === 'pendiente' || i.estado === undefined,'cursorPointer': i.estado === 'pendiente' || i.estado === undefined, 'estado-vencido': i.estado === 'pendiente' || i.estado === undefined }"> <div class="float-right" >{{i?.plan?.mon_total ? i?.plan?.mon_total : i.monto}}</div></td>
+                                    <td>
+                                        <div class="float-right">{{getTotalPagado(i.pagos_confirm) | currency: '': ''}}</div>
+                                        
+                                    </td>
+                                    <td>
+                                        <!-- <div *ngFor="let j of i.pagos_confirm">
+                                            {{j.monto}}
+                                        </div> -->
+                                        <button class="btn btn-primary btn-sm" (click)="addPagos(i)">Pagos</button>
+                                    </td>
+                                </tr>
+                               
+                            </tbody>
+                          </table>
+                          
+                          <div *ngIf="listService.length > 0">
+                            <span class="float-right mr-2">
+                                <table class="text-right">
+                                    <tr>
+                                        <td>Total:</td>
+                                        <th>{{system.toFixed(sub_total)}}</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Pagado:</td>
+                                        <th>{{system.toFixed(pagado)}}</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Total por pagar:</td>
+                                        <th>{{system.toFixed(resta)}}</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Resta:</td>
+                                        <th>{{system.toFixed(resta_pagando)}}</th>
+                                    </tr>
+                                </table>
+                                <!-- <b>sub total: {{sub_total}}</b> <br>
+                                <b>IVA: {{view_iva}}</b> <br>
+                                <b>Total: {{total}}</b> -->
+                            </span>
+                          </div>
+                          <!-- <code>
+                            {{filteredOptionCuotas | json}}
+                        </code>
+                        <code>
+                            {{filteredOptionsServicios | json}}
+                        </code> -->
+                      </div>
+                  </div>
+              </div>
+              <div class="row justify-content-center" *ngIf="listService.length > 0">
+                  <!-- <div class="col text-center" *ngIf="listPagos.length === 0">
+                      <button class="btn btn-primary btn-lg" (click)="agregar_pago()">Agregar pagos</button>
+                  </div> -->
+                  <div class="col" *ngIf="listPagos.length > 0">
+                      <div>
+                          <table class="table table-sm">
+                              <tr>
+                                  <th></th>
+                                  <th>Servicio</th>
+                                  <th>Tipo de pago</th>
+                                  <th>Fecha</th>
+                                  <th>Referencia</th>
+                                  <th>Monto</th>
+                              </tr>
+                              <!-- <tr *ngFor="let i of listService">
+                                <td></td>
+                                <td>{{i | json}}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                              </tr> -->
+                              <tr *ngFor="let i of listPagos">
+                                <td>
+                                    <i (click)="deleteSelectPago(i)" class="fa fa-trash-o"></i>
+                                </td>
+                                <td>
+                                    <select class="form-control form-control-sm" [(ngModel)]="i.servicio" name="" id="">
+                                        <option [value]="i" *ngFor="let i of listService">{{i.nombre}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control form-control-sm" [(ngModel)]="i.tipo_pago_id" name="" id="">
+                                        <option value="1">Transferencia</option>
+                                        <option value="4">Debito</option>
+                                        <option value="3">NOTA DE CREDITO</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input class="form-control form-control-sm" type="date" name="" id="" [(ngModel)]="i.fecha">
+                                </td>
+                                <td>
+                                    <input class="form-control form-control-sm" [(ngModel)]="i.referencia" type="text" name="" id="">
+                                </td>
+                                <td>
+                                    <input class="form-control form-control-sm" [(ngModel)]="i.monto" type="number" name="" id="">
+                                </td>
+                              </tr>
+                          </table>
+                          <button class="btn btn-primary btn-sm" (click)="agregar_pago()">Agregar pago</button>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <div class="hdmodal-footer">
+              <div class="row mt-2">
+                <div class="col-md-12">
+                  <div class="d-flex flex-row-reverse">
+                    <button class="btn btn-primary ml-2" [disabled]="resta_pagando > 0 || listService.length === 0" (click)="save()">CREAR FACTURA</button>
+                    <button class="btn btn-secoundary" (click)="modalFactureClose()">Cancelar</button>
+                  </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="hdmodal hdmodal-md" id="modal-view-facture">
+    <div class="hdmodal-content">
+        <div class="card p-0">
+            <h5 class="py-2 px-3 modal-title flex">
+                Factura <b>{{viewFacture?.codigo}}</b>
+                <i class="fa fa-times ml-auto closer" (click)="modalViewFactureClose()"></i>
+            </h5>
+            <div class="container p-3">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                    <table >
+                        <tr>
+                            <td>
+                                <span>
+                                    <img src="http://200.6.152.109/rp/assets/img/Logo-uft-one.png" atl="Logo">
+                                </span>
+                            </td>
+                            <td>
+                                <span>
+                                    <em style="padding-left:20px;">Universidad Fermín Toro</em> <br>
+                                    <em style="padding-left:20px;">Educación para los Valores Humano</em> <br>
+                                    <p style="padding-left:20px;">
+                                        <small>Calle principal, Centro Comercial Chucho Briceño, N S/N Sector Cabudare. Lara.</small>
+                                    </p>
+                
+                                </span>
+                            </td>       
+                        </tr>
+                    </table>
+                  </div>
+                  <div class="col-md-6">
+                    <h2 class="text-center">C.I: <b>{{viewFacture?.estudiante_cedula}}</b></h2>
+                  </div>
+                  <!-- <div class="col-6">
+                      {{viewFacture | json}}
+                      <hr>
+                      {{viewEstudiante | json}}
+                  </div>  -->
+                  
+                  
+                  <div class="col-md-6">
+                    <table *ngIf="viewEstudiante?.correo">
+                        <tr>
+                            <td>Nombres y apellidos:</td>
+                            <td>
+                                <b>{{viewEstudiante?.nombres}} {{viewEstudiante?.apellidos}}</b>
+                            </td>
+                        </tr>
+                        <tr>
+                          <td>Correo:</td>
+                          <td>
+                              <b>{{viewEstudiante?.correo}} </b>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Direccion:</td>
+                          <td>
+                              <b>{{viewEstudiante?.direccion}} </b>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Telefono celular:</td>
+                          <td>
+                              <b>{{viewEstudiante?.telefono_celular}} </b>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Telefono local:</td>
+                          <td>
+                              <b>{{viewEstudiante?.telefono_local}} </b>
+                          </td>
+                      </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h4 class="text-center mb-1">N°: <b>{{viewFacture?.codigo}}</b></h4>
+                    <h5 class="text-center"><b>{{viewFacture?.estado }}</b></h5>
+                    <h5 class="text-center"><b>{{viewFacture?.created_at | date: 'YYYY-MM-dd'}}</b></h5>
+                </div>
+              </div>
+              <div class="row">
+                  <div class="col">
+                      <!-- {{listService | json}} style="height: 170px;overflow-y: auto;"-->
+                      <div >
+                        <table class="table table-sm table-bordered mt-2" *ngIf="viewFacture?.detalles.length > 0">
+                            <tbody>
+                                <tr class="head">
+                                    <th>
+                                        
+                                    </th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>
+                                        <div class="float-right">Monto</div>
+                                    </th>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                <tr *ngFor="let i of viewFacture.detalles">
+                                    <td>
+                                        
+                                    </td>
+                                    <td>{{i.nombre}}</td>
+                                    <td>{{i.descripcion}}</td>
+                                    <td> <div class="float-right">{{i.monto}}</div></td>
+                                </tr>
+                            </tbody>
+                          </table>
+                          <div *ngIf="viewFacture?.detalles.length > 0">
+                              <span class="float-right mr-2">
+                                <table>
+                                    <tr>
+                                        <td>sub total:</td>
+                                        <th>{{system.toFixed(view_sub_total)}}</th>
+                                    </tr>
+                                    <tr>
+                                        <td>IVA:</td>
+                                        <th>{{system.toFixed(viewFacture.iva || 0)}}</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Total:</td>
+                                        <th>{{system.toFixed(view_total)}}</th>
+                                    </tr>
+                                </table>
+                                  <!-- <b>Total: {{view_total}}</b> -->
+                              </span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <div class="hdmodal-footer">
+              <div class="row mt-2">
+                <div class="col-md-12">
+                  <div class="d-flex flex-row-reverse">
+                    <button *ngIf="viewFacture?.estado !== 'anulado'" class="btn btn-primary ml-2">Reverso</button>
+                    <button *ngIf="viewFacture?.estado !== 'anulado'" class="btn btn-primary ml-2" (click)="anular()">Anular</button>
+                    <button class="btn btn-secoundary" (click)="modalViewFactureClose()">Cerrar</button>
+                  </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="hdmodal hdmodal-sm" id="modal-anular">
+    <div class="hdmodal-content">
+        <div class="card p-0">
+            <h5 class="py-2 px-3 modal-title flex">
+                Confirmación
+                <i class="fa fa-times ml-auto closer" (click)="modalAnularClose()"></i>
+            </h5>
+            <div class="container p-3">
+              <h4 class="mb-0">¿Desea anular la factura?</h4>
+            </div>
+            <div class="hdmodal-footer">
+              <div class="row mt-2">
+                <div class="col-md-12">
+                  <div class="d-flex flex-row-reverse">
+                    <button class="btn btn-primary ml-2" (click)="anularConfirm()">CONFIRMAR</button>
+                    <button class="btn btn-secoundary" (click)="modalAnularClose()">Cancelar</button>
+                  </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="hdmodal hdmodal-sm" id="modal-pagos">
+    <div class="hdmodal-content">
+        <div class="card p-0">
+            <h5 class="py-2 px-3 modal-title flex">
+                Pagos
+                <i class="fa fa-times ml-auto closer" (click)="modalPAgosClose()"></i>
+            </h5>
+            <div class="containerpl-3 pr-3 pl-3 pb-3 pt-1">
+                <div class="d-flex flex-row-reverse mb-1" [style.height]="'29px'">
+                  <!-- <button (click)="PagoDelete()" *ngIf="PagosSelected.selected.length > 0" class="btn btn-primary btn-sm ml-auto">
+                    Eliminar
+                  </button> -->
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-sm table-bordered" >
+                    <tr class="head">
+                      <th></th>
+                      <th>Tipo de pago</th>
+                      <th>Fecha</th>
+                      <th>Banco</th>
+                      <th>Referencia</th>
+                      <th>Cedula titular</th>
+                      
+                      <!-- <th>Usuario</th> -->
+                      <th class="text-right">Monto</th>
+                    </tr>
+                    <tr *ngFor="let i of pagos"  [ngClass]="{'estado-confirmado': i.montobs_confirm}">
+                      <td>
+                        <i (click)="deleteSelectPago_(i)" class="fa fa-trash-o"></i> 
+                      </td>
+                      <td class="cursorPointer2">
+                          <select class="form-control form-control-sm">
+                            <option value="1">Transferencia</option>
+                            <option value="4">Debito</option>
+                            <option value="3">NOTA DE CREDITO</option>
+                        </select>
+                      </td>
+                      <td class="cursorPointer2">
+                          <input type="date" class="form-control form-control-sm" [(ngModel)]="i.fecha">
+                      </td>
+                      <td class="cursorPointer2">banco </td>
+                      <td class="cursorPointer2">
+                          <input type="text" class="form-control form-control-sm" [(ngModel)]="i.referencia">
+                      </td>
+                      <td class="cursorPointer2">
+                        <input type="number" class="form-control form-control-sm" [(ngModel)]="i.titular_cedula">
+                      </td>
+                      
+                      <!-- <td class="cursorPointer2">{{i.user_id}}</td> -->
+                      <td class="cursorPointer2 text-right">
+                          <input type="number" class="form-control form-control-sm" [(ngModel)]="i.monto">
+                      </td>
+                    </tr>
+                  </table>
+                  <button class="btn btn-primary btn-sm" (click)="agregar_pago_()">Agregar pago</button>
+                  <div *ngIf="pagos.length > 1">
+                     <b class="float-right">Monto: {{getTotalPagado(pagos) | currency: '': ''}} Bs</b>
+                  </div>
+                </div>
+              </div>
+            <div class="hdmodal-footer">
+              <div class="row mt-2">
+                <div class="col-md-12">
+                  <div class="d-flex flex-row-reverse">
+                    <button class="btn btn-secoundary" (click)="modalPAgosClose()">cerrar</button>
+                  </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+  </div>

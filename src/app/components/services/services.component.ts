@@ -8,12 +8,14 @@ class FormService {
   nombre = '';
   description = '';
   periodo_id = '';
+  l_venta_id = '';
   edit(user) {
     this.guid = user.guid;
     this.id = user.id;
     this.nombre = user.nombre;
     this.description = user.description;
     this.periodo_id = user.periodo_id;
+    this.l_venta_id = user.l_venta_id;
   }
   get isFilter() {
     return this.nombre !== '' || this.description !== '';
@@ -35,6 +37,7 @@ export class ServicesComponent implements OnInit {
   isNew = false;
   selected = new SelectItem();
   periodos = [];
+  libros_contable = [];
   constructor(
     public system: SystemService
   ) { }
@@ -47,6 +50,7 @@ export class ServicesComponent implements OnInit {
     }
     await this.getPeriodos();
     await this.refreshData();
+    await this.getLibrosContables();
   }
   new() {
     this.form = new FormService();
@@ -94,6 +98,24 @@ export class ServicesComponent implements OnInit {
         console.log(res);
         if (res.status === 200) {
           this.periodos = res.object;
+          return res.object;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        return false;
+      }
+    });
+  }
+  async getLibrosContables() {
+    this.loadData = false;
+    //this.selected.reset();
+    return this.system.post('api/servicios/libros_contable', {}).then(res => {
+      try {
+        this.loadData = true;
+        console.log(res);
+        if (res.status === 200) {
+          this.libros_contable = res.object;
           return res.object;
         } else {
           return false;

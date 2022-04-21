@@ -124,6 +124,16 @@
                                 <!-- <input type="text" (keyup.enter)="save()" class="form-control" id="description" [(ngModel)]="form.apellido"> -->
                             </div>
                         </div>
+                        <div class="col-md-6 col-sm-12" *ngIf="true">
+                            <div class="form-group">
+                                <label for="libro_contable">Libro de venta</label>
+                                <select name="libros_contable" id="libros_contable" class="form-control" [(ngModel)]="form.l_venta_id">
+                                    <option value=""></option>
+                                    <option [value]="i.id" *ngFor="let i of libros_contable">{{i.nombre}}</option>
+                                </select>
+                                <!-- <input type="text" (keyup.enter)="save()" class="form-control" id="periodo" [(ngModel)]="form.nombre"> -->
+                            </div>
+                        </div>
                         
                     </div>
                 </div>

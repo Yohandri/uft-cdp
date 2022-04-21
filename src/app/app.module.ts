@@ -36,6 +36,10 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { CuotasComponent } from './components/cuotas/cuotas.component';
 import { CuotasServiciosComponent } from './components/cuotas-servicios/cuotas-servicios.component';
 import { ActiveComponent } from './components/login/active/active.component';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { FacturasComponent } from './components/facturas/facturas.component';
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
+import { LibroVentaComponent } from './components/libro-venta/libro-venta.component';
 // import localeVe from '@angular/common/locales/es-VE';
 // import { registerLocaleData } from '@angular/common';
 export function loadConfig(config: SettingsService) {
@@ -66,7 +70,9 @@ export function tokenGetter() {
     SettingsComponent,
     CuotasComponent,
     CuotasServiciosComponent,
-    ActiveComponent
+    ActiveComponent,
+    FacturasComponent,
+    LibroVentaComponent
   ],
   imports: [
     BrowserModule,
@@ -85,6 +91,8 @@ export function tokenGetter() {
     NzUploadModule,
     NzPopoverModule,
     NzRadioModule,
+    NzToolTipModule,
+    NzAutocompleteModule,
     JwtModule.forRoot({
       config: {
         tokenGetter

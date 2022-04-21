@@ -235,12 +235,12 @@
                     </li>
                     <li _ngcontent-hkb-c112="" *ngIf="system.isStudent && !system.isMobile" placement="bottom-left" display="static" ngbdropdown="" class="nav-item mr-1 dropdown">
                         <a class=" d-flex align-items-end" style="cursor: default;" aria-expanded="false">
-                            <div *ngIf="system.saldo" _ngcontent-hkb-c112="" class="user  mr-2" style="cursor: default;">
+                            <div *ngIf="system.saldo" _ngcontent-hkb-c112="" class="user  mr-2" style="cursor: default;" nzTooltipPlacement="left" >
                                 {{system.saldo | currency: ' ': ' '}} Bs <i style="cursor: default;" class="fa fa-money"></i>
                                 <!-- <span _ngcontent-hkb-c112="" class="text-right">{{system.decodedToken?.user?.nombre}}</span>
                                 <span _ngcontent-hkb-c112="" class="text-right text-muted font-small-3">{{system.decodedToken?.user?.ci}}</span> -->
                             </div>
-                            <div *ngIf="!system.saldo" _ngcontent-hkb-c112="" class="user  mr-2" style="cursor: default;">
+                            <div nzTooltipPlacement="left" *ngIf="!system.saldo" _ngcontent-hkb-c112="" class="user  mr-2" style="cursor: default;">
                                 0 Bs <i style="cursor: default;" class="fa fa-money"></i>
                                 <!-- <span _ngcontent-hkb-c112="" class="text-right">{{system.decodedToken?.user?.nombre}}</span>
                                 <span _ngcontent-hkb-c112="" class="text-right text-muted font-small-3">{{system.decodedToken?.user?.ci}}</span> -->
@@ -315,49 +315,59 @@
                         <!-- <li  appsidebarlink="" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-usd"></i><span class="menu-title ng-tns-c125-10 ">Gestión de pagos</span>
-                            </a>
+                            </a> {{system.showIn(true, 'Administrador', 'administracion')}}
                         </li> -->
-                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="users" routerLinkActive="active">
+                        <li *ngIf="system.showIn(true, 'Administrador', 'Administracion')" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="users" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('gp/users')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-user"></i><span class="menu-title ng-tns-c125-10">Gestión de usuarios</span>
                             </a>
                         </li>
-                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="services" routerLinkActive="active">
+                        <li *ngIf="system.showIn(true, 'Administrador', 'Administracion')" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="services" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('gp/services')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-server" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Gestión de servicios</span>
                             </a>
                         </li>
-                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="planes" routerLinkActive="active">
+                        <li *ngIf="system.showIn(true, 'Administrador', 'Administracion')" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="planes" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('gp/planes')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-handshake-o" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Gestión de planes</span>
                             </a>
                         </li>
-                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="pagos" routerLinkActive="active">
+                        <li *ngIf="system.showIn(true, 'Administrador', 'Administracion')" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="pagos" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('gp/pagos')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-usd" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Pagos</span>
                             </a>
                         </li>
-                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="tipopago" routerLinkActive="active">
+                        <li *ngIf="system.showIn(true, 'Administrador')" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="tipopago" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('gp/tipopago')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-money" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Tipos de pago</span>
                             </a>
                         </li>
-                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="cuotas" routerLinkActive="active">
+                        <li *ngIf="system.showIn(true, 'Administrador', 'Administracion')" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="cuotas" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('gp/cuotas')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-archive" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Cuotas</span>
                             </a>
                         </li>
-                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="cuotasServicios" routerLinkActive="active">
+                        <li *ngIf="system.showIn(true, 'Administrador', 'Administracion')" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="cuotasServicios" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('gp/cuotasServicios')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-square-o" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Cuotas de servicios</span>
                             </a>
                         </li>
-                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="estudiantes" routerLinkActive="active">
+                        <li *ngIf="system.showIn(true, 'Administrador', 'Administracion', 'Caja')" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="estudiantes" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('gp/estudiantes')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-users" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Gestión de estudiantes</span>
                             </a>
                         </li>
-                        <li *ngIf="system.isAdministrator" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="ajustes" routerLinkActive="active">
+                        <li *ngIf="system.showIn(true, 'Administrador', 'Administracion', 'Caja')" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="facturas" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('gp/facturas')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-file-text-o" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Facturas</span>
+                            </a>
+                        </li>
+                        <li *ngIf="system.showIn(true, 'Administrador', 'Coordinador')" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="libroVenta" routerLinkActive="active">
+                            <a appsidebaranchortoggle="" (click)="system.goto('gp/libroVenta')" class="ng-tns-c125-10 ng-star-inserted">
+                                <i class="fa fa-book" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Libro ventas</span>
+                            </a>
+                        </li>
+                        <li *ngIf="system.showIn(true, 'Administrador')" class="ng-tns-c125-10 has-sub ng-star-inserted" routerLink="ajustes" routerLinkActive="active">
                             <a appsidebaranchortoggle="" (click)="system.goto('gp/ajustes')" class="ng-tns-c125-10 ng-star-inserted">
                                 <i class="fa fa-cogs" aria-hidden="true"></i><span class="menu-title ng-tns-c125-10">Ajustes</span>
                             </a>
@@ -443,7 +453,7 @@
         </div>
         <div _ngcontent-hkb-c126="" _nghost-hkb-c113="">
             <footer _ngcontent-hkb-c113="" class="footer">
-                <p _ngcontent-hkb-c113="" class="copyright clearfix text-muted m-0"> Copyright © 2021 <a _ngcontent-hkb-c113="" id="pixinventLink" href="#">App</a><span _ngcontent-hkb-c113="" class="d-none d-sm-inline-block">, All rights reserved.</span> 
+                <p _ngcontent-hkb-c113="" class="copyright clearfix text-muted m-0"> Copyright © 2022 <a _ngcontent-hkb-c113="" id="pixinventLink" href="#">App</a><span _ngcontent-hkb-c113="" class="d-none d-sm-inline-block">, All rights reserved.</span> 
                     <button *ngIf="system.isStudent && system.isMobile" class="btn  btn-sm float-right" [ngClass]="{'btn-outline-danger': !system.isSolvente, 'btn-outline-success': system.isSolvente}" style="cursor: default;">
                         {{system.isSolvente ? 'Solvente' : 'MOROSO'}}
                     </button>

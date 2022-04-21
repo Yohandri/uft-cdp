@@ -14,13 +14,23 @@
                             </div>
                         </div>
                         <div class="row" *ngIf="user.nombre !== ''">
-                            <div class="col-md-12 col-sm-12 mb-2">
+                            <div class="col-md-12 col-sm-12">
                                 Nombre: <b>{{user.nombre}}</b> <br>
                                 Apellido: <b>{{user.apellido}}</b> <br>
                                 Correo: <b>{{user.correo}}</b> <br>
                                 Solvente: <b [ngClass]="{'text-danger': !solvente, 'text-success': solvente}">{{solvente ? 'Si' : 'No'}}</b> <br>
                             </div>
                             
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 mb-2">
+                                <hr>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button [disabled]="cedula.length < 7" type="button" (click)="nuevaCuotaModalOpen()" class="btn btn-primary">Nueva cuota</button>
+                                  </div>
+                                  <hr>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -55,7 +65,7 @@
                                     <td>{{i.description}}</td>
                                     <td>{{i.fecha_vencimiento}}</td>
                                     <td class="text-right">
-                                        <span> Bs  {{system.toBs(i.monto) | currency: ' ': ' '}}</span> 
+                                        <span > Bs  {{system.toBs(i.monto) | currency: ' ': ' '}}</span> 
                                         <small> ({{i.monto}} $)</small>
                                     </td>
                                 </tr>
@@ -182,3 +192,56 @@
         </div>
     </div>
   </div>
+
+  <div class="hdmodal hdmodal-md" id="modal-nueva-cuota">
+    <div class="hdmodal-content">
+        <div class="card p-0">
+            <h5 class="py-2 px-3 modal-title flex">
+                Agregar nueva cuota a la C.I: <b>{{cedula}}</b>
+                <i class="fa fa-times ml-auto closer" (click)="nuevaCuotaModalClose()"></i>
+            </h5>
+            <div class="container p-3">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="nombre">Nombre</label>
+                            <input [(ngModel)]="formCuota.nombre" type="text" class="form-control" id="nombre">
+                          </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="description">Descripcion</label>
+                            <input [(ngModel)]="formCuota.description" type="text" class="form-control" id="description">
+                          </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="fecha_vencimiento">Fecha de vencimiento</label>
+                            <input [(ngModel)]="formCuota.fecha_vencimiento" [min]="today" type="date" class="form-control" id="fecha_vencimiento">
+                          </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="monto">Monto $</label>
+                            <input [(ngModel)]="formCuota.monto" type="number" class="form-control" id="monto">
+                          </div>
+                    </div>
+                    <!-- <div class="col-md-6 col-sm-12">
+                        {{formCuota | json}}
+                    </div> -->
+                </div>
+          </div>
+          <div class="hdmodal-footer">
+            <div class="row mt-2">
+              <div class="col-md-12">
+                <div class="d-flex flex-row-reverse">
+                  <button class="btn btn-primary ml-2" [disabled]="enabledBtn ? false : true" [ngClass]="{'pulse': enabledBtn}" (click)="nuevaCuota()">AGREGAR</button>
+                 
+                  <button class="btn btn-secoundary" (click)="nuevaCuotaModalClose()">Cancelar</button>
+                </div>
+              </div>
+          </div>
+          </div>
+      </div>
+  </div>
+</div>

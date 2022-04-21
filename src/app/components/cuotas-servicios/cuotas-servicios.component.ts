@@ -95,6 +95,22 @@ export class CuotasServiciosComponent implements OnInit {
   modalDeleteClose() {
     hideModal('modal-delete');
   }
+  delete() {
+    console.log('delete');
+    const body = this.selected.selected;
+    this.system.post('api/servicios/cuotasEstudiantesDelete', body).then(res => {
+      console.log(res); 
+      try {
+        if (res.status === 200) {
+          this.modalDeleteClose();
+          this.system.message(res.message, 'success');
+          this.refreshData();
+        }
+      } catch (error) {
+        
+      }
+    })
+  }
   toFixed(mon) {
     try {
       return parseFloat(mon).toFixed(2);

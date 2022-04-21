@@ -20,6 +20,8 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { CuotasComponent } from './components/cuotas/cuotas.component';
 import { CuotasServiciosComponent } from './components/cuotas-servicios/cuotas-servicios.component';
 import { ActiveComponent } from './components/login/active/active.component';
+import { FacturasComponent } from './components/facturas/facturas.component';
+import { LibroVentaComponent } from './components/libro-venta/libro-venta.component';
 
 const routes: Routes = [
   {path: 'gp', component: ContainerComponent, canActivate: [SessionGuard],
@@ -38,7 +40,9 @@ const routes: Routes = [
     {path: 'ajustes', component: SettingsComponent, canActivate: [AdminGuard]},
     {path: 'cuotas', component: CuotasComponent, canActivate: [AdminGuard]},
     {path: 'cuotasServicios', component: CuotasServiciosComponent, canActivate: [AdminGuard]},
-    {path: 'profile', component: ProfileComponent}
+    {path: 'profile', component: ProfileComponent},
+    {path: 'facturas', component: FacturasComponent},
+    {path: 'libroVenta', component: LibroVentaComponent}
   ]
   },
   {path: '', component: LoginComponent, canActivate: [LoginGuard]},

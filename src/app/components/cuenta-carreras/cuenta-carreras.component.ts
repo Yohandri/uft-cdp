@@ -13,12 +13,16 @@ export class CuentaCarrerasComponent implements OnInit {
   bancos = [];
   tipospago = [];
   form = new FormRePago();
-  selectCuota = '';
+  selectCuota = [];
   pagos = [];
   displayCuotas = false;
   pagination = new PaginationBuild();
   PagosSelected = new SelectItem();
   selected = new SelectItem();
+  cuotasAll = [];
+  test: number = 0;
+  selectNotaCredito: number = 0;
+  nota_credito: any = [];
   constructor(
     public system: SystemService
   ) { }
@@ -28,6 +32,7 @@ export class CuentaCarrerasComponent implements OnInit {
     this.system.module.icon = 'bookmark';
     if (this.system.isStudent) {
       this.system.getSaldo();
+      this.system.getNotaCredito();
     }
     this.system.getStatus();
     this.carreras = await this.getCarreras();
@@ -55,7 +60,7 @@ export class CuentaCarrerasComponent implements OnInit {
   showConfirm() {
     try {
       if (this.form.tipo_pago_id === '2') {
-        return this.restarSaldo(this.system.saldo) >= 0;
+        return this.n_c_pagar >= this.system.toBs(this.monto_pagar);
       } else {
         return true;
       }
@@ -72,6 +77,8 @@ export class CuentaCarrerasComponent implements OnInit {
     for (let i = 0;i < this.cuotas.length;i++) {
       //this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
       let montopagado = 0;
+      this.cuotas[i].index = i;
+      this.cuotas[i].check = false;
       for(let j of this.cuotas[i].pagos) {
         pagosSelelect.push(j);
         console.log(parseFloat(j.monto));
@@ -84,6 +91,21 @@ export class CuentaCarrerasComponent implements OnInit {
     console.log(this.PagosSelected);
     this.system.getStatus();
     this.displayCuotas = true;
+    this.getcuotasAll();
+  }
+  async getcuotasAll() {
+    this.cuotasAll = await this.system.post('api/estudiante/cuotasAll', {}, false).then(res => {
+      try {
+        if (res.status === 200) {
+          console.log(res);
+          return res.object;
+        } else {
+          return [];
+        }
+      } catch (error) {
+        return [];
+      }
+    });
   }
   async goPage(page, ctrl = '') {
     this.pagination.page = ctrl === '+' ? page + 1 > this.pagination.last_page ? page : page + 1 : ctrl === '-' ? page - 1 < 1 ? 1 : page -1 : page;
@@ -189,7 +211,11 @@ changeTypePay(tipo) {
 }
 restarSaldo(saldo) {
   try {
-    return Number(saldo) - Number(this.form.montobs);
+      if(this.form.montobs) {
+        return Number(saldo) - Number(this.form.montobs);
+      } else {
+        return Number(saldo);
+      }
   } catch (error) {
     return saldo;
   }
@@ -207,12 +233,12 @@ operarResta(i) {
   // }
   get montoAPagar() {
     try {
-      return this.operarResta(this.cuotas.find(x => x.id === this.selectCuota));
+      return this.operarResta(this.cuotas.find(x => x.id === this.selectCuota.find(y => y === x.id)));
     } catch (error) {
       return 0;
     }
   }
-  initPay(id) {
+  initPay(id = null) {
     this.selectCuota = id;
     this.changeTypePay(this.form.tipo_pago_id);
     displayModal('modal-pay');
@@ -228,39 +254,67 @@ operarResta(i) {
     hideModal('modal-cardPay');
   }
   confirm() {
+    let send = true;
+    if (this.form.tipo_pago_id === '2') {
+      let sum: number = 0;
+      for(let s = 0;s < this.nota_credito.length;s++) {
+        sum += Number(this.nota_credito[s]?.montobs);
+      }
+      this.form.montobs = sum.toFixed(2);
+    }
     console.log(this.form.montobs);
     const montobs = Number(this.form.montobs);
     if (montobs !== 0 && montobs !== null ) {
       this.form.addCuota(this.selectCuota);
       this.form.monto = this.system.toD(this.form.montobs);
       this.form.montobs_cambio = this.system.dolar.valor;
+      this.form.nota_creditos = this.nota_credito;
+      //this.form.c_c_e_lapso = [this.form.c_c_e_lapso];
       console.log(this.form);
-      this.system.post('api/estudiante/reportarpago', this.form, true).then(async (res) => {
-        try {
-          if (res.status === 200) {
-            console.log(res);
-            this.modalPayClose();
-            this.displayCuotas = false;
-            await this.refreshData();
-            //this.cuotas = await this.getCuotas();
+      if (this.form.referencia !== null) {
+        this.form.referencia = String(this.form.referencia).replace(/\./g, '');
+      } else {
+        send = false;
+        this.form.referencia = '';
+        this.system.message('La referencia no debe de utilizar caracteres especiales', 'warning');
+      }
+      if (this.form.titular_celular !== null ) {
+        this.form.titular_celular = String(this.form.titular_celular).replace(/\./g, '');
+      } else {
+        send = false;
+        this.form.titular_celular = '';
+        this.system.message('La cedula no debe de utilizar caracteres especiales', 'warning');
+      }
+      if (send) {
+        this.system.post('api/estudiante/reportarpago', this.form, true).then(async (res) => {
+          try {
             this.form.reset();
-            for (let i = 0;i < this.cuotas.length;i++) {
-              this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
-              let montopagado = 0;
-              for(let j of this.cuotas[i].pagos) {
-                console.log(parseFloat(j.monto));
-                montopagado = montopagado + parseFloat(j.monto);
+            if (res.status === 200) {
+              console.log(res);
+              this.modalPayClose();
+              this.displayCuotas = false;
+              await this.refreshData();
+              //this.cuotas = await this.getCuotas();
+              
+              for (let i = 0;i < this.cuotas.length;i++) {
+                //this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
+                let montopagado = 0;
+                for(let j of this.cuotas[i].pagos) {
+                  console.log(parseFloat(j.monto));
+                  montopagado = montopagado + parseFloat(j.monto);
+                }
+                this.cuotas[i].pagado = montopagado;
+                this.cuotas[i].monto = parseFloat(this.cuotas[i].monto);
               }
-              this.cuotas[i].pagado = montopagado;
-              this.cuotas[i].monto = parseFloat(this.cuotas[i].monto);
+              this.displayCuotas = true;
+            } else if (res.status === 204) {
+              this.system.message(res.message, 'danger', 5000);
             }
-            this.displayCuotas = true;
-          } else if (res.status === 204) {
-            this.system.message(res.message, 'danger', 5000);
+          } catch (error) {
           }
-        } catch (error) {
-        }
-      });
+        });
+      }
+      
     } else {
       this.system.message('Introduzca monto', 'danger');
     }
@@ -306,6 +360,145 @@ operarResta(i) {
     }
     return Number(val);
   }
+  refreshCurrentCheck(index, _) {
+    let cuotas = this.cuotas.filter(x => x.estado !== 'pagado' && x.estado !== 'anulado').sort((n1,n2): any => n1 < n2);
+    const val = this.selected.value[cuotas[index]?.id];
+    if (!val.value) {
+      for (let i = index; i >= 0; i--) {
+        this.selected.value[cuotas[i]?.id].value = false;
+      }
+    }
+  }
+  isActive(index: any, obj: any) {
+    let cuotas = this.cuotas.filter(x => x.estado !== 'pagado' && x.estado !== 'anulado').sort((n1,n2): any => n1 < n2);
+    if (cuotas.length - 1 === index) {
+      return true;
+    }
+    if (obj.estado === 'pagado' || obj.estado === 'anulado') {
+      return false;
+    }
+    for (let i = index + 1; i < cuotas.length; i++) {
+      return this.selected.value[cuotas[i]?.id].value;
+    }
+    return true;
+  }
+  isPayCuota(is, obj) {
+    try {
+      if (is) {
+        const cuotas = this.cuotasAll.filter(x => x.estado !== 'pagado' && x.estado !== 'anulado').sort((n1,n2): any => n1 < n2);
+        console.log(cuotas, this.selected.value);
+        if (cuotas.length > 0) {
+          let activeIndex = 0;
+          // let val =  this.selected.value[obj.id];
+          // if (val.id === obj.id  || (val.value ? cuotas[index + 1].id === obj.id : false )) {
+          //   return true;
+          // } else {
+          //    return false;
+          // }
+          let val =  this.selected.value[obj.id];
+          let count = this.selected.value.filter(x => x.value);
+          console.log(count, this.test);
+          if (cuotas[0]?.id === obj?.id) {
+            return true;
+          }
+          if (count[0]?.value === false) {
+            return count[0]?.value;
+          }
+          // const currentIndex = this.cuotas.indexOf(obj);
+          // const nextIndex = (currentIndex + 1) % this.cuotas.length;
+          // this.cuotas[nextIndex].nombre = 'test';
+          // console.log(nextIndex, this.cuotas[nextIndex])
+
+
+          // const is = count.find(x => x.id === obj.id);
+          // if (is || ((cuotas[count.length]?.id === obj?.id) ? count[count.length - 1]?.value  : false )) {
+          //   this.test = obj.id;
+          //   return true;
+          // } else {
+          //   return false;
+          // }
+
+
+          // if(this.selected.value[this.test]?.value || this.selected.value[obj?.id]?.value) {
+          //   for (let c = 0; c < cuotas.length;c++) {
+          //     console.log(c);
+          //     if (cuotas[c]?.id === obj?.id ||((cuotas[count.length]?.id === obj?.id) ? true  : this.selected.value[obj?.id]?.value )) {
+          //       this.test = obj.id;
+          //       return true;
+          //     } else {
+          //       return false;
+          //     }
+          //   }
+          // } else {
+            
+          //   if (cuotas[0]?.id === obj?.id) {
+          //     this.test = obj.id;
+          //     return true;
+          //   } else {
+          //     //this.selected.value[obj?.id]?.value = false;
+          //     return false;
+          //   }
+            
+          // }
+          
+          // if (val.id === cuotas[0].id && val.value === false) {
+          //   this.selected.reset();
+          // }
+          // if (cuotas[0].id === obj.id || (val.value ? cuotas[1].id === obj.id : false )) {
+          //   return true;
+          // } else {
+          //   return false;
+          // }
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+  addNotaCredito() {
+    if (this.selectNotaCredito !== 0) {
+      const obj = this.system.nota_credito.find(x => x.id === Number(this.selectNotaCredito));
+      this.nota_credito.push(obj);
+      this.selectNotaCredito = 0;
+    }
+  }
+  isSelectDisabled(_obj) {
+    try {
+      return this.nota_credito.find(x => x.id === Number(_obj.id))
+    } catch (error) {
+      return true;
+    }
+  }
+  selectDelete(_obj) {
+    this.nota_credito = this.nota_credito.filter(x => x.id !== _obj.id);
+  }
+  get monto_pagar() {
+    try {
+      let total = 0;
+      for(let i of this.selectCuota) {
+        let _total = this.cuotas.find(x => x.id === i);
+        total += Number(_total.monto) - Number(_total.pagado);
+      }
+      return total;
+    } catch (error) {
+      
+    }
+  }
+  get n_c_pagar() {
+    try {
+      let total = 0;
+      for(let i of this.nota_credito) total+=Number(i.montobs);
+      return total;
+    } catch (error) {
+      console.log(error);
+      return 0;
+    }
+  }
   get deudaTotal() {
     try {
       let val = 0;
@@ -336,11 +529,12 @@ class FormRePago {
   referencia = '';
   montobs = '';
   monto = 0;
-  c_c_e_lapso = '';
+  c_c_e_lapso: any[] = [];
   user_id = '';
   montobs_cambio = 0;
-  addCuota(id) {
-    this.c_c_e_lapso = id;
+  nota_creditos = [];
+  addCuota(ids) {
+    this.c_c_e_lapso = ids;
   }
   edit(user) {
     this.guid = user.guid;
@@ -371,6 +565,7 @@ class FormRePago {
     this.montobs = '';
     this.monto = 0;
     this.montobs_cambio = 0;
+    this.c_c_e_lapso = [];
   }
   resetBanco() {
     this.titular_nombre = '';
@@ -388,8 +583,8 @@ class FormRePago {
     && this.tipo_pago_id !== '' && this.banco_id !== ''
     && this.fecha !== '' && this.referencia !== '' && this.montobs !== ''
     }
-    if (this.tipo_pago_id === '2') {
-      return this.montobs !== '' 
-    }
+    // if (this.tipo_pago_id === '2') {
+    //   return this.montobs !== '' 
+    // }
   }
 }

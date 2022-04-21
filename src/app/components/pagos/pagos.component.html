@@ -192,7 +192,15 @@
                         </div>
                         <div class="col-md-6 col-sm-12 h-52" *ngIf="form.titular_nombre !== null">
                             <div>Nombre y apellido del titular</div>
-                            <b class="pl-2">{{form.titular_nombre}} {{form.titular_apellido}}</b>
+                            <b class="pl-2" *ngIf="!isEdit">{{form.titular_nombre}} {{form.titular_apellido}}</b>
+                            <div class="row" *ngIf="isEdit">
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-sm" id="fecha" [(ngModel)]="form.titular_nombre">
+                                </div>
+                                <div class="col">
+                                    <input type="text" class="form-control form-control-sm" id="fecha" [(ngModel)]="form.titular_apellido">
+                                </div>
+                            </div>
                             <!-- <div class="form-group">
                                 <label for="monto">Monto</label>
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">
@@ -209,7 +217,8 @@
                         </div>
                         <div class="col-md-6 col-sm-12 h-52" *ngIf="form.titular_telefono !== null">
                             <div>Teléfono del titular</div>
-                            <b class="pl-2">{{form.titular_telefono}}</b>
+                            <b *ngIf="!isEdit" class="pl-2">{{form.titular_telefono}}</b>
+                            <input *ngIf="isEdit" type="text" class="form-control form-control-sm" id="titular_cedula" [(ngModel)]="form.titular_telefono">
                             <!-- <div class="form-group">
                                 <label for="monto">Monto</label>
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">
@@ -232,18 +241,26 @@
                             </div> c_c_e_lapso-->
                         </div>
                         <div class="col-md-6 col-sm-12 h-52" *ngIf="form?.c_servicio !== null">
-                            <div *ngIf="form?.c_servicio?.tipo === 'servicio'">Nombre del servicio</div>
-                            <div *ngIf="form?.c_servicio?.tipo === 'materia'">Nombre de materia</div>
-                            <div *ngIf="form?.c_servicio?.tipo === 'inscripcion'">Nombre del servicio</div>
-                            <b class="pl-2">{{form?.c_servicio?.nombre}}</b>
+                            <div *ngIf="form?.tipo === 'servicio'">Nombre del servicio</div>
+                            <div *ngIf="form?.tipo === 'materia'">Nombre de materia</div>
+                            <div *ngIf="form?.tipo === 'inscripcion'">Nombre del servicio</div>
+                            <b class="pl-2">{{form?.tipo}}</b>
                             <!-- <div class="form-group">
                                 <label for="monto">Monto</label>
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">
                             </div> -->
                         </div>
-                        <div class="col-md-6 col-sm-12 h-52" *ngIf="form?.c_c_e_lapso !== null ">
+                        <div class="col-md-6 col-sm-12" *ngIf="form?.c_c_e_lapso !== null ">
                             <div>Nombre de carrera</div>
-                            <b class="pl-2">{{form?.c_c_e_lapso?.c_e_lapso?.carrera?.nombre}}</b>
+                            <!-- <b class="pl-2">{{form?.c_c_e_lapso?.c_e_lapso?.carrera?.nombre}}</b> --> 
+                            <!-- <b class="pl-2">{{form?.pagos_servicio[0]?.get_c_c_e_lapso?.c_e_lapso.carrera?.nombre}}</b> -->
+                            <div *ngFor="let i of form?.pagos_servicio" class="pl-2">
+                                <b>{{i?.get_c_c_e_lapso?.c_e_lapso?.carrera?.nombre}}</b>
+                                {{i?.get_c_c_e_lapso?.nombre}}
+                            </div>
+                            <div *ngFor="let i of form?.pagos_servicio" class="pl-2">
+                                <b>{{i?.get_c_servicio?.nombre}}</b>
+                            </div>
                             <!-- <div class="form-group">
                                 <label for="monto">Monto</label>
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">
@@ -251,7 +268,10 @@
                         </div>
                         <div class="col-md-6 col-sm-12 h-52" *ngIf="form.banco_id !== null">
                             <div>Banco</div>
-                            <b class="pl-2">{{getBanco(form.banco_id)}}</b>
+                            <b *ngIf="!isEdit" class="pl-2">{{getBanco(form.banco_id)}}</b>
+                            <select *ngIf="isEdit" class="form-control form-control-sm" [(ngModel)]="form.banco_id" name="banco_id" id="banco_id">
+                                <option [value]="i.id" *ngFor="let i of bancos">{{i.nombre}}</option>
+                            </select>
                             <!-- <div class="form-group">
                                 <label for="fecha">Fecha</label>
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="fecha" [(ngModel)]="form.fecha">
@@ -280,7 +300,8 @@
                         </div>
                         <div class="col-md-6 col-sm-12 h-52">
                             <div>Monto ($)</div>
-                            <b class="pl-2">{{form.monto | currency: '$ ' }} / {{system.toPetro(form.monto)}} (P)</b>
+                            <b *ngIf="!isEdit" class="pl-2">{{form.monto | currency: '$ ' }} / {{system.toPetro(form.monto)}} (P)</b>
+                            <input *ngIf="isEdit" type="number" class="form-control form-control-sm" id="monto" [(ngModel)]="form.monto">
                             <!-- <div class="form-group">
                                 <label for="monto">Monto</label>
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">
@@ -304,7 +325,10 @@
                         </div>
                         <div class="col-md-6 col-sm-12 h-52">
                             <div>Tipo de pago</div>
-                            <b class="pl-2" >{{ gettipopago(form.tipo_pago_id) === '' ? form.tipo_pago_caja : gettipopago(form.tipo_pago_id) }}</b>
+                            <b *ngIf="!isEdit" class="pl-2" >{{ gettipopago(form.tipo_pago_id) === '' ? form.tipo_pago_caja : gettipopago(form.tipo_pago_id) }}</b>
+                            <select *ngIf="isEdit && gettipopago(form.tipo_pago_id) !== ''" class="form-control form-control-sm" [(ngModel)]="form.tipo_pago_id" name="tipo_pago_id" id="tipo_pago_id">
+                                <option [value]="i.id" *ngFor="let i of tipospago">{{i.nombre}}</option>
+                            </select>
                             <!-- <div class="form-group">
                                 <label for="monto">Monto</label>
                                 <input type="text" (keyup.enter)="save()" class="form-control" id="monto" [(ngModel)]="form.monto">

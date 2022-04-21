@@ -206,6 +206,20 @@ export class UsersComponent implements OnInit {
     }
     if (id === 3) {
       return 'Estudiante';
+    }
+    if (id === 4) {
+      return 'Coordinador';
+    }
+    if (id === 5) {
+      return 'Caja';
     } 
+  }
+  get isValidForm() {
+    try {
+      return this.form.cedula !== '' && this.form.nombre !== '' && this.form.apellido && this.form.correo !== ''
+      && this.form.rp_user.profile_id !== 0 && this.form.password !== '';
+    } catch (error) {
+      return false
+    }
   }
 }

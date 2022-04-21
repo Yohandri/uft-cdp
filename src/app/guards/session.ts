@@ -113,7 +113,7 @@ export class AdminGuard implements CanActivate {
         next: ActivatedRouteSnapshot,
         state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         
-        if (this.system.isAdministrator) {
+        if (this.system.showIn(true, 'Administrador', 'Administracion', 'Caja', 'Coordinador')) {
             return true;
         } else {
             return false;

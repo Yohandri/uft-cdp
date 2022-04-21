@@ -209,7 +209,7 @@
                             </div>
                            <div class="form-group" *ngIf="form.tipo === 'materia'">
                                 <label for="horas">Horas</label>
-                                <select [disabled]="!isNew" name="horas" id="horas" class="form-control"  [(ngModel)]="form.horas">
+                                <select (change)="getLapso(true)" [disabled]="!isNew" name="horas" id="horas" class="form-control"  [(ngModel)]="form.horas">
                                     <option value="0"></option>
                                     <option [value]="i" [ngStyle]="{'background-color': disabledHora(i) ? '#dedede' : 'inherent'}" [disabled]="disabledHora(i)" *ngFor="let i of horas_materias">{{i}}</option>
                                 </select>

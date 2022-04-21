@@ -22,6 +22,8 @@ export class CuentaServiciosComponent implements OnInit {
   tipospago = [];
   PagosSelected = new SelectItem();
   becado_media = false;
+  selectNotaCredito: number = 0;
+  nota_credito: any = [];
   constructor(
     public system: SystemService
   ) { }
@@ -47,7 +49,7 @@ export class CuentaServiciosComponent implements OnInit {
   }
   changeTypePay(tipo) {
     if (tipo === '2') {
-      this.form.montobs = this.system.toBs(this.montoAPagar);
+      //this.form.montobs = this.system.toBs(this.montoAPagar);
       this.form.resetBanco();
       this.system.getSaldo();
     }
@@ -55,9 +57,9 @@ export class CuentaServiciosComponent implements OnInit {
   showConfirm() {
     try {
       if (this.form.tipo_pago_id === '2') {
-        return this.restarSaldo(this.system.saldo) >= 0;
+        return this.n_c_pagar >= this.system.toBs(this.monto_pagar);
       } else {
-        return true;
+        return this.form.isValidated;
       }
     } catch (error) {
       return false;
@@ -112,7 +114,8 @@ export class CuentaServiciosComponent implements OnInit {
 }
 operarResta(i) {
   try {
-    return (i.monto - i.pagado);
+    console.log(i);
+    return (i?.monto - i?.pagado);
   } catch (error) {
     console.log(error);
     return 0;
@@ -131,6 +134,7 @@ async refreshData() {
   this.PagosSelected.init(pagosSelelect);
   console.log(pagosSelelect ,this.PagosSelected);
   this.displayCuotas = true;
+  this.system.getNotaCredito();
 }
 async goPage(page, ctrl = '') {
   this.pagination.page = ctrl === '+' ? page + 1 > this.pagination.last_page ? page : page + 1 : ctrl === '-' ? page - 1 < 1 ? 1 : page -1 : page;
@@ -149,7 +153,7 @@ getTotalPagado(obj) {
 }
 get montoAPagar() {
   try {
-    return this.operarResta(this.cuotas.find(x => x.id === this.selectCuota));
+    return this.operarResta(this.cuotas.find(x => x.id === Number(this.selectCuota)));
   } catch (error) {
     return 0;
   }
@@ -161,6 +165,7 @@ initPay(id) {
 }
 modalPayClose() {
   this.form.montobs = '0';
+  this.nota_credito = [];
   hideModal('modal-pay');
 }
 verPagos(obj) {
@@ -192,27 +197,54 @@ esVencido(obj) {
   return new Date(obj.fecha_vencimiento).getTime() < new Date(fechaToday).getTime() && obj.estado !== 'pagado';
 }
 confirm() {
+  let send = true;
+  if (this.form.tipo_pago_id === '2') {
+    let sum: number = 0;
+    for(let s = 0;s < this.nota_credito.length;s++) {
+      sum += Number(this.nota_credito[s]?.montobs);
+    }
+    this.form.montobs = sum.toFixed(2);
+  }
+  console.log(this.form);
   const montobs = Number(this.form.montobs);
     if (montobs !== 0 && montobs !== null ) {
   this.form.addCuota(this.selectCuota);
   this.form.monto = this.system.toD(this.form.montobs);
   this.form.montobs_cambio = this.system.dolar.valor;
   this.form.tipo = 'servicio';
+  this.form.nota_creditos = this.nota_credito;
   console.log(this.form);
-  this.system.post('api/estudiante/reportarpago_servicio', this.form, true).then(async (res) => {
-    try {
-      if (res.status === 200) {
-        console.log(res);
-        this.modalPayClose();
-        
-        this.form.reset();
-        await this.refreshData();
-      } else if (res.status === 204) {
-        this.system.message(res.message, 'danger', 5000);
+  if (this.form.referencia !== null) {
+    this.form.referencia = String(this.form.referencia).replace(/\./g, '');
+  } else {
+    send = false;
+    this.form.referencia = '';
+    this.system.message('La referencia no debe de utilizar caracteres especiales', 'warning');
+  }
+  if (this.form.titular_celular !== null ) {
+    this.form.titular_celular = String(this.form.titular_celular).replace(/\./g, '');
+  } else {
+    send = false;
+    this.form.titular_celular = '';
+    this.system.message('La cedula no debe de utilizar caracteres especiales', 'warning');
+  }
+  if (send) {
+    this.system.post('api/estudiante/reportarpago_servicio', this.form, true).then(async (res) => {
+      try {
+        if (res.status === 200) {
+          console.log(res);
+          this.modalPayClose();
+          
+          this.form.reset();
+          await this.refreshData();
+        } else if (res.status === 204) {
+          this.system.message(res.message, 'danger', 5000);
+        }
+      } catch (error) {
       }
-    } catch (error) {
-    }
-  });
+    });
+  }
+  
 } else {
   this.system.message('Introduzca monto', 'danger');
 }
@@ -323,9 +355,71 @@ PagoDelete() {
 }
 restarSaldo(saldo) {
   try {
-    return Number(saldo) - Number(this.form.montobs);
+    console.log(saldo, this.form.montobs);
+    if(this.form.montobs) {
+      return Number(saldo) - Number(this.form.montobs);
+    } else {
+      return Number(saldo);
+    }
+    
   } catch (error) {
+    console.log(error);
     return saldo;
+  }
+}
+isPayCuota(is) {
+  try {
+    if (is) {
+      const isSolvente = this.system.isSolvente;
+      if (isSolvente) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
+}
+addNotaCredito() {
+  if (this.selectNotaCredito !== 0) {
+    const obj = this.system.nota_credito.find(x => x.id === Number(this.selectNotaCredito));
+    this.nota_credito.push(obj);
+    this.selectNotaCredito = 0;
+  }
+}
+isSelectDisabled(_obj) {
+  try {
+    return this.nota_credito.find(x => x.id === Number(_obj.id))
+  } catch (error) {
+    return true;
+  }
+}
+selectDelete(_obj) {
+  this.nota_credito = this.nota_credito.filter(x => x.id !== _obj.id);
+}
+get monto_pagar() {
+  try {
+    let total = 0;
+    for(let i of this.selectCuota) {
+      let _total = this.cuotas.find(x => x.id === i);
+      total += Number(_total.monto) - Number(_total.pagado);
+    }
+    return total;
+  } catch (error) {
+    
+  }
+}
+get n_c_pagar() {
+  try {
+    let total = 0;
+    for(let i of this.nota_credito) total+=Number(i.montobs);
+    return total;
+  } catch (error) {
+    console.log(error);
+    return 0;
   }
 }
  get servicio() {
@@ -356,10 +450,11 @@ class FormRePago {
   referencia = '';
   montobs = '';
   monto = 0;
-  c_servicio = '';
+  c_servicio = [];
   user_id = '';
   montobs_cambio = 0;
   tipo = '';
+  nota_creditos = [];
   addCuota(id) {
     this.c_servicio = id;
   }
@@ -410,8 +505,8 @@ class FormRePago {
     && this.tipo_pago_id !== '' && this.banco_id !== ''
     && this.fecha !== '' && this.referencia !== '' && this.montobs !== ''
     }
-    if (this.tipo_pago_id === '2') {
-      return this.montobs !== '' 
-    }
+    // if (this.tipo_pago_id === '2') {
+    //   return this.montobs !== '' 
+    // }
   }
 }

@@ -9,6 +9,7 @@ class Settings {
   public BlobLogo: string;
   public max_num_cuotas: number;
   public horas_materias: number[];
+  public iva: number = 0;
   setURL = (obj: Settings, ApiVersion: string, Blob: string, BlobLogo) => {
     this.Subscriptions = `${obj.Subscriptions}api/v${ApiVersion}`;
     this.Blob = Blob;
@@ -31,6 +32,7 @@ export class SettingsService {
   private extractData(res: any) {
     const body = res;
     this.Settings.endpoint = body.InertiaApiUrl;
+    this.Settings.iva = body.iva;
     this.Settings.max_num_cuotas = body.max_num_cuotas ? body.max_num_cuotas : 15;
     this.Settings.horas_materias = body.horas_materias ? body.horas_materias : [2,3,4,5,6,7,8];
     return this.Settings;

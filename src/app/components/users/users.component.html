@@ -7,7 +7,7 @@
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Nuevo
                     </button>
-                    <button class="btn btn-primary float-right btn-sm ml-2" (click)="save()" *ngIf="isForm">
+                    <button [disabled]="!isValidForm" class="btn btn-primary float-right btn-sm ml-2" (click)="save()" *ngIf="isForm">
                         <i class="fa fa-floppy-o" aria-hidden="true"></i>
                         Guardar
                     </button>
@@ -50,6 +50,8 @@
                                         <option value="1">Administrador</option>
                                         <option value="2">Administración</option>
                                         <option value="3">Estudiante</option>
+                                        <option value="4">Coordinador</option>
+                                        <option value="5">Caja</option>
                                       </select>
                                 </th>
                             </tr>
@@ -142,7 +144,9 @@
                                 <select [attr.disabled]="form.rp_user.profile_id === 3 ? '' : null" class="form-control" id="userType" [(ngModel)]="form.rp_user.profile_id">
                                   <option value="1">Administrador</option>
                                   <option value="2">Administración</option>
-                                  <option value="3" disabled>Estudiante</option>
+                                  <!-- <option value="3" disabled>Estudiante</option> -->
+                                  <option value="4">Coordinador</option>
+                                    <option value="5">Caja</option>
                                 </select>
                               </div>
                         </div>

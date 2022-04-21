@@ -25,6 +25,14 @@ export class SystemService {
   isBlock = false;
   isModalReload = false;
   isCatchDolar = false;
+  nota_credito: any = [];
+  profiles = [
+    {value: 1, name: 'Administrador'},
+    {value: 2, name: 'Administracion'},
+    {value: 3, name: 'Estudiante'},
+    {value: 4, name: 'Coordinador'},
+    {value: 5, name: 'Caja'}
+  ];
   constructor(
     public router: Router,
     private http: HttpClient,
@@ -296,6 +304,13 @@ private calculateRequest(res: any) {
         setTimeout(() => {
           this.isModalReload = false;
         }, 7000);
+        if (res.message === 'Unauthenticated.') {
+          this.message('The session was expired', 'danger');
+          localStorage.removeItem(btoa('access_token'));
+          setTimeout(() => {
+              location.reload();
+          }, 3000);
+      }
       }
       return res;
   }
@@ -334,6 +349,34 @@ private calculateRequest(res: any) {
          }
        } catch (error) {
          return false;
+       }
+     });
+  }
+  async getNotaCredito() {
+    await this.post('api/estudiante/nota_credito', {}, true).then(res => {
+       try {
+         if (res.status === 200) {
+           console.log(res);
+           this.nota_credito = res.object;
+           return true;
+         } else {
+           return false;
+         }
+       } catch (error) {
+         return false;
+       }
+     });
+  }
+  async getSaldoCedula(cedula) {
+    return await this.post('api/facturas/saldo', {cedula}, true).then(res => {
+       try {
+         if (res.status === 200) {
+           return Number(res.object?.saldo || 0);
+         } else {
+           return 0;
+         }
+       } catch (error) {
+         return 0;
        }
      });
   }
@@ -377,6 +420,38 @@ toPetro(dolar) {
     return (dolar / this.dolar.petro).toFixed(2);
   } catch (error) {
     return dolar;
+  }
+}
+toDigital(bs) {
+  try {
+    //return (bs / 1000000).toFixed(2);
+    return (bs).toFixed(2);
+  } catch (error) {
+    return bs;
+  }
+}
+showIn(arg, ...profiles) {
+  try {
+    if (arg) {
+      const profile = this.decodedToken?.user?.profile_id || null;
+      if (profile !== null) {
+        //console.log(profile, profiles);
+        return profiles.filter(x => x === this.profiles.find(x => x.value === profile)?.name || '').length > 0;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
+}
+toFixed(mon) {
+  try {
+    return parseFloat(mon).toFixed(2);
+  } catch (error) {
+    return mon;
   }
 }
 get isLogged() {

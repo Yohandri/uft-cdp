@@ -3,7 +3,7 @@ import { displayModal, hideModal, PaginationBuild, SelectItem } from 'src/app/se
 import { SystemService } from 'src/app/services/system.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
-class FormPago {
+export class FormPago {
   id = '';
   guid = '';
   referencia = '';
@@ -26,6 +26,7 @@ class FormPago {
   c_servicio = {nombre: '', tipo: ''};
   c_c_e_lapso = {c_e_lapso: {carrera: {nombre: ''}}}
   tipo_pago_caja = '';
+  pagos_servicio = []
   edit(user) {
     this.guid = user.guid;
     this.id = user.id;
@@ -50,6 +51,7 @@ class FormPago {
     this.c_c_e_lapso = user?.c_c_e_lapso;
     this.tipo = user.tipo;
     this.tipo_pago_caja = user.tipo_pago_caja;
+    this.pagos_servicio = user.pagos_servicio;
   }
   get isFilter() {
     return this.referencia !== '' || this.monto !== '' 
@@ -95,7 +97,15 @@ export class PagosComponent implements OnInit {
   }
   changeBank() {
     setTimeout(() => {
-      this.urlUpload = this.system.settingsService.Settings.endpoint + 'api/planes/import_' + (this.banco_id === '1' ? 'provincial' : (this.banco_id === '2' || this.banco_id === '5' ?  'banesco' : 'mercantil'));
+      let url = '';
+      if (this.banco_id === '2') {
+        url = 'banesco';
+      } else
+      if (this.banco_id === '5') {
+        url = 'banesco2';
+      }
+      this.urlUpload = this.system.settingsService.Settings.endpoint + 'api/planes/import_' + 
+      (this.banco_id === '1' ? 'provincial' : (this.banco_id === '2' || this.banco_id === '5' ?  url : 'mercantil'));
     }, 100);
   }
   handleChange(info: NzUploadChangeParam): void {
@@ -279,10 +289,10 @@ export class PagosComponent implements OnInit {
     this.data = await this.refreshData();
   }
   gettipopago(id) {
-    return this.tipospago.find(x => x.id === id)?.nombre;
+    return this.tipospago.find(x => x.id === Number(id))?.nombre;
   }
   getBanco(id) {
-    return this.bancos.find(x => x.id === id)?.nombre;
+    return this.bancos.find(x => x.id === Number(id))?.nombre;
   }
   toFixed(mon) {
     try {
