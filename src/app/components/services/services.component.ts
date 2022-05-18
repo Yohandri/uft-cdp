@@ -50,7 +50,7 @@ export class ServicesComponent implements OnInit {
     }
     await this.getPeriodos();
     await this.refreshData();
-    await this.getLibrosContables();
+    //await this.getLibrosContables();
   }
   new() {
     this.form = new FormService();

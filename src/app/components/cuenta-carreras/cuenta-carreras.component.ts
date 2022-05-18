@@ -371,6 +371,9 @@ operarResta(i) {
   }
   isActive(index: any, obj: any) {
     let cuotas = this.cuotas.filter(x => x.estado !== 'pagado' && x.estado !== 'anulado').sort((n1,n2): any => n1 < n2);
+    if (obj.rp_carreraestudiante_lapso === null) {
+      return true;
+    }
     if (cuotas.length - 1 === index) {
       return true;
     }
@@ -378,6 +381,9 @@ operarResta(i) {
       return false;
     }
     for (let i = index + 1; i < cuotas.length; i++) {
+      if(cuotas[index + 1].rp_carreraestudiante_lapso === null) {
+        return true;
+      }
       return this.selected.value[cuotas[i]?.id].value;
     }
     return true;

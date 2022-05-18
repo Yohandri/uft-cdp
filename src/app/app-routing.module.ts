@@ -41,8 +41,8 @@ const routes: Routes = [
     {path: 'cuotas', component: CuotasComponent, canActivate: [AdminGuard]},
     {path: 'cuotasServicios', component: CuotasServiciosComponent, canActivate: [AdminGuard]},
     {path: 'profile', component: ProfileComponent},
-    {path: 'facturas', component: FacturasComponent},
-    {path: 'libroVenta', component: LibroVentaComponent}
+    // {path: 'facturas', component: FacturasComponent},
+    // {path: 'libroVenta', component: LibroVentaComponent}
   ]
   },
   {path: '', component: LoginComponent, canActivate: [LoginGuard]},

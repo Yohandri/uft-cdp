@@ -121,8 +121,8 @@ export class FacturasComponent implements OnInit {
     this.listService = [];
     hideModal('modal-new-facture');
   }
-  async dataOption(load = false) {
-    await this.system.post('api/facturas/options', {}, load).then(res => {
+  async dataOption(load = false, search = '') {
+    await this.system.post('api/facturas/options', {search}, load).then(res => {
       try {
         console.log(res);
         if (res.status === 200) {
@@ -163,7 +163,17 @@ export class FacturasComponent implements OnInit {
       this.dataOptionServicios(value);
       this.saldo_estudiante = await this.system.getSaldoCedula(value);
     }
-    this.filteredOptions = this.options.filter(option => option.cedula.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+    await this.system.post('api/facturas/options', {search: value}, false).then(res => {
+      try {
+        console.log(res);
+        if (res.status === 200) {
+          this.filteredOptions = res.object;
+        }
+      } catch (error) { 
+        console.log(error);
+      }
+    })
+    //this.filteredOptions = this.options.filter(option => option.cedula.toLowerCase().indexOf(value.toLowerCase()) !== -1);
   }
   onChangeServicios(value: any): void {
     typeof value === 'string' ? value = value : value = value.nombre;
