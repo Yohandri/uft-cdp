@@ -9,6 +9,7 @@ export class FormPago {
   referencia = '';
   titular_cedula = '';
   titular_nombre = '';
+  addpay = '';
   titular_apellido = '';
   titular_telefono = '';
   monto = '';
@@ -19,7 +20,7 @@ export class FormPago {
   banco_id = '';
   montobs = 0;
   montobs_confirm = '';
-  montobs_cambio = '';
+  montobs_cambio:number;
   cedula = '';
   tipo = '';
   user = {nombre: '', apellido: '', cedula: ''};
@@ -36,6 +37,7 @@ export class FormPago {
     this.description = user.description;
     this.tipo_pago_id = user.tipo_pago_id;
     this.user_id = user.user_id;
+    this.addpay = user.addpay;
     this.banco_id = user.banco_id;
     this.titular_cedula = user.titular_cedula;
     this.titular_nombre = user.titular_nombre;

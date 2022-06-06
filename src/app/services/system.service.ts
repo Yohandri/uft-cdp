@@ -455,6 +455,7 @@ toFixed(mon) {
   }
 }
 get isLogged() {
+  console.log("LAM");
         return localStorage.getItem('access_token') ? true : false;
     }
   get isMobile() {

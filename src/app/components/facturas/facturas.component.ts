@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { displayModal, hideModal, makeguid, PaginationBuild, SelectItem } from 'src/app/services';
+import { dateToStr, displayModal, hideModal, makeguid, PaginationBuild, SelectItem } from 'src/app/services';
 import { SystemService } from 'src/app/services/system.service';
 import {FormPago} from 'src/app/components/pagos/pagos.component';
 @Component({
@@ -8,6 +8,7 @@ import {FormPago} from 'src/app/components/pagos/pagos.component';
   styleUrls: ['./facturas.component.scss']
 })
 export class FacturasComponent implements OnInit {
+
   data: any = [];
   loadData = false;
   pagination = new PaginationBuild();
@@ -18,7 +19,7 @@ export class FacturasComponent implements OnInit {
   selected = new SelectItem();
   selectedService: any = new SelectItem();
   isEdit = false;
-
+  instrumento_pago:any=[]
   inputValue: any = '';
   servicioSelect: any = '';
   options: Option[] = [];
@@ -37,6 +38,13 @@ export class FacturasComponent implements OnInit {
   pagos_insert = [];
   saldo_estudiante: any = 0;
   pagos = [];
+  pagosxc:any = [];
+  formaddpaynote:boolean = false;
+  notasdecredito:any = [];
+  formaddpaydebito:boolean = false;
+  formaddpaytransferencia:boolean = false;
+  notasdecredito_selected:any=[];
+  
 
   compareFun = (o1: Option | string, o2: Option) => {
     if (o1) {
@@ -52,6 +60,7 @@ export class FacturasComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this.notasdecredito_selected = [];
     this.system.module.name = 'Facturas';
     this.system.module.icon = 'file-text-o';
     if (this.system.isMobile) {
@@ -79,6 +88,17 @@ export class FacturasComponent implements OnInit {
         return [];
       }
     });
+  }
+
+  async getfact(){
+    await this.system.getDownloadFile('api/facturas/export_factura', {},true).then(res => {
+      try {
+        console.log(res);
+        
+      } catch (error) { 
+        console.log(error);
+      }
+    })
   }
   async goPage(page, ctrl = '') {
     this.pagination.page = ctrl === '+' ? page + 1 > this.pagination.last_page ? page : page + 1 : ctrl === '-' ? page - 1 < 1 ? 1 : page -1 : page;
@@ -110,7 +130,7 @@ export class FacturasComponent implements OnInit {
     }
   }
   new() {
-    this.dataOption();
+    //this.dataOption();
     //this.dataOptionServicios();
     this.listPagos = [];
     displayModal('modal-new-facture');
@@ -140,7 +160,7 @@ export class FacturasComponent implements OnInit {
         console.log(res);
         if (res.status === 200) {
           this.selectedService.init(res.object);
-          this.optionsServicios = res.object.filter(x => x.plan !== null && x?.plan?.estado === 'activo');
+          this.optionsServicios = res.object.filter(x => x.plan !== null && x?.plan?.estado === 'activo' && x?.l_venta_id === null);
           this.optionCuotas = res.object.filter(x => x.tipo !== undefined);
           // for (let i of this.optionCuotas) {
           //   i['plan'] = {mon_total: i.monto};
@@ -163,17 +183,20 @@ export class FacturasComponent implements OnInit {
       this.dataOptionServicios(value);
       this.saldo_estudiante = await this.system.getSaldoCedula(value);
     }
-    await this.system.post('api/facturas/options', {search: value}, false).then(res => {
-      try {
-        console.log(res);
-        if (res.status === 200) {
-          this.filteredOptions = res.object;
+
+    if(value.length > 3){
+      await this.system.post('api/facturas/options', {search: value}, false).then(res => {
+        try {
+          console.log(res);
+          if (res.status === 200) {
+            this.filteredOptions = res.object;
+          }
+        } catch (error) { 
+          console.log(error);
         }
-      } catch (error) { 
-        console.log(error);
-      }
-    })
-    //this.filteredOptions = this.options.filter(option => option.cedula.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+      })
+      //this.filteredOptions = this.options.filter(option => option.cedula.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+    }
   }
   onChangeServicios(value: any): void {
     typeof value === 'string' ? value = value : value = value.nombre;
@@ -192,19 +215,27 @@ export class FacturasComponent implements OnInit {
   //   this.dataOptionServicios(value.cedula);
   // }
   onSelectServicio() {
-    console.log(this.servicioSelect);
+    this.pagosxc = '';
     let obj = JSON.parse(JSON.stringify(this.servicioSelect));
+    //console.log("onSelectServicio",this.system.dolar.valor);
     obj.id = obj.id + '.' + makeguid();
+    obj.isPay = this.isPay;
     for (let i of obj.pagos_confirm) {
       i['plan'] = {mon_total: i.monto};
+
       if (i?.pagos_confirm?.length > 0) {
         this.agregar_pago(i.pagos_confirm);
       }
     }
+
     // if (obj?.pagos_confirm?.length === 0) {
     //   obj.pagos_confirm.push(new FormPago());
     // }
+    
     this.listService.push(obj);
+    console.log("here");
+    console.log(obj.pagos_confirm);
+    console.log("here");
     this.servicioSelect = '';
   }
   deleteSelectService(obj) {
@@ -237,13 +268,14 @@ export class FacturasComponent implements OnInit {
   save() {
     //let saldo = Math.abs(this.resta_pagando).toFixed(2);
     let saldo = 0;
+    let index = 0;
     for (let i of this.listService) {
       i.id = i.id.split('.')[0];
-      console.log(i);
+      console.log('save',i);
       let monto = Number(i?.plan?.mon_total ? i?.plan?.mon_total : i?.monto);
       i['monto_pagado'] = 0;
       for(let j of i.pagos_confirm) {
-        const p = i['monto_pagado'];
+        let p = i['monto_pagado'];
         i['monto_pagado'] = i['monto_pagado'] + Number(j.monto);
         console.log(i['monto_pagado'] , Number(monto));
         if (i['monto_pagado'] >= monto) {
@@ -253,13 +285,21 @@ export class FacturasComponent implements OnInit {
         } else {
           j.monto = j.monto;
         }
-          
-      }
+      index = index + 1;
+    }
+    
+    }
+
+    for (let i of this.instrumento_pago) {
+      i.monto = this.system.toD(i.monto);
     }
     //this.pagos_refresh();
     const body = {
       estudiante_cedula: this.inputValue.cedula,
+      sede: "Caracas",
+      nota_creditos : this.notasdecredito_selected,
       detalle_factura: this.listService,
+      instrumento_pago: this.instrumento_pago,
       mon_total: this.total,
       sub_total: this.sub_total,
       iva: this.iva,
@@ -267,17 +307,17 @@ export class FacturasComponent implements OnInit {
     };
     
     console.log(body);
-    // this.system.post('api/facturas/create', body, true).then(res => {
-    //   try {
-    //     console.log(res);
-    //     if (res.status === 200) {
-    //       //this.modalFactureClose();
-    //       //this.refreshData();
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // });
+    this.system.post('api/facturas/create', body, true).then(res => {
+     try {
+       console.log(res);
+       if (res.status === 200) {
+         this.modalFactureClose();
+         this.refreshData();
+       }
+     } catch (error) {
+       console.log(error);
+  }
+  });
   }
   anular() {
     this.esAnular = true;
@@ -287,10 +327,16 @@ export class FacturasComponent implements OnInit {
     hideModal('modal-anular');
   }
   addPagos(servicio) {
-    console.log(servicio);
-    this.pagos = servicio.pagos_confirm;
-    displayModal('modal-pagos');
+//    console.log("lam",servicio);
+      this.pagos=servicio.pagos_confirm;
+      displayModal('modal-pagos');
   }
+
+  addinstrumento() {
+    //    console.log("lam",servicio);
+          
+          displayModal('modal-pagos');
+      }
   modalPAgosClose() {
     hideModal('modal-pagos');
     this.pagos = [];
@@ -312,7 +358,7 @@ export class FacturasComponent implements OnInit {
     });
   }
   agregar_pago(pagos_confirm = []) {
-    console.log(pagos_confirm);
+    console.log("agregar_pago",pagos_confirm);
     if (pagos_confirm.length === 0) {
       this.listPagos.push({
         tipo_pago_id: '',
@@ -342,23 +388,35 @@ export class FacturasComponent implements OnInit {
   agregar_pago_() {
     let pago = new FormPago();
     pago.guid = makeguid();
-    this.pagos.push(pago);
+    pago.montobs_cambio =  this.system.dolar.valor;
+    this.instrumento_pago.push(pago);
   }
+
+  agregar_pago_instrumento() {
+    let pago = new FormPago();
+    pago.guid = makeguid();
+    pago.montobs_cambio =  this.system.dolar.valor;
+    this.instrumento_pago.push(pago);
+  }
+
+                                    
+
   reportarPago(is) {
     if (is) {
       console.log(is);
     }
   }
   pagos_refresh() {
+    console.log("pagorefresh");
     try {
       let pagos_ = JSON.parse(JSON.stringify(this.listPagos));
       for(let i of this.listService) {
-        console.log(i, pagos_);
         if (!i.pagado) {
           if (i?.plan?.mon_total >= this.sumarPagos(pagos_)) {
             i['pagado'] = true;
             const p = new FormPago();
             p.monto = i?.plan?.mon_total;
+            p.montobs_cambio =  this.system.dolar.valor;
             p.referencia = undefined;
             i.pagos_confirm.push()
           }
@@ -376,11 +434,12 @@ export class FacturasComponent implements OnInit {
     return val;
   }
   pagos_refresh_() {
+    console.log("pagorefres_");
     try {
       let pagos_ = JSON.parse(JSON.stringify(this.listPagos));
       this.pagos_insert = [];
       for(let i of this.listService) {
-        console.log(i);
+        console.log("LAM--",i, pagos_);
         for(let j of i?.pagos_confirm) {
           let monto_servicio = i.monto ? Number(i.monto) : Number(i?.plan?.mon_total);
           let monto_confirmado = Number(j.monto);
@@ -388,6 +447,7 @@ export class FacturasComponent implements OnInit {
           console.log(monto_confirmado <= monto_servicio);
           if (monto_confirmado <= monto_servicio) {
             const pago = new FormPago();
+            
             pago.monto = ((monto_servicio - monto_confirmado).toFixed(2));
             for (let p of pagos_) {
               if (p.monto > 0) {
@@ -468,19 +528,58 @@ export class FacturasComponent implements OnInit {
       for (let i of this.listService) {
         for (let j of i.pagos_confirm) {
           // if (j.montobs_confirm !== '') {
-          //   val += Number(j.monto);
-          // }
-          val += Number(j.monto);
+            //   val += Number(j.monto);
+            // }
+            val += Number(j.monto);
+          }
         }
-      }
-      return val;
+      return this.system.toBs(val);
     } catch (error) {
       return 0;
     }
   }
-  get resta() {
+
+  get pagado_instrumento() {
+     
     try {
-      return this.sub_total - this.pagado;
+      let val = 0;
+      for (let i of this.instrumento_pago) {
+        i.pagos_confirm
+           if (i.montobs_confirm !== '') {
+               val += Number(i.monto);
+             }
+            val += Number(i.monto);
+            i.montobs = this.system.toBs(i.monto);
+          
+        }
+ 
+      return val+this.sumpagos_confirm;
+    } catch (error) {
+      return 0;
+    }
+  }
+  get sumpagos_confirm(){
+    let index = 0;
+    let index2 = 0;
+    let val = 0;
+    try {
+    for(let i=0;i<this.listService.length;i++){
+      for(let j of this.listService[index].pagos_confirm){
+        val +=Number(j.monto);
+      }
+
+      index = index +1;
+      index2 = 0;
+      
+    }
+    return val
+  } catch (error) {
+    return 1;
+  }
+  }
+  get resta() {
+    try {    
+      return this.system.toBs(this.sub_total) - this.pagado_instrumento;
     } catch (error) {
       return 0;
     }
@@ -488,15 +587,55 @@ export class FacturasComponent implements OnInit {
   get resta_pagando() {
     try {
       let val = 0;
-      for (let i of this.listPagos) {
+      for (let i of this.instrumento_pago) {
         val += Number(i.monto);
       }
       //return this.resta - val;
-      return this.sub_total - val - this.pagado;
+      return this.system.toBs(this.sub_total) - val - this.system.toBs(this.sumpagos_confirm);
       //return val;
     } catch (error) {
       return 0;
     }
+  }
+
+  async formaddpay(i){
+ 
+
+    this.formaddpaynote = i == 3 ? true : false ;
+    this.formaddpaytransferencia = i == 1 ? true : false ;
+
+    if(i == 3){
+      await this.system.post('api/facturas/notacredito', {estudiante_cedula: 24500401}, false).then(res => {
+        try {
+          console.log(res);
+          if (res.status === 200) {
+            this.notasdecredito = res.object;
+            console.log(res);
+          }
+        } catch (error) { 
+          console.log(error);
+        }
+      })
+    }
+    
+  }
+
+  addpagonotacredito(i){
+    let myDate = new Date();
+    let p = new FormPago;
+    p.referencia = i.pago_id;
+    this.notasdecredito_selected.push(i);
+
+    for (let index = 0; index <this.instrumento_pago.length; index++) {
+      if (this.instrumento_pago[index].referencia === "") {
+        this.instrumento_pago[index].referencia = i.pago_id; 
+        this.instrumento_pago[index].monto = this.system.toD(Number(i.montobs)).toFixed(2);
+        this.instrumento_pago[index].tipo_pago_id = 2;
+        this.instrumento_pago[index].fecha = dateToStr(myDate,false); 
+        console.log(this.system.toD(Number(i.montobs)));
+      }
+    }
+
   }
 }
 interface Option {
