@@ -29,6 +29,7 @@ export class FacturasComponent implements OnInit {
   listService = [];
   listPagos = [];
   viewFac = false;
+  sede = 'Cabudare';
   viewFacture: any = null;
   viewEstudiante: any = null;
   esAnular = false;
@@ -71,6 +72,10 @@ export class FacturasComponent implements OnInit {
   cancelar() {}
   refreshData() {
     this.data = [];
+    this.instrumento_pago = [];
+    this.notasdecredito_selected = [];
+    this.listPagos = [];
+    this.notasdecredito = [];
     this.loadData = false;
     this.selected.reset();
     return this.system.post('api/facturas?page=' + this.pagination.page, {pagination: this.pagination, filter: this.filter }).then(res => {
@@ -286,6 +291,7 @@ export class FacturasComponent implements OnInit {
           j.monto = j.monto;
         }
       index = index + 1;
+      this.refreshData();
     }
     
     }
@@ -296,7 +302,7 @@ export class FacturasComponent implements OnInit {
     //this.pagos_refresh();
     const body = {
       estudiante_cedula: this.inputValue.cedula,
-      sede: "Caracas",
+      sede: this.sede,
       nota_creditos : this.notasdecredito_selected,
       detalle_factura: this.listService,
       instrumento_pago: this.instrumento_pago,
@@ -625,11 +631,12 @@ export class FacturasComponent implements OnInit {
     let p = new FormPago;
     p.referencia = i.pago_id;
     this.notasdecredito_selected.push(i);
+    this.notasdecredito = this.notasdecredito.filter(item => item !== i);
 
     for (let index = 0; index <this.instrumento_pago.length; index++) {
       if (this.instrumento_pago[index].referencia === "") {
         this.instrumento_pago[index].referencia = i.pago_id; 
-        this.instrumento_pago[index].monto = this.system.toD(Number(i.montobs)).toFixed(2);
+        this.instrumento_pago[index].monto = Number(i.montobs).toFixed(2);
         this.instrumento_pago[index].tipo_pago_id = 2;
         this.instrumento_pago[index].fecha = dateToStr(myDate,false); 
         console.log(this.system.toD(Number(i.montobs)));

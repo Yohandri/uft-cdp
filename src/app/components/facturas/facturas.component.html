@@ -3,6 +3,11 @@
         <div class="row bg-white">
             <div class="col">
                 <h3 class="mt-2 mb-4" style="height: 28px;"><span *ngIf="!system.isMobile">Factura<span *ngIf="!isForm">s</span></span>
+                    <select name="sede" id="sede" [(ngModel)]="sede" class="float-right ml-2 sede form-control">
+                        <option value="Ujano">Ujano</option>
+                        <option value="Cabudare">Cabudare</option>
+                        <option value="Acarigua">Acarigua</option>
+                    </select>
                     <button class="btn btn-primary float-right btn-sm ml-2 mt-1" (click)="refreshData()" [ngStyle]="{'opacity': filter.isFilter ? .6 : 1}" *ngIf="!isForm">
                         <i class="fa fa-refresh" aria-hidden="true"></i>
                     </button>
@@ -10,9 +15,9 @@
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Nuevo
                     </button>
-                    <button class="btn btn-primary float-right btn-sm mt-1" (click)="getfact()" *ngIf="!isForm && !isEdit">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                        get
+                    <button class="btn btn-primary float-right btn-sm mt-1 mr-1" (click)="getfact()" *ngIf="!isForm && !isEdit">
+                        <i class="fa fa-chart" aria-hidden="true"></i>
+                        Exportar Facturas
                     </button>
                    
                     <button class="btn btn-primary float-right btn-sm" (click)="cancelar()" *ngIf="isForm && !isEdit">
