@@ -15,7 +15,7 @@
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Nuevo
                     </button>
-                    <button class="btn btn-primary float-right btn-sm mt-1 mr-1" (click)="getfact()" *ngIf="!isForm && !isEdit">
+                    <button class="btn btn-primary float-right btn-sm mt-1 mr-1" (click)="openmodal()" *ngIf="!isForm && !isEdit">
                         <i class="fa fa-chart" aria-hidden="true"></i>
                         Exportar Facturas
                     </button>
@@ -71,7 +71,6 @@
                                 <th>Fecha</th>
                                 <th>Cedula</th>
                                 <th>Estado</th>
-                                <!-- <th>Usuario</th> -->
                                 <th class="text-right">Monto</th>
                             </tr>
                             <tr *ngFor="let i of data" [ngClass]="{'estado-confirmado': i.estado === 'pagado', 'estado-parcial': i.estado === 'anulado' }">
@@ -82,7 +81,8 @@
                                 <td class="" (click)="edit(i)">{{i.created_at | date: 'YYYY-MM-dd'}}</td>
                                 <td class="" (click)="edit(i)">{{i.estudiante_cedula}} </td>
                                 <td class="" (click)="edit(i)">{{i.estado}} </td>
-                                <td class=" text-right"  (click)="edit(i)">{{ toFixed(i.mon_total) }} $ / {{system.toPetro(toFixed(i.mon_total))}} (P)</td>
+
+                                <td class=" text-right"  (click)="edit(i)">{{ toFixed(i.mon_total) }} / {{system.toPetro(toFixed(i.mon_total))}} (P)</td>
                             </tr>
                             <tr *ngIf="data.length === 0">
                                 <td class="text-center" colspan="10" *ngIf="!loadData">
@@ -133,6 +133,57 @@
     </div>
 </div>
 
+<div class="hdmodal hdmodal-md" id="modal-view-report">
+    <div class="hdmodal-content">
+        <div class="card p-0">
+            <h5 class="py-2 px-3 modal-title flex">
+                Reportes
+            </h5>
+            <div class="container p-3">            
+                <div class="row d-flex">
+                 <div class="col-12 col-lg-3">
+                    <small>Tipo de Reporte</small>
+                    <select name="tipo" id="sede" [(ngModel)]="rtipo"  class="form-control">
+                        <option value="diario">Diario</option>
+                        <option value="mensual">Mensual</option>
+                    </select>
+                 </div>
+                 <div class="col-12 col-lg-3" *ngIf="rtipo == 'mensual'">
+                    <small>Libro</small>
+                    <select name="libro" id="libro" [(ngModel)]="rlibro"  class="form-control">
+                        <option value="viejo">Libro Viejo</option>
+                        <option value="nuevo">Libro Nuevo</option>
+                    </select>
+                 </div>
+                 <div class="col-12 col-lg-3">
+                    <small>Fecha</small>
+                    <input *ngIf="rtipo=='mensual'" type="month" class="form-control" [(ngModel)]="rfecha">
+                    <input *ngIf="rtipo=='diario'" type="date" class="form-control" [(ngModel)]="rfecha">
+                 </div>
+                 <div class="col-12 col-lg-3">
+                    <small>Sede</small>
+                    <select name="sede" id="sede" [(ngModel)]="sede" class="form-control">
+                        <option value="Ujano">Ujano</option>
+                        <option value="Cabudare">Cabudare</option>
+                        <option value="Acarigua">Acarigua</option>
+                        <option value="CABUDARE - UJANO"> CABUDARE - UJANO</option>
+                    </select>
+                 </div>
+              </div>
+            </div>
+            <div class="hdmodal-footer">
+              <div class="row mt-2">
+                <div class="col-md-12">
+                  <div class="d-flex flex-row-reverse">
+                    <button class="btn btn-primary" [disabled]="rfecha === ''" (click)="getfact()">Procesar</button>
+                    <button class="btn btn-secoundary" (click)="closemodal()">Cerrar</button>
+                  </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+  </div>
 <div class="hdmodal hdmodal-md" id="modal-new-facture">
     <div class="hdmodal-content">
         <div class="card p-0">
@@ -273,6 +324,7 @@
                                     <th>Nombre</th>
                                     <th>Descripción</th>
                                     <th>Estado</th>
+                                  
                                     <th>
                                         <div class="float-right">Monto</div>
                                     </th>
@@ -519,7 +571,7 @@
                                     </td>
                                     <td>{{i.nombre}}</td>
                                     <td>{{i.descripcion}}</td>
-                                    <td> <div class="float-right">{{i.monto}}</div></td>
+                                    <td> <div class="float-right">{{i.montobs}}</div></td>
                                 </tr>
                             </tbody>
                           </table>
@@ -528,15 +580,15 @@
                                 <table>
                                     <tr>
                                         <td>sub total:</td>
-                                        <th>{{system.toFixed(view_sub_total)}}</th>
+                                        <th>{{system.toBs(system.toFixed(view_sub_total))}}</th>
                                     </tr>
-                                    <tr>
+                                    <!--<tr>
                                         <td>IVA:</td>
-                                        <th>{{system.toFixed(viewFacture.iva || 0)}}</th>
-                                    </tr>
+                                        <th>{{system.toBs(system.toFixed(viewFacture.iva || 0))}}</th>
+                                    </tr>-->
                                     <tr>
                                         <td>Total:</td>
-                                        <th>{{system.toFixed(view_total)}}</th>
+                                        <th>{{system.toBs(system.toFixed(view_total))}}</th>
                                     </tr>
                                 </table>
                                   <!-- <b>Total: {{view_total}}</b> -->
@@ -550,7 +602,8 @@
               <div class="row mt-2">
                 <div class="col-md-12">
                   <div class="d-flex flex-row-reverse">
-                    <button *ngIf="viewFacture?.estado !== 'anulado'" class="btn btn-primary ml-2">Reverso</button>
+                    <button *ngIf="viewFacture?.estado !== 'anulado'" (click)="print()" class="btn btn-primary ml-2">Imprimir</button>
+                    <!--<button *ngIf="viewFacture?.estado !== 'anulado'" class="btn btn-primary ml-2">Reverso</button>-->
                     <button *ngIf="viewFacture?.estado !== 'anulado'" class="btn btn-primary ml-2" (click)="anular()">Anular</button>
                     <button class="btn btn-secoundary" (click)="modalViewFactureClose()">Cerrar</button>
                   </div>
@@ -674,4 +727,160 @@
             </div>
         </div>
     </div>
+  </div>
+
+  <div *ngIf="printer" id="printable">
+    <html lang="es">
+<head>
+    <meta charset="utf-8">
+</head>
+<body >
+    <!-- <h1 style="border-bottom: 1px solid #991334;color: #991334;">Factura</h1> -->
+    <div style="margin:10px;border: 1px solid #000;border-radius: 10px;margin-bottom: 20px;background-image: url('https://b781.gconex.com/~utftes/wp-content/uploads/2019/08/fondo-footer-2.png');background-repeat: no-repeat;background-position: center;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="text-align: center;">
+                    <span>
+                        <img width="90" src="http://200.6.152.109/rp/assets/img/Logo-uft-one.png" atl="Logo"><br>
+                        <p style="margin:0;text-align: center;font-size: 12px;">Educación para los</p> 
+                        <p style="margin:0;text-align: center;font-size: 12px;">Valores Humano</p>
+                    </span>
+                    
+                </td>
+                <td style="vertical-align: top;">
+                    <span style="display: block;margin-top: 10px;font-size: 14px;">
+                        <span style="padding-left:10px;">
+                            <b>RIF: j-300255158</b> Asociacion civil Universidad Fermin Toro
+                        </span> <br>
+                        
+                        <span style="padding-left:10px;">
+                            <span>Calle principal, Centro Comercial Chucho Briceño, N S/N Sector Cabudare. Lara.</span>
+                        </span>
+                        <br>
+                        <span style="padding-left:10px;">
+                            <span>Cabudare Lara / Zona Postal 3023</span>
+                        </span>
+                        <br>
+                        <span style="padding-left:10px;">
+                            <span>Telfs: (0251) 7100123 - 7100111 - Fax: (0251) 7100188</span>
+                        </span>
+                        
+                    </span>
+                </td>
+                <td style="vertical-align: top;">
+                    <h2 style="text-align: center;font-weight: 100;">FORMA LIBRE</h2>
+                    <h3 style="text-align: center;">CONTRIBUYENTE FORMAL</h3>
+                </td> 
+                <td style="vertical-align: top;">
+                    <h4 style="text-align: center;margin:0;">No. de control</h4>
+                    <h2 style="text-align: center;margin:0;font-weight: 100;">00-1699487</h2>
+                </td>    
+            </tr>
+        </table>
+        <div style="text-align: center;font-size: 12px;">
+            <table style="margin: auto;font-size: 12px;">
+                <tr>
+                    <td>FACTURA:</td>
+                    <td>
+                        <span style="margin-left:10px;">{{viewFacture?.id}}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>FECHA DE EMISION:</td>
+                    <td>
+                        <span style="margin-left:10px;">13/17/2021 - 10:30</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table style="width: 100%;font-size: 12px;">
+                <tr>
+                    <td>CI/RIF - NOMBRE O RAZON SOCIAL:</td>
+                    <td>{{viewFacture?.estudiante.cedula}} - {{viewFacture?.estudiante.nombres}}</td>
+                    <td>BENEFICIARIO:{{viewFacture?.estudiante.nombres}}</td>
+                </tr>
+                <tr>
+                    <td>DOMICILIO: {{viewFacture?.estudiante.direccion}}</td>
+                    <td>LARA</td>
+                    <td>TELF: {{viewFacture?.estudiante.telefono_celular}} CONDICION DE PAGO: CREDITO</td>
+                </tr>
+                <tr>
+                    <td>CODIGO: {{viewFacture?.estudiante.telefono_celular}}</td>
+                    <td>CARRERA: {{viewFacture?.carrera_estudiante.carrera.nombre}}</td>
+                    <td>INGRESO:{{viewFacture?.estudiante.prd.fecha_ingreso}} PERIODO:{{viewFacture?.carrera_estudiante.lapso}}</td>
+                </tr>
+            </table>
+        </div>
+        <div style="margin-bottom: 20px;">
+            <table style="width: 100%;font-size: 12px;">
+                <tr >
+                    <td style="border-top: 1px dotted #000;border-bottom: 1px dotted #000;">CANTIDAD</td>
+                    <td style="border-top: 1px dotted #000;border-bottom: 1px dotted #000;">DESCRIPCION</td>
+                    <td style="border-top: 1px dotted #000;border-bottom: 1px dotted #000;">PRECIO UNITARIO</td>
+                    <td style="border-top: 1px dotted #000;border-bottom: 1px dotted #000;">MONTO</td>
+                    <td style="border-top: 1px dotted #000;border-bottom: 1px dotted #000;">DESCUENTO</td>
+                    <td style="border-top: 1px dotted #000;border-bottom: 1px dotted #000;">TOTAL</td>
+                </tr>
+                <tr *ngFor="let j of detallesfac">
+                    <td>1</td>
+                    <td>{{j.descripcion}}</td>
+                    <td>{{j.montobs}}</td>
+                    <td>{{j.montobs}}</td>
+                    <td>0</td>
+                    <td>{{j.montobs}}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>TOTAL A PAGAR:</td>
+                    <td>{{viewFacture?.mon_total}}</td>
+                </tr>
+            </table>
+        </div>
+        <div style="margin-bottom: 20px;">
+            <p style="margin-left: 5px;margin-bottom: 0;">OBSERVACIONES:</p>
+            <P style="margin-left: 5px;margin-top: 0;">NOTAS. La universidad se reserve el derecho de modificar tanto el monto como las condiciones de pago, de acuerdo a las variaciones economicas del pais.
+                LAS CONSTANCIAS DE: ESTUDIOS, BUENA CONDUCTA E INSCRIPCION CADUCAN A LOS 3 MESES. gdiciementc@uft.edu.ve 
+            </P>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td>INSTRUMENTO</td>
+                    <td>BANCO</td>
+                    <td>FECHA</td>
+                    <td>NUMERO</td>
+                    <td>MONTO INSTRUMENTO</td>
+                </tr>
+                <tr>
+                    <td>DEPOSITO</td>
+                    <td>PROVINCIAL</td>
+                    <td>01/07/21</td>
+                    <td>365063</td>
+                    <td>242.362.050,66</td>
+                </tr>
+            </table>
+            <div style="margin-top: 20px;margin-left: 5px">
+                Saldo deudor: 0,00 
+                <div style="text-align: right;">
+                    <span style="margin-right: 200px;">Firma y Sello:</span>
+                </div>
+            </div>
+            <div style="margin-top: 50px;margin-bottom: 20px;">
+                <span style="margin-left: 100px;">
+                    Usuario:    JFERNAND
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- <p>
+        Para información sobre su solicitud, envíe un correo electrónico a consultapagouft@gmail.com
+    </p> -->
+    
+</body>
+</html>
   </div>

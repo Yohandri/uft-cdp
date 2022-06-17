@@ -11,6 +11,7 @@ export class FacturasComponent implements OnInit {
 
   data: any = [];
   loadData = false;
+  detallesfac:any;
   pagination = new PaginationBuild();
   isForm = false;
   form = new FormFactura();
@@ -45,6 +46,10 @@ export class FacturasComponent implements OnInit {
   formaddpaydebito:boolean = false;
   formaddpaytransferencia:boolean = false;
   notasdecredito_selected:any=[];
+  rtipo:any="diario";
+  rlibro:any='viejo';
+  rfecha:any='';
+  printer:boolean=false;
   
 
   compareFun = (o1: Option | string, o2: Option) => {
@@ -96,14 +101,23 @@ export class FacturasComponent implements OnInit {
   }
 
   async getfact(){
-    await this.system.getDownloadFile('api/facturas/export_factura', {},true).then(res => {
+    const q = {tipo:this.rtipo,sede:this.sede,libro:this.rlibro,fecha:this.rfecha,}
+   // window.open(this.system.reendpoint()+'api/facturas/export_factura');
+    await this.system.getDownloadFilePDF('api/facturas/export_factura?tipo='+this.rtipo+'&sede='+this.sede+'&fecha='+this.rfecha+'&libro='+this.rlibro,{},true).then(res => {
       try {
-        console.log(res);
+        //console.log(res.url);
         
       } catch (error) { 
         console.log(error);
       }
     })
+  }
+
+  openmodal(){
+    displayModal('modal-view-report');
+  }
+  closemodal(){
+    hideModal('modal-view-report');
   }
   async goPage(page, ctrl = '') {
     this.pagination.page = ctrl === '+' ? page + 1 > this.pagination.last_page ? page : page + 1 : ctrl === '-' ? page - 1 < 1 ? 1 : page -1 : page;
@@ -125,6 +139,7 @@ export class FacturasComponent implements OnInit {
     displayModal('modal-view-facture');
   }
   modalViewFactureClose() {
+    this.printer=false;
     hideModal('modal-view-facture');
   }
   toFixed(mon) {
@@ -255,6 +270,14 @@ export class FacturasComponent implements OnInit {
       i.pagos_confirm = i.pagos_confirm.filter(x => x.guid !== obj.guid);
     }
   }
+
+  print(){
+    this.detallesfac = this.viewFacture.detalles;
+    console.log(this.detallesfac);
+    this.printer=true;
+    setTimeout(function(){window.print();},100);
+    setTimeout(function(){this.printer=false;},400);
+  }
   estaPago(servicio) {
     let pago = 0;
     for (let i of servicio.pagos_confirm) {
@@ -306,7 +329,8 @@ export class FacturasComponent implements OnInit {
       nota_creditos : this.notasdecredito_selected,
       detalle_factura: this.listService,
       instrumento_pago: this.instrumento_pago,
-      mon_total: this.total,
+      mon_total: this.system.toBs(this.total),
+      monto_total: this.system.toBs(this.total),
       sub_total: this.sub_total,
       iva: this.iva,
       saldo : saldo.toFixed(2)
@@ -523,7 +547,8 @@ export class FacturasComponent implements OnInit {
   }
   get iva() {
     try {
-      return this.sub_total * (this.system.settingsService.Settings.iva/100);
+      return 0;
+      //return this.sub_total * (this.system.settingsService.Settings.iva/100);
     } catch (error) {
       return 0;
     }
@@ -555,7 +580,7 @@ export class FacturasComponent implements OnInit {
                val += Number(i.monto);
              }
             val += Number(i.monto);
-            i.montobs = this.system.toBs(i.monto);
+            i.montobs = i.monto;
           
         }
  
@@ -605,13 +630,12 @@ export class FacturasComponent implements OnInit {
   }
 
   async formaddpay(i){
- 
 
     this.formaddpaynote = i == 3 ? true : false ;
     this.formaddpaytransferencia = i == 1 ? true : false ;
 
     if(i == 3){
-      await this.system.post('api/facturas/notacredito', {estudiante_cedula: 24500401}, false).then(res => {
+      await this.system.post('api/facturas/notacredito', {estudiante_cedula: this.inputValue.cedula}, false).then(res => {
         try {
           console.log(res);
           if (res.status === 200) {

@@ -80,11 +80,16 @@ export class SystemService {
     }
   }
 
-  message(str = '', classname = 'info', time = 3000) {
-    this.snackBar.open(str, null, {
-        duration: time,
-        panelClass: [classname]
-    });
+  reendpoint() {
+    var a = this.settingsService.Settings.endpoint;
+    return  a;
+}
+
+message(str = '', classname = 'info', time = 3000) {
+  this.snackBar.open(str, null, {
+      duration: time,
+      panelClass: [classname]
+  });
 }
 
   goto(path, details: any = {}) {
@@ -243,6 +248,32 @@ downLoadFile(data: any, type: string, body) {
   //     alert( 'Please disable your Pop-up blocker and try again.');
   // }
 }
+
+public async getDownloadFilePDF(path: string = '',body: any, loading = true) {
+  this.loading = loading ? true : false;
+  const headers = new HttpHeaders().append('Authorization', 'Bearer ' + localStorage.getItem('access_token')).append('Accept','application/pdf').append('responseType','blob');
+  this.http.get(`${this.settingsService.Settings.endpoint + path}`,{
+    responseType: 'arraybuffer', headers:headers} 
+   ).subscribe(response => this.downLoadFilePDF(response, "application/pdf", body));
+}
+downLoadFilePDF(data: any, type: string, body) {
+  this.loading = false;
+  let blob = new Blob([data], { type: type});
+  // let url = window.URL.createObjectURL(blob);
+  // let pwa = window.open(url);
+  var link=document.createElement('a');
+  link.href=window.URL.createObjectURL(blob);
+  link.download="Factura_" + body.from + '_' + body.to +".pdf";
+  link.click();
+
+  
+
+  // if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
+  //     alert( 'Please disable your Pop-up blocker and try again.');
+  // }
+}
+
+
 public async getDownloadFile_cuota(path: string = '',body: any, loading = true) {
   this.loading = loading ? true : false;
   const headers = new HttpHeaders().append('Authorization', 'Bearer ' + localStorage.getItem('access_token')).append('Accept','application/xlsx').append('responseType','blob');
