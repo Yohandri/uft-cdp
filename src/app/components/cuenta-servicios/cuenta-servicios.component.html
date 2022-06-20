@@ -18,7 +18,25 @@
             <h2 *ngIf="system.isMobile && tabSelect === 0" class="bg-primary mb-0">Servicios</h2>
             <h2 *ngIf="system.isMobile && tabSelect === 1" class="bg-primary mb-0">Servicios por cancelar</h2>
             <div class="bg-white p-2 tabTranssition" *ngIf="tabSelect === 0">
-                <h3>Servicios</h3>
+                <h3><i class="fa fa-info" nz-popover [nzPopoverTitle]="titleHelp" [nzPopoverContent]="contentHelp" nzPopoverPlacement="leftTop"></i> Servicios</h3>
+                <ng-template #titleHelp>Ayuda</ng-template>
+                <ng-template #contentHelp>
+                  <div class="p-1">
+                    <a target="_blank" download href="/assets/pdf/ProntoPagoCuotas.pdf">
+                      <i class="fa fa-download"></i> Pasos para pagar las cuotas 
+                    </a>
+                  </div>
+                  <div class="p-1">
+                    <a target="_blank" download href="/assets/pdf/ProntoPagoServicios.pdf">
+                      <i class="fa fa-download"></i> Pasos para pagar los servicios 
+                    </a>
+                  </div>
+                  <div class="p-1">
+                    <a target="_blank" download href="/assets/pdf/ProntoPagoRegistrar.pdf">
+                      <i class="fa fa-download"></i> Pasos para registrarse
+                    </a>
+                  </div>
+                </ng-template>
                 <div class="row">
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group">

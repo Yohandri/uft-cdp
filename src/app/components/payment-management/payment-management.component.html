@@ -26,7 +26,25 @@
         
         <div class="row">
           <div class="col-sm-12 col-md-6">
-            <h3>Información personal</h3>
+            <h3><i class="fa fa-info" nz-popover [nzPopoverTitle]="titleHelp" [nzPopoverContent]="contentHelp" nzPopoverPlacement="leftTop"></i> Información personal</h3>
+            <ng-template #titleHelp>Ayuda</ng-template>
+                <ng-template #contentHelp>
+                  <div class="p-1">
+                    <a target="_blank" download href="/assets/pdf/ProntoPagoCuotas.pdf">
+                      <i class="fa fa-download"></i> Pasos para pagar las cuotas 
+                    </a>
+                  </div>
+                  <div class="p-1">
+                    <a target="_blank" download href="/assets/pdf/ProntoPagoServicios.pdf">
+                      <i class="fa fa-download"></i> Pasos para pagar los servicios 
+                    </a>
+                  </div>
+                  <div class="p-1">
+                    <a target="_blank" download href="/assets/pdf/ProntoPagoRegistrar.pdf">
+                      <i class="fa fa-download"></i> Pasos para registrarse
+                    </a>
+                  </div>
+                </ng-template>
             <table>
               <tr>
                 <td [ngClass]="{'text-right': !system.isMobile}">Nombres y apellidos: </td>

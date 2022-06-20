@@ -1,7 +1,9 @@
 <div class="container-fluid">
     <div class="row card">
         <div class="col-sm-12 col-md-12 mt-2">
-          <h3>Cuotas
+          <h3>
+            <i class="fa fa-info" nz-popover [nzPopoverTitle]="titleHelp" [nzPopoverContent]="contentHelp" nzPopoverPlacement="leftTop"></i>
+            Cuotas
             <small *ngIf="deudaTotal > 0" class="float-right">
               Deuda total: <b>{{system.toBs(deudaTotal) | currency: ' ': ' '}} Bs</b>
             </small>
@@ -12,6 +14,24 @@
               Reportar pago
             </button>
           </h3>
+          <ng-template #titleHelp>Ayuda</ng-template>
+          <ng-template #contentHelp>
+            <div class="p-1">
+              <a target="_blank" download href="/assets/pdf/ProntoPagoCuotas.pdf">
+                <i class="fa fa-download"></i> Pasos para pagar las cuotas 
+              </a>
+            </div>
+            <div class="p-1">
+              <a target="_blank" download href="/assets/pdf/ProntoPagoServicios.pdf">
+                <i class="fa fa-download"></i> Pasos para pagar los servicios 
+              </a>
+            </div>
+            <div class="p-1">
+              <a target="_blank" download href="/assets/pdf/ProntoPagoRegistrar.pdf">
+                <i class="fa fa-download"></i> Pasos para registrarse
+              </a>
+            </div>
+          </ng-template>
           <div class="table-responsive">
             <div class="text-center" *ngIf="!displayCuotas">
               <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>

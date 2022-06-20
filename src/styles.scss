@@ -10099,3 +10099,7 @@ re-captcha div {
         box-shadow: 0 0 0 0 rgba(0 ,0 ,0, 0);
     }
   }
+  .fa.fa-info[nz-popover] {
+    border: 1px solid #dedede !important;
+    padding: .2rem .5rem;
+  }
