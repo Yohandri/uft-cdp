@@ -643,7 +643,8 @@
                 Pagos
                 <i class="fa fa-times ml-auto closer" (click)="modalPAgosClose()"></i>
             </h5>
-            <div class="containerpl-3 pr-3 pl-3 pb-3 pt-1">
+            <div class="containerpl-3 pr-3 pl-3 pb-3 pt-1" style="overflow: auto;
+            max-height: 600px;">
                 <div class="d-flex flex-row-reverse mb-1" [style.height]="'29px'">
                   <!-- <button (click)="PagoDelete()" *ngIf="PagosSelected.selected.length > 0" class="btn btn-primary btn-sm ml-auto">
                     Eliminar
@@ -663,8 +664,8 @@
                       <th class="text-right">Monto</th>
                     </tr>
                     <tr *ngFor="let i of instrumento_pago"  [ngClass]="{'estado-confirmado': i.montobs_confirm}">
-                      <td>
-                        <i (click)="deleteSelectPago_(i)" class="fa fa-trash-o"></i> 
+                      <td (click)="deleteSelectPago_(i)">
+                        <i  class="fa fa-trash-o"></i> 
                       </td>
                       <td class="cursorPointer2">
                           <select class="form-control form-control-sm" [(ngModel)]="i.addpay" (change)="formaddpay(i.addpay)">
@@ -700,15 +701,15 @@
                   <div *ngIf="pagos.length > 1">
                      <b class="float-right">Monto: {{getTotalPagado(pagos) | currency: '': ''}} Bs</b>
                   </div>
-                  <div *ngIf="formaddpaynote"><br>
+                  <div *ngIf="formaddpaynote" ><br>
                     <table class="table table-sm table-bordered">
                         <tr class="head">
-                        <th># Pago</th>
+                        <th># Nota de Credito</th>
                         <th>Monto</th>
                         <th >Descripcion</th>
                         </tr>
                         <tr *ngFor="let i of notasdecredito" (click)="addpagonotacredito(i)">
-                            <td>{{i.pago_id}}</td>
+                            <td>{{i.id}}</td>
                             <td>{{i.montobs}}</td>
                             <td>{{i.description}}</td>
                         </tr>
@@ -808,7 +809,7 @@
                 <tr>
                     <td>CODIGO: {{viewFacture?.estudiante.telefono_celular}}</td>
                     <td>CARRERA: {{viewFacture?.carrera_estudiante.carrera.nombre}}</td>
-                    <td>INGRESO:{{viewFacture?.estudiante.prd.fecha_ingreso}} PERIODO:{{viewFacture?.carrera_estudiante.lapso}}</td>
+                    <td>INGRESO:{{viewFacture?.estudiante?.prd?.fecha_ingreso}} PERIODO:{{viewFacture?.carrera_estudiante.lapso}}</td>
                 </tr>
             </table>
         </div>
@@ -847,7 +848,7 @@
             </P>
         </div>
         <div>
-            <table>
+            <table style="width: 100%;font-size: 12px;">
                 <tr>
                     <td>INSTRUMENTO</td>
                     <td>BANCO</td>
@@ -855,13 +856,25 @@
                     <td>NUMERO</td>
                     <td>MONTO INSTRUMENTO</td>
                 </tr>
-                <tr>
-                    <td>DEPOSITO</td>
-                    <td>PROVINCIAL</td>
-                    <td>01/07/21</td>
-                    <td>365063</td>
-                    <td>242.362.050,66</td>
-                </tr>
+                <tbody *ngFor="let o of detallesfac">
+                    <tr  *ngFor="let i of o.pagos_cuotas">
+                        <td>DEPOSITO</td>
+                        <td>PROVINCIAL</td>
+                        <td>{{i.created_at | date : 'YYYY-MM-dd'}}</td>
+                        <td>{{i.id}}</td>
+                        <td>{{i.montobs}}</td>
+                    </tr>
+                </tbody>
+                <tbody *ngFor="let o of detallesfac">
+                    <tr  *ngFor="let i of o.pagos_servicios">
+                        <td>DEPOSITO</td>
+                        <td>PROVINCIAL</td>
+                        <td>{{i.created_at | date : 'YYYY-MM-dd'}}</td>
+                        <td>{{i.id}}</td>
+                        <td>{{i.montobs}}</td>
+                    </tr>
+                </tbody>
+              
             </table>
             <div style="margin-top: 20px;margin-left: 5px">
                 Saldo deudor: 0,00 
@@ -871,7 +884,7 @@
             </div>
             <div style="margin-top: 50px;margin-bottom: 20px;">
                 <span style="margin-left: 100px;">
-                    Usuario:    JFERNAND
+                    Usuario:    {{viewFacture?.userbyfactura.nombre}}
                 </span>
             </div>
         </div>

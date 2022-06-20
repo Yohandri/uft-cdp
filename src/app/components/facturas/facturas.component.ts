@@ -50,6 +50,8 @@ export class FacturasComponent implements OnInit {
   rlibro:any='viejo';
   rfecha:any='';
   printer:boolean=false;
+  pagos_cuotasof:any;
+  pagos_serviciosof:any;
   
 
   compareFun = (o1: Option | string, o2: Option) => {
@@ -159,6 +161,7 @@ export class FacturasComponent implements OnInit {
     this.viewFac = false;
     this.inputValue = '';
     this.listService = [];
+    this.instrumento_pago = [];
     hideModal('modal-new-facture');
   }
   async dataOption(load = false, search = '') {
@@ -181,7 +184,7 @@ export class FacturasComponent implements OnInit {
         if (res.status === 200) {
           this.selectedService.init(res.object);
           this.optionsServicios = res.object.filter(x => x.plan !== null && x?.plan?.estado === 'activo' && x?.l_venta_id === null);
-          this.optionCuotas = res.object.filter(x => x.tipo !== undefined);
+          this.optionCuotas = res.object.filter(x => x.isPay );
           // for (let i of this.optionCuotas) {
           //   i['plan'] = {mon_total: i.monto};
           //   if (i?.pagos_confirm?.length > 0) {
@@ -264,7 +267,9 @@ export class FacturasComponent implements OnInit {
   deleteSelectPago(obj) {
     this.listPagos = this.listPagos.filter(x => x.guid_ !== obj.guid_);
   }
+  
   deleteSelectPago_(obj) {
+    this.instrumento_pago = this.instrumento_pago.filter(x => x.guid !== obj.guid);
     this.pagos = JSON.parse(JSON.stringify(this.pagos.filter(x => x.guid !== obj.guid)));
     for(let i of this.listService) {
       i.pagos_confirm = i.pagos_confirm.filter(x => x.guid !== obj.guid);
@@ -273,6 +278,8 @@ export class FacturasComponent implements OnInit {
 
   print(){
     this.detallesfac = this.viewFacture.detalles;
+    this.pagos_cuotasof = this.viewFacture.detalles.pagos_cuotas;
+    this.pagos_serviciosof = this.viewFacture.detalles.pagosservicios;
     console.log(this.detallesfac);
     this.printer=true;
     setTimeout(function(){window.print();},100);
@@ -370,6 +377,8 @@ export class FacturasComponent implements OnInit {
   modalPAgosClose() {
     hideModal('modal-pagos');
     this.pagos = [];
+    //this.instrumento_pago = [];
+    //this.refreshData();
   }
   anularConfirm() {
     console.log(this.viewFacture);
@@ -633,20 +642,24 @@ export class FacturasComponent implements OnInit {
 
     this.formaddpaynote = i == 3 ? true : false ;
     this.formaddpaytransferencia = i == 1 ? true : false ;
+    if(this.notasdecredito.length > 0){
+      this.notasdecredito = this.notasdecredito;
+    }else{
 
-    if(i == 3){
-      await this.system.post('api/facturas/notacredito', {estudiante_cedula: this.inputValue.cedula}, false).then(res => {
-        try {
-          console.log(res);
-          if (res.status === 200) {
-            this.notasdecredito = res.object;
+      if(i == 3){
+        await this.system.post('api/facturas/notacredito', {estudiante_cedula: this.inputValue.cedula}, false).then(res => {
+          try {
             console.log(res);
+            if (res.status === 200) {
+              this.notasdecredito = res.object;
+              console.log(res);
+            }
+          } catch (error) { 
+            console.log(error);
           }
-        } catch (error) { 
-          console.log(error);
-        }
-      })
-    }
+        })
+      }
+  }
     
   }
 
@@ -666,7 +679,7 @@ export class FacturasComponent implements OnInit {
         console.log(this.system.toD(Number(i.montobs)));
       }
     }
-
+    this.formaddpaynote = false;
   }
 }
 interface Option {

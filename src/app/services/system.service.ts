@@ -263,7 +263,7 @@ downLoadFilePDF(data: any, type: string, body) {
   // let pwa = window.open(url);
   var link=document.createElement('a');
   link.href=window.URL.createObjectURL(blob);
-  link.download="Factura_" + body.from + '_' + body.to +".pdf";
+  link.download="Factura_" +new Date().getTime()+ '_' + ".pdf";
   link.click();
 
   
@@ -402,7 +402,7 @@ private calculateRequest(res: any) {
     return await this.post('api/facturas/saldo', {cedula}, true).then(res => {
        try {
          if (res.status === 200) {
-           return Number(res.object?.saldo || 0);
+           return Number(res.object || 0);
          } else {
            return 0;
          }
