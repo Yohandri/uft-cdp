@@ -644,7 +644,7 @@
                 <i class="fa fa-times ml-auto closer" (click)="modalPAgosClose()"></i>
             </h5>
             <div class="containerpl-3 pr-3 pl-3 pb-3 pt-1" style="overflow: auto;
-            max-height: 600px;">
+            max-height: 425px;">
                 <div class="d-flex flex-row-reverse mb-1" [style.height]="'29px'">
                   <!-- <button (click)="PagoDelete()" *ngIf="PagosSelected.selected.length > 0" class="btn btn-primary btn-sm ml-auto">
                     Eliminar
@@ -858,14 +858,21 @@
                 </tr>
                 <tbody *ngFor="let o of detallesfac">
                     <tr  *ngFor="let i of o.pagos_cuotas">
-                        <td>{{o.pagos_cuotas.pagos.tipo_pago}}</td>
-                        <td>{{o.pagos_cuotas.pagos.banco}}</td>
-                        <td>{{i.created_at | date : 'YYYY-MM-dd'}}</td>
-                        <td>{{i.id}}</td>
-                        <td>{{i.montobs}}</td>
+                        <td>{{o.pagos_cuotas?.pagos?.tipo_pago?.nombre}}</td>
+                        <td>{{o.pagos_cuotas?.pagos?.banco}}</td>
+                        <td>{{o.created_at | date : 'YYYY-MM-dd'}}</td>
+                        <td>{{o.id}}</td>
+                        <td>{{o.montobs}}</td>
+                    </tr>
+                    <tr  *ngFor="let i of o.pagos_servicio">
+                        <td>{{o.pagos_cuotas?.pagos?.tipo_pago?.nombre}}</td>
+                        <td>{{o.pagos_cuotas?.pagos?.banco}}</td>
+                        <td>{{o.created_at | date : 'YYYY-MM-dd'}}</td>
+                        <td>{{o.id}}</td>
+                        <td>{{o.montobs}}</td>
                     </tr>
                 </tbody>
-                <tbody *ngFor="let o of detallesfac">
+                <!-- <tbody *ngFor="let o of detallesfac">
                     <tr  *ngFor="let i of o.pagos_servicios">
                         <td>{{o.pagos_cuotas.pagos.tipo_pago}}</td>
                         <td>{{o.pagos_cuotas.pagos.banco}}</td>
@@ -873,7 +880,7 @@
                         <td>{{i.id}}</td>
                         <td>{{i.montobs}}</td>
                     </tr>
-                </tbody>
+                </tbody> -->
               
             </table>
             <div style="margin-top: 20px;margin-left: 5px">
