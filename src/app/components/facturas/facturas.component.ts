@@ -586,16 +586,20 @@ export class FacturasComponent implements OnInit {
      
     try {
       let val = 0;
+      let valtotal = 0;
       for (let i of this.instrumento_pago) {
            if (i.montobs_confirm !== '') {
                val += Number(this.system.toBs(i.monto));
+               valtotal += Number(this.system.toBs(i.monto));
               }else{
                 val += Number(i.monto);
                 i.montobs = this.system.toBs(i.monto);
+                valtotal += Number(i.monto);
               }
-              this.montotaluserpagad = this.system.toBs(i.monto);
           
         }
+
+        this.montotaluserpagad = valtotal;
  
       return val+this.sumpagos_confirm;
     } catch (error) {
