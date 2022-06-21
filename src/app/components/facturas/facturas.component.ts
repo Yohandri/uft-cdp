@@ -62,6 +62,7 @@ export class FacturasComponent implements OnInit {
       return false;
     }
   };
+  montotaluserpagad: number;
 
   constructor(
     public system: SystemService
@@ -296,7 +297,7 @@ export class FacturasComponent implements OnInit {
   getTotalPagado(obj) {
     let val = 0;
     for(let i of obj) {
-      val = val + Number(i.monto);
+      val = val + Number(this.system.toBs(i.monto));
     }
     return Number(val);
   }
@@ -321,7 +322,7 @@ export class FacturasComponent implements OnInit {
           j.monto = j.monto;
         }
       index = index + 1;
-      this.refreshData();
+     
     }
     
     }
@@ -337,6 +338,7 @@ export class FacturasComponent implements OnInit {
       detalle_factura: this.listService,
       instrumento_pago: this.instrumento_pago,
       mon_total: this.system.toBs(this.total),
+      monpagadouser:this.montotaluserpagad,
       monto_total: this.system.toBs(this.total),
       sub_total: this.sub_total,
       iva: this.iva,
@@ -344,7 +346,7 @@ export class FacturasComponent implements OnInit {
     };
     
     console.log(body);
-    this.system.post('api/facturas/create', body, true).then(res => {
+   this.system.post('api/facturas/create', body, true).then(res => {
      try {
        console.log(res);
        if (res.status === 200) {
@@ -355,6 +357,7 @@ export class FacturasComponent implements OnInit {
        console.log(error);
   }
   });
+  this.refreshData();
   }
   anular() {
     this.esAnular = true;
@@ -584,12 +587,13 @@ export class FacturasComponent implements OnInit {
     try {
       let val = 0;
       for (let i of this.instrumento_pago) {
-        i.pagos_confirm
            if (i.montobs_confirm !== '') {
-               val += Number(i.monto);
-             }
-            val += Number(i.monto);
-            i.montobs = i.monto;
+               val += Number(this.system.toBs(i.monto));
+              }else{
+                val += Number(i.monto);
+                i.montobs = this.system.toBs(i.monto);
+              }
+              this.montotaluserpagad = this.system.toBs(i.monto);
           
         }
  
@@ -605,7 +609,7 @@ export class FacturasComponent implements OnInit {
     try {
     for(let i=0;i<this.listService.length;i++){
       for(let j of this.listService[index].pagos_confirm){
-        val +=Number(j.monto);
+        val +=Number(j.montobs);
       }
 
       index = index +1;
@@ -619,7 +623,7 @@ export class FacturasComponent implements OnInit {
   }
   get resta() {
     try {    
-      return this.system.toBs(this.sub_total) - this.system.toBs(this.pagado_instrumento);
+      return this.system.toBs(this.sub_total) - this.pagado_instrumento;
     } catch (error) {
       return 0;
     }
@@ -631,7 +635,7 @@ export class FacturasComponent implements OnInit {
         val += Number(i.monto);
       }
       //return this.resta - val;
-      return this.system.toBs(this.sub_total) - val - this.system.toBs(this.sumpagos_confirm);
+      return this.system.toBs(this.sub_total) - val - this.sumpagos_confirm;
       //return val;
     } catch (error) {
       return 0;

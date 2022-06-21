@@ -254,16 +254,18 @@ public async getDownloadFilePDF(path: string = '',body: any, loading = true) {
   const headers = new HttpHeaders().append('Authorization', 'Bearer ' + localStorage.getItem('access_token')).append('Accept','application/pdf').append('responseType','blob');
   this.http.get(`${this.settingsService.Settings.endpoint + path}`,{
     responseType: 'arraybuffer', headers:headers} 
-   ).subscribe(response => this.downLoadFilePDF(response, "application/pdf", body));
+   ).subscribe(response => this.downLoadFilePDF(response, "application/pdf", path));
 }
 downLoadFilePDF(data: any, type: string, body) {
   this.loading = false;
+  console.log("P",body);
+  if(body.includes('diario')){var namedoc="Diario";}else{var namedoc = "Mensual";}
   let blob = new Blob([data], { type: type});
   // let url = window.URL.createObjectURL(blob);
   // let pwa = window.open(url);
   var link=document.createElement('a');
   link.href=window.URL.createObjectURL(blob);
-  link.download="Factura_" +new Date().getTime()+ '_' + ".pdf";
+  link.download="Reporte_"+namedoc +new Date().getTime()+ '_' + ".pdf";
   link.click();
 
   
