@@ -619,7 +619,7 @@ export class FacturasComponent implements OnInit {
   }
   get resta() {
     try {    
-      return this.system.toBs(this.sub_total) - this.pagado_instrumento;
+      return this.system.toBs(this.sub_total) - this.system.toBs(this.pagado_instrumento);
     } catch (error) {
       return 0;
     }
