@@ -278,11 +278,12 @@ export class FacturasComponent implements OnInit {
   }
 
   print(){
+    this.printer=true;
     this.detallesfac = this.viewFacture.detalles;
     this.pagos_cuotasof = this.viewFacture.detalles.pagos_cuotas;
     this.pagos_serviciosof = this.viewFacture.detalles.pagosservicios;
     console.log(this.detallesfac);
-    this.printer=true;
+    
     setTimeout(function(){window.print();},100);
     setTimeout(function(){this.printer=false;},400);
   }
