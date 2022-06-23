@@ -6,6 +6,7 @@ class PaginationBuild {
   per_page = 10;
   last_page = 0;
   pages = [];
+  
   init(res) {
     this.pages = [];
     this.last_page = res.last_page;
@@ -27,13 +28,15 @@ class FormUser {
   correo = '';
   profile_id = '';
   password = '';
-  rp_user = {profile_id: 0}
+  rp_user = {profile_id: 0,sede:''}
+  
   edit(user) {
     this.cedula = user.cedula;
     this.nombre = user.nombre;
     this.apellido = user.apellido;
     this.correo = user.correo;
     this.rp_user.profile_id = user.rp_user.profile_id;
+    this.rp_user.sede = user.rp_user.sede;
     this.id = user.id;
   }
   get isFilter() {
@@ -60,6 +63,8 @@ class SelectItem {
       this.isSelectAll = true;
     }
   }
+
+
   reset() {
     for(let i of this.value) {
       if (i) {
@@ -84,6 +89,7 @@ class SelectItem {
 })
 export class UsersComponent implements OnInit {
   data: any = [];
+  datasede:any = [];
   loadData = false;
   pagination = new PaginationBuild();
   isForm = false;
@@ -119,6 +125,24 @@ export class UsersComponent implements OnInit {
     this.form.edit(user);
     this.isForm = true;
     this.isNew = false;
+  }
+  getsedes(){
+ 
+    this.system.post('api/facturas/sedes', {},true).then(res => {
+      try {
+        this.system.loading = false;
+        if (res.status === 200) {
+          this.datasede = res.object;
+          return res;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        return false;
+      }
+    });
+
+
   }
   save() {
     console.log(this.form);
@@ -167,6 +191,7 @@ export class UsersComponent implements OnInit {
     this.data = [];
     this.loadData = false;
     this.selected.reset();
+    this.getsedes();
     return this.system.post('api/users?page=' + this.pagination.page, {pagination: this.pagination, filter: this.filter }).then(res => {
       try {
         this.loadData = true;
@@ -216,8 +241,8 @@ export class UsersComponent implements OnInit {
   }
   get isValidForm() {
     try {
-      return this.form.cedula !== '' && this.form.nombre !== '' && this.form.apellido && this.form.correo !== ''
-      && this.form.rp_user.profile_id !== 0 && this.form.password !== '';
+      return this.form.rp_user.sede !== '' && this.form.cedula !== '' && this.form.nombre !== '' && this.form.apellido && this.form.correo !== ''
+      && this.form.rp_user.profile_id !== 0;
     } catch (error) {
       return false
     }

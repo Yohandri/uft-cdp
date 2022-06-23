@@ -150,6 +150,15 @@
                                 </select>
                               </div>
                         </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="userType">Sede</label>
+                                <select class="form-control" id="sede" [(ngModel)]="form.rp_user.sede">
+                                    <option value=""></option>
+                                  <option  *ngFor="let i of datasede"  value="{{i}}">{{i}}</option>
+                                </select>
+                              </div>
+                        </div>
                         <div class="col-md-6 col-sm-12" *ngIf="isNew">
                             <div class="form-group">
                                 <label for="password">Contraseña</label>

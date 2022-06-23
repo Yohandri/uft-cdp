@@ -14,9 +14,11 @@ export class FacturasComponent implements OnInit {
   detallesfac:any;
   pagination = new PaginationBuild();
   isForm = false;
+  correlativo:any;
   form = new FormFactura();
   filter = new FormFactura();
   isNew = false;
+  type:any;
   selected = new SelectItem();
   selectedService: any = new SelectItem();
   isEdit = false;
@@ -30,11 +32,12 @@ export class FacturasComponent implements OnInit {
   listService = [];
   listPagos = [];
   viewFac = false;
-  sede = 'Cabudare';
+  sede = this.system.decodedToken.user.sede;
   viewFacture: any = null;
   viewEstudiante: any = null;
   esAnular = false;
   isPay = false;
+  anuladas = false;
   optionCuotas = [];
   filteredOptionCuotas: Cuotas[] = [];
   pagos_insert = [];
@@ -48,10 +51,12 @@ export class FacturasComponent implements OnInit {
   notasdecredito_selected:any=[];
   rtipo:any="diario";
   rlibro:any='viejo';
+  istrue_correlativo:any;
   rfecha:any='';
   printer:boolean=false;
   pagos_cuotasof:any;
   pagos_serviciosof:any;
+  account:any;
   
 
   compareFun = (o1: Option | string, o2: Option) => {
@@ -78,7 +83,41 @@ export class FacturasComponent implements OnInit {
     await this.refreshData();
   }
   cancelar() {}
+
+  getaccount(){
+    return this.system.post('api/facturas/cuentas' , { }).then(res => {
+      try {
+        this.loadData = true;
+        if (res.status === 200) {
+          this.account = res.object;
+        } else {
+          return [];
+        }
+      } catch (error) {
+        return [];
+      }
+    });
+
+  }
+
+  typepay(){
+    return this.system.post('api/facturas/tipospago' , { }).then(res => {
+      try {
+        this.loadData = true;
+        if (res.status === 200) {
+          this.type = res.object;
+        } else {
+          return [];
+        }
+      } catch (error) {
+        return [];
+      }
+    });
+
+  }
   refreshData() {
+    this.anuladas = false;
+    this.correlativo = '';
     this.data = [];
     this.instrumento_pago = [];
     this.notasdecredito_selected = [];
@@ -86,6 +125,8 @@ export class FacturasComponent implements OnInit {
     this.notasdecredito = [];
     this.loadData = false;
     this.selected.reset();
+    this.getaccount();
+    this.typepay();
     return this.system.post('api/facturas?page=' + this.pagination.page, {pagination: this.pagination, filter: this.filter }).then(res => {
       try {
         this.loadData = true;
@@ -93,6 +134,7 @@ export class FacturasComponent implements OnInit {
           this.pagination.init(res.object);
           this.selected.init(res.object.data);
           this.data = res.object.data;
+          this.istrue_correlativo = res.object.data;
           return res.object.data;
         } else {
           return [];
@@ -104,8 +146,18 @@ export class FacturasComponent implements OnInit {
   }
 
   async getfact(){
-    const q = {tipo:this.rtipo,sede:this.sede,libro:this.rlibro,fecha:this.rfecha,}
+    const q = {tipo:this.rtipo,sede:this.sede,libro:this.rlibro,fecha:this.rfecha,anulada:this.anuladas}
    // window.open(this.system.reendpoint()+'api/facturas/export_factura');
+   if(this.anuladas){
+    await this.system.getDownloadFilePDF('api/facturas/export_reverso_factura?tipo='+this.rtipo+'&sede='+this.sede+'&fecha='+this.rfecha+'&libro='+this.rlibro+'&anulada='+this.anuladas,{},true).then(res => {
+      try {
+        //console.log(res.url);
+        
+      } catch (error) { 
+        console.log(error);
+      }
+    })
+   }else{
     await this.system.getDownloadFilePDF('api/facturas/export_factura?tipo='+this.rtipo+'&sede='+this.sede+'&fecha='+this.rfecha+'&libro='+this.rlibro,{},true).then(res => {
       try {
         //console.log(res.url);
@@ -114,6 +166,7 @@ export class FacturasComponent implements OnInit {
         console.log(error);
       }
     })
+  }
   }
 
   openmodal(){
@@ -337,6 +390,7 @@ export class FacturasComponent implements OnInit {
       sede: this.sede,
       nota_creditos : this.notasdecredito_selected,
       detalle_factura: this.listService,
+      correlativo: this.correlativo,
       instrumento_pago: this.instrumento_pago,
       mon_total: this.system.toBs(this.total),
       monpagadouser:this.montotaluserpagad,
@@ -649,8 +703,9 @@ export class FacturasComponent implements OnInit {
 
   async formaddpay(i){
 
-    this.formaddpaynote = i == 3 ? true : false ;
+    this.formaddpaynote = i == 2 ? true : false ;
     this.formaddpaytransferencia = i == 1 ? true : false ;
+    this.formaddpaydebito = i == 5? true : false ;
     if(this.notasdecredito.length > 0){
       this.notasdecredito = this.notasdecredito;
     }else{
