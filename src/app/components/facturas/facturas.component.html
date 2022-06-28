@@ -724,7 +724,7 @@
                         </select>
                      </td>
                      <td *ngIf="formaddpaydebito" class="cursorPointer2">
-                        <select class="form-control form-control-sm">
+                        <select class="form-control form-control-sm" [(ngModel)]="i.tipocuenta">
                             <option *ngFor="let i of account"value="{{i}}">{{i}}</option>
                             
                         </select>
@@ -900,15 +900,18 @@
                 </tr>
                 <tbody *ngFor="let o of detallesfac">
                     <tr  *ngFor="let i of o.pagos_cuotas">
-                        <td>{{o.pagos_cuotas?.pagos?.tipo_pago?.nombre}}</td>
-                        <td>{{o.pagos_cuotas?.pagos?.banco}}</td>
+                        <td>{{i.pagos?.tipo_pago?.nombre}}</td>
+                        <td>{{i.pagos?.banco}}</td>
+                        <td *ngIf="i.pagos?.tipo_pago_id == 1">{{i.pagos?.banco.nombre}}</td>
+                        <td *ngIf="i.pagos?.tipo_pago_id == 5">{{i.pagos?.description}}</td>
                         <td>{{o.created_at | date : 'YYYY-MM-dd'}}</td>
                         <td>{{o.id}}</td>
                         <td>{{o.montobs}}</td>
                     </tr>
                     <tr  *ngFor="let i of o.pagos_servicio">
-                        <td>{{o.pagos_cuotas?.pagos?.tipo_pago?.nombre}}</td>
-                        <td>{{o.pagos_cuotas?.pagos?.banco}}</td>
+                        <td>{{i.pagos?.tipo_pago?.nombre}}</td>
+                        <td *ngIf="i.pagos?.tipo_pago_id == 1">{{i.pagos?.banco.nombre}}</td>
+                        <td *ngIf="i.pagos?.tipo_pago_id == 5">{{i.pagos?.description}}</td>
                         <td>{{o.created_at | date : 'YYYY-MM-dd'}}</td>
                         <td>{{o.id}}</td>
                         <td>{{o.montobs}}</td>

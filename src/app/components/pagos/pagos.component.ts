@@ -14,6 +14,7 @@ export class FormPago {
   titular_telefono = '';
   monto = '';
   fecha = '';
+  tipocuenta = '';
   description = '';
   tipo_pago_id = '';
   user_id = '';
@@ -28,6 +29,7 @@ export class FormPago {
   c_c_e_lapso = {c_e_lapso: {carrera: {nombre: ''}}}
   tipo_pago_caja = '';
   pagos_servicio = []
+  cuenta: any;
   edit(user) {
     this.guid = user.guid;
     this.id = user.id;

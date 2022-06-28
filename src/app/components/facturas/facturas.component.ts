@@ -485,6 +485,7 @@ export class FacturasComponent implements OnInit {
         tipo_pago_id: '',
         monto: '',
         referencia: '',
+        tipocuenta:'',
         fecha: '',
         confirm: false,
         json: {},
@@ -493,10 +494,11 @@ export class FacturasComponent implements OnInit {
     } else {
       for (let p of pagos_confirm) {
         this.listPagos.push({
-          tipo_pago_id: p.tipo_pago_id,
+          tipo_pago_id: p.addpay,
           monto: p.monto,
           referencia: p.referencia,
           fecha: p.fecha,
+          tipocuenta:p.tipocuenta,
           confirm: true,
           servicio_id: p.c_c_e_lapso ? p.c_c_e_lapso : p.c_servicio,
           json: p,
@@ -672,7 +674,8 @@ export class FacturasComponent implements OnInit {
                valtotal += Number(this.system.toBs(i.monto));
               }else{
                 val += Number(i.monto);
-                i.montobs = this.system.toBs(i.monto);
+                //i.montobs = this.system.toBs(i.monto);
+                i.montobs = i.monto;
                 valtotal += Number(i.monto);
               }
           
