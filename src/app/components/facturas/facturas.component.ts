@@ -57,6 +57,7 @@ export class FacturasComponent implements OnInit {
   pagos_cuotasof:any;
   pagos_serviciosof:any;
   account:any;
+  esReintegro: boolean = false;
   
 
   compareFun = (o1: Option | string, o2: Option) => {
@@ -421,6 +422,13 @@ export class FacturasComponent implements OnInit {
   modalAnularClose() {
     hideModal('modal-anular');
   }
+  modalReintegroClose() {
+    hideModal('modal-reintegro');
+  }
+  reintegro() {
+    this.esReintegro = true;
+    displayModal('modal-reintegro');
+  }
   addPagos(servicio) {
 //    console.log("lam",servicio);
       this.pagos=servicio.pagos_confirm;
@@ -437,6 +445,22 @@ export class FacturasComponent implements OnInit {
     this.pagos = [];
     //this.instrumento_pago = [];
     //this.refreshData();
+  }
+  reintegroConfirm() {
+    console.log(this.viewFacture);
+    const body = {factura: this.viewFacture};
+    this.system.post('api/facturas/reintegro', body, true).then(res => {
+      try {
+        console.log(res);
+        if (res.status === 200) {
+          this.system.message(res.message, 'success', 5000);
+          this.modalReintegroClose();
+          this.refreshData();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
   }
   anularConfirm() {
     console.log(this.viewFacture);
