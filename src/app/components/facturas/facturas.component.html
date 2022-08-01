@@ -906,7 +906,7 @@
                         <td *ngIf="i.pagos?.tipo_pago_id == 5">{{i.pagos?.description}}</td>
                         <td>{{o.created_at | date : 'YYYY-MM-dd'}}</td>
                         <td>{{o.id}}</td>
-                        <td>{{o.montobs}}</td>
+                        <td>{{i.pagos.montobs}}</td>
                     </tr>
                     <tr  *ngFor="let i of o.pagos_servicio">
                         <td>{{i.pagos?.tipo_pago?.nombre}}</td>
@@ -914,7 +914,7 @@
                         <td *ngIf="i.pagos?.tipo_pago_id == 5">{{i.pagos?.description}}</td>
                         <td>{{o.created_at | date : 'YYYY-MM-dd'}}</td>
                         <td>{{o.id}}</td>
-                        <td>{{o.montobs}}</td>
+                        <td>{{i.pagos.montobs}}</td>
                     </tr>
                 </tbody>
                 <!-- <tbody *ngFor="let o of detallesfac">
