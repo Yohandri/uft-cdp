@@ -241,7 +241,7 @@ export class UsersComponent implements OnInit {
   }
   get isValidForm() {
     try {
-      return this.form.rp_user.sede !== '' && this.form.cedula !== '' && this.form.nombre !== '' && this.form.apellido && this.form.correo !== ''
+      return this.form.cedula !== '' && this.form.nombre !== '' && this.form.apellido && this.form.correo !== ''
       && this.form.rp_user.profile_id !== 0;
     } catch (error) {
       return false

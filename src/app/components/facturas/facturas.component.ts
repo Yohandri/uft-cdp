@@ -58,6 +58,7 @@ export class FacturasComponent implements OnInit {
   pagos_serviciosof:any;
   account:any;
   esReintegro: boolean = false;
+  descuento: number = 0;
   
 
   compareFun = (o1: Option | string, o2: Option) => {
@@ -337,9 +338,9 @@ export class FacturasComponent implements OnInit {
     this.pagos_cuotasof = this.viewFacture.detalles.pagos_cuotas;
     this.pagos_serviciosof = this.viewFacture.detalles.pagosservicios;
     console.log(this.detallesfac);
-    
-    setTimeout(function(){window.print();},100);
-    setTimeout(function(){this.printer=false;},400);
+    const self = this;
+    setTimeout(() => {window.print();},100);
+    setTimeout(() => {self.printer=false;},200);
   }
   estaPago(servicio) {
     let pago = 0;
@@ -398,7 +399,8 @@ export class FacturasComponent implements OnInit {
       monto_total: this.system.toBs(this.total),
       sub_total: this.sub_total,
       iva: this.iva,
-      saldo : saldo.toFixed(2)
+      saldo : saldo.toFixed(2),
+      descuento: this.descuento
     };
     
     console.log(body);
@@ -413,7 +415,6 @@ export class FacturasComponent implements OnInit {
        console.log(error);
   }
   });
-  this.refreshData();
   }
   anular() {
     this.esAnular = true;
@@ -709,7 +710,7 @@ export class FacturasComponent implements OnInit {
   }
   get resta() {
     try {    
-      return this.system.toBs(this.sub_total) - this.pagado_instrumento;
+      return this.system.toBs(this.sub_total) - this.pagado_instrumento - this.descuento;
     } catch (error) {
       return 0;
     }
@@ -721,7 +722,7 @@ export class FacturasComponent implements OnInit {
         val += Number(i.monto);
       }
       //return this.resta - val;
-      return this.system.toBs(this.sub_total) - val - this.sumpagos_confirm;
+      return this.system.toBs(this.sub_total) - val - this.sumpagos_confirm - this.descuento;
       //return val;
     } catch (error) {
       return 0;
@@ -737,7 +738,7 @@ export class FacturasComponent implements OnInit {
       this.notasdecredito = this.notasdecredito;
     }else{
 
-      if(i == 3){
+      if(i == 2){
         await this.system.post('api/facturas/notacredito', {estudiante_cedula: this.inputValue.cedula}, false).then(res => {
           try {
             console.log(res);
