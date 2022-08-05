@@ -59,6 +59,9 @@ export class FacturasComponent implements OnInit {
   account:any;
   esReintegro: boolean = false;
   descuento: number = 0;
+  fj: boolean = false;
+  razonsocialfj: any;
+  riffj: any;
   
 
   compareFun = (o1: Option | string, o2: Option) => {
@@ -269,6 +272,8 @@ export class FacturasComponent implements OnInit {
           console.log(res);
           if (res.status === 200) {
             this.filteredOptions = res.object;
+            this.riffj = res.object[0].factura_juridica.rif;
+            this.razonsocialfj = res.object[0].factura_juridica.nombre;
           }
         } catch (error) { 
           console.log(error);
@@ -400,7 +405,10 @@ export class FacturasComponent implements OnInit {
       sub_total: this.sub_total,
       iva: this.iva,
       saldo : saldo.toFixed(2),
-      descuento: this.descuento
+      descuento: this.descuento,
+      fj: this.fj,
+      razonsocial_fj: this.razonsocialfj,
+      rif_fj: this.riffj
     };
     
     console.log(body);
@@ -475,6 +483,17 @@ export class FacturasComponent implements OnInit {
           this.refreshData();
         }
       } catch (error) {
+        console.log(error);
+      }
+    });
+  }
+  imprimirback() {
+    const body = {viewFacture: this.viewFacture};
+    this.system.getDownloadFilePDFFACTURA('api/facturas/imprimir_factura', body, true).then(res => {
+      try {
+        console.log("LAM");
+        }
+       catch (error) {
         console.log(error);
       }
     });

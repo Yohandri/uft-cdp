@@ -256,6 +256,33 @@ public async getDownloadFilePDF(path: string = '',body: any, loading = true) {
     responseType: 'arraybuffer', headers:headers} 
    ).subscribe(response => this.downLoadFilePDF(response, "application/pdf", path));
 }
+
+public async getDownloadFilePDFFACTURA(path: string = '',body: any, loading = true) {
+  this.loading = loading ? true : false;
+  const headers = new HttpHeaders().append('Authorization', 'Bearer ' + localStorage.getItem('access_token')).append('Accept','application/pdf').append('responseType','blob');
+  this.http.post(`${this.settingsService.Settings.endpoint + path}`,body,{
+    responseType: 'arraybuffer', headers:headers} 
+   ).subscribe(response => this.downLoadFilePDFFACTURA(response, "application/pdf", path));
+}
+downLoadFilePDFFACTURA(data: any, type: string, body) {
+  this.loading = false;
+  console.log("P",body);
+  if(body.includes('diario')){var namedoc="Diario";}else{var namedoc = "Mensual";}
+  let blob = new Blob([data], { type: type});
+  // let url = window.URL.createObjectURL(blob);
+  // let pwa = window.open(url);
+  var link=document.createElement('a');
+  link.href=window.URL.createObjectURL(blob);
+  window.open(link.href);
+  //link.open()="Factura"+namedoc +new Date().getTime()+ '_' + ".pdf";
+  //link.click();
+
+  
+
+  // if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
+  //     alert( 'Please disable your Pop-up blocker and try again.');
+  // }
+}
 downLoadFilePDF(data: any, type: string, body) {
   this.loading = false;
   console.log("P",body);

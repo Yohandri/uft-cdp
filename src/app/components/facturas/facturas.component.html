@@ -312,7 +312,7 @@
                                 
                                 <td colspan="2">
                                     <div class="d-flex">
-                                        <input type="text" *ngIf="istrue_correlativo.length == 0" class="form-control mr-2" placeholder="Correlativo sede {{system.decodedToken.user.sede}}" [(ngModel)]="correlativo">
+                                        <input type="text" *ngIf="istrue_correlativo.length == 0 && !filter.isFilter" class="form-control mr-2" placeholder="Correlativo sede {{system.decodedToken.user.sede}}" [(ngModel)]="correlativo">
                                         <input type="search" placeholder="Buscar servicios" (keyup.enter)="onSelectServicio()" nz-input [(ngModel)]="servicioSelect" [nzAutocomplete]="autoServicios2" (ngModelChange)="onChangeServicios($event)"  class="form-control"  >
                                         <nz-autocomplete #autoServicios2 >
                                             <nz-auto-option *ngFor="let option of filteredOptionsServicios" [nzValue]="option" [nzLabel]="option.nombre">
@@ -332,6 +332,14 @@
                                 <td>
                                     <input type="checkbox" id="servicio_pago" [(ngModel)]="isPay"> <label for="servicio_pago" class="ml-2">Servicios pendientes</label>
                                 </td>
+                                <td>
+                                    <input type="checkbox" id="fj" [(ngModel)]="fj"><label for="fj" class="ml-2"> Factura Juridica</label>
+                                </td>
+                                    <td  *ngIf="fj">
+                                        <input type="text" placeholder="Rif" class="form-control" [(ngModel)]="riffj">
+                                        <input type="text" placeholder="Razon Social" class="form-control" [(ngModel)]="razonsocialfj">
+                                    </td>
+                                
                             </tr>
                           </table>
                         <table class="table table-sm table-bordered mt-2" >
@@ -364,7 +372,7 @@
                                             {{i.nombre}}
                                         </div>
                                     </td>
-                                    <td>{{i.description ? i.description : i?.c_e_lapso?.carrera?.nombre}}</td>
+                                    <td>{{i.descripcion}}</td>
                                     <td>{{i.estado ? i.estado : 'pendiente *'}}</td>
                                     <td (click)="reportarPago(i.estado === 'pendiente' || i.estado === undefined)" [ngClass]="{'text-white': i.estado === 'pendiente' || i.estado === undefined,'cursorPointer': i.estado === 'pendiente' || i.estado === undefined, 'estado-vencido': i.estado === 'pendiente' || i.estado === undefined }"> <div class="float-right" >{{i?.plan?.mon_total ? system.toFixed(system.toBs(i?.plan?.mon_total)) : system.toFixed(system.toBs(i.monto))}}</div></td>
                                     <td>
@@ -392,6 +400,8 @@
                                             <input type="number" class="form-control" [(ngModel)]="descuento">
                                         </td>
                                     </tr>
+        
+                                   
                                 </table>
                               </span>
                             <span class="float-right mr-2">
@@ -466,7 +476,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input class="form-control form-control-sm" type="date" name="" id="" [(ngModel)]="i.fecha">
+                                    <input class="form-control form-control-sm" type="date" name="" id="" [(ngModel)]="i.fecha ">
                                 </td>
                                 <td>
                                     <input class="form-control form-control-sm" [(ngModel)]="i.referencia" type="text" name="" id="">
@@ -630,7 +640,7 @@
               <div class="row mt-2">
                 <div class="col-md-12">
                   <div class="d-flex flex-row-reverse">
-                    <button *ngIf="viewFacture?.estado !== 'anulado' && viewFacture?.estado !== 'reintegro'" (click)="print()" class="btn btn-primary ml-2">Imprimir</button>
+                    <button *ngIf="viewFacture?.estado !== 'anulado' && viewFacture?.estado !== 'reintegro'" (click)="imprimirback()" class="btn btn-primary ml-2">Imprimir</button>
                     <!--<button *ngIf="viewFacture?.estado !== 'anulado' && viewFacture?.estado !== 'reintegro'" class="btn btn-primary ml-2">Reverso</button>-->
                     <button *ngIf="viewFacture?.estado !== 'anulado' && viewFacture?.estado !== 'reintegro'" class="btn btn-primary ml-2" (click)="anular()">Reverso</button>
                     <button *ngIf="viewFacture?.estado !== 'anulado' && viewFacture?.estado !== 'reintegro'" class="btn btn-primary ml-2" (click)="reintegro()">Reintegro</button>
@@ -708,8 +718,8 @@
                       <th></th>
                       <th>Tipo de pago</th>
                       <th>Fecha</th>
-                      <th >Banco</th>
                       <th >Cuenta</th>
+                      <th >Banco</th>
                       <th>Referencia</th>
                       <!-- <th *ngIf="!formaddpaydebito">Cedula titular</th> -->
                       
@@ -769,7 +779,7 @@
                         <tr *ngFor="let i of notasdecredito" (click)="addpagonotacredito(i)">
                             <td>{{i.id}}</td>
                             <td>{{i.montobs}}</td>
-                            <td>{{i.description}}</td>
+                            <td>{{i.descripcion}}</td>
                         </tr>
                       </table>
                   </div>
@@ -786,208 +796,4 @@
             </div>
         </div>
     </div>
-  </div>
-
-  <div *ngIf="printer" id="printable">
-    <html lang="es">
-<head>
-    <meta charset="utf-8">
-</head>
-<body >
-    <!-- <h1 style="border-bottom: 1px solid #991334;color: #991334;">Factura</h1> -->
-    <div style="margin:10px;border: 1px solid transparent;border-radius: 10px;margin-bottom: 20px;background-image: url('https://b781.gconex.com/~utftes/wp-content/uploads/2019/08/fondo-footer-2.png');background-repeat: no-repeat;background-position: center;">
-        <table style="width: 100%;">
-            <tr>
-                <td style="text-align: center;">
-                    <span>
-                        <p style="margin:0;text-align: center;font-size: 12px;"></p> 
-                        <p style="margin:0;text-align: center;font-size: 12px;"></p>
-                    </span>
-                    
-                </td>
-                <td style="vertical-align: top;">
-                    <span style="display: block;margin-top: 10px;font-size: 14px;">
-                        <span style="padding-left:10px;">
-                        </span> <br>
-                        <span style="padding-left:10px;">
-                            <span></span>
-                        <br>
-                        <span style="padding-left:10px;">
-                            <span></span>
-                        </span>
-                        <br>
-                        <span style="padding-left:10px;">
-                            <span></span>
-                        </span>
-                        
-                    </span>
-                </span>
-                </td>
-                <td style="vertical-align: top;">
-                    <h2 style="text-align: center;font-weight: 100;"></h2>
-                    <h3 style="text-align: center;"></h3>
-                </td> 
-                <td style="vertical-align: top;">
-                    <h4 style="text-align: center;margin:0;"></h4>
-                    <h2 style="text-align: center;margin:0;font-weight: 100;"></h2>
-                </td>    
-            </tr>
-        </table>
-        <div style="text-align: center;font-size: 12px;">
-            <table style="margin: auto;font-size: 12px;">
-                <tr>
-                    <td>FACTURA:</td>
-                    <td>
-                        <span style="margin-left:10px;">{{viewFacture?.correlativo}}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>FECHA DE EMISION:</td>
-                    <td>
-                        <span style="margin-left:10px;">{{viewFacture?.created_at | date: 'dd/mm/yyyy - hh:mm'}}</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div>
-            <table style="width: 100%;font-size: 12px;">
-                <tr>
-                    <td>CI/RIF - NOMBRE O RAZON SOCIAL: </td>
-                    <td>{{viewFacture?.estudiante?.cedula}} - {{viewFacture?.estudiante?.nombres}}</td>
-                    <td>BENEFICIARIO: {{viewFacture?.estudiante?.nombres}}</td>
-                </tr>
-                <tr>
-                    <td>DOMICILIO: {{viewFacture?.estudiante?.direccion}}</td>
-                    <td>LARA</td>
-                    <td>TELF: {{viewFacture?.estudiante?.telefono_celular}} CONDICION DE PAGO: CREDITO</td>
-                </tr>
-                <tr>
-                    <td>CODIGO: {{viewFacture?.carrera_estudiante}}</td>
-                    <td>CARRERA: {{viewFacture?.carrera_estudiante?.carrera?.codigo}} {{viewFacture?.carrera_estudiante?.carrera?.nombre}}</td>
-                    <td>INGRESO: {{viewFacture?.estudiante?.prd?.fecha_ingreso}} PERIODO: {{viewFacture?.carrera_estudiante?.lapso}}</td>
-                </tr>
-            </table>
-        </div>
-        <div style="margin-bottom: 20px;">
-            <table style="width: 100%;font-size: 12px;">
-                <tr >
-                    <td style="border-top: 1px dotted #000;border-bottom: 1px dotted #000;">CANTIDAD</td>
-                    <td style="border-top: 1px dotted #000;border-bottom: 1px dotted #000;">DESCRIPCION</td>
-                    <td style="border-top: 1px dotted #000;border-bottom: 1px dotted #000;">PRECIO UNITARIO</td>
-                    <td style="border-top: 1px dotted #000;border-bottom: 1px dotted #000;">MONTO</td>
-                    <td style="border-top: 1px dotted #000;border-bottom: 1px dotted #000;">DESCUENTO</td>
-                    <td style="border-top: 1px dotted #000;border-bottom: 1px dotted #000;">TOTAL</td>
-                </tr>
-                <tr *ngFor="let j of detallesfac">
-                    <td>1</td>
-                    <td>{{j.descripcion}}</td>
-                    <td>{{j.montobs}}</td>
-                    <td>{{j.montobs}}</td>
-                    <td>0</td>
-                    <td>{{j.montobs}}</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>TOTAL A PAGAR: </td>
-                    <td>{{viewFacture?.mon_total}}</td>
-                </tr>
-            </table>
-        </div>
-        <div style="margin-bottom: 20px;">
-            <p style="margin-left: 5px;margin-bottom: 0;">OBSERVACIONES:</p>
-            <P style="margin-left: 5px;margin-top: 0;">NOTAS. La universidad se reserve el derecho de modificar tanto el monto como las condiciones de pago, de acuerdo a las variaciones economicas del pais.
-                LAS CONSTANCIAS DE: ESTUDIOS, BUENA CONDUCTA E INSCRIPCION CADUCAN A LOS 3 MESES. gdiciementc@uft.edu.ve 
-            </P>
-        </div>
-        <div>
-            <table style="width: 100%;font-size: 12px;">
-                <tr>
-                    <td>INSTRUMENTO</td>
-                    <td>BANCO</td>
-                    <td>FECHA</td>
-                    <td>NUMERO</td>
-                    <td>MONTO INSTRUMENTO</td>
-                </tr>
-<<<<<<< HEAD
-                <tbody *ngFor="let o of detallesfac">
-                    <tr  *ngFor="let i of o.pagos_cuotas">
-                        <td>{{i.pagos?.tipo_pago?.nombre}}</td>
-                        <td>{{i.pagos?.banco}}</td>
-                        <td *ngIf="i.pagos?.tipo_pago_id == 1">{{i.pagos?.banco.nombre}}</td>
-                        <td *ngIf="i.pagos?.tipo_pago_id == 5">{{i.pagos?.description}}</td>
-                        <td>{{o.created_at | date : 'YYYY-MM-dd'}}</td>
-                        <td>{{o.id}}</td>
-                        <td>{{i.pagos.montobs}}</td>
-                    </tr>
-                    <tr  *ngFor="let i of o.pagos_servicio">
-                        <td>{{i.pagos?.tipo_pago?.nombre}}</td>
-                        <td *ngIf="i.pagos?.tipo_pago_id == 1">{{i.pagos?.banco.nombre}}</td>
-                        <td *ngIf="i.pagos?.tipo_pago_id == 5">{{i.pagos?.description}}</td>
-=======
-                <tbody >
-                    <tr  *ngFor="let o of viewFacture.instrumento_pago">
-                        <td>{{o.tipopago?.nombre}}</td>
-                        <td *ngIf="o.tipo_pago_id == 1">{{o.banco?.description}}</td>
-                        <td *ngIf="o.tipo_pago_id !== 1">{{o.description}}</td>
->>>>>>> b67cb97e8410133025313040f69acc09f7b37106
-                        <td>{{o.created_at | date : 'YYYY-MM-dd'}}</td>
-                        <td>{{o.id}}</td>
-                        <td>{{i.pagos.montobs}}</td>
-                    </tr>
-                </tbody>
-                 <!--<tbody *ngFor="let o of detallesfac">
-                    <tr  *ngFor="let i of o.pagos_cuotas">
-                        <td>{{i.pagos?.tipo_pago?.nombre}}</td>
-                        <td>{{i.pagos?.banco}}</td>
-                        <td *ngIf="i.pagos?.tipo_pago_id == 1">{{i.pagos?.banco?.nombre}}</td>
-                        <td *ngIf="i.pagos?.tipo_pago_id == 5">{{i.pagos?.description}}</td>
-                        <td>{{o.created_at | date : 'YYYY-MM-dd'}}</td>
-                        <td>{{o.id}}</td>
-                        <td>{{i.pagos.montobs}}</td>
-                    </tr>
-                    <tr  *ngFor="let i of o.pagos_servicio">
-                        <td>{{i.pagos?.tipo_pago?.nombre}}</td>
-                        <td *ngIf="i.pagos?.tipo_pago_id == 1">{{i.pagos?.banco?.nombre}}</td>
-                        <td *ngIf="i.pagos?.tipo_pago_id == 5">{{i.pagos?.description}}</td>
-                        <td *ngIf="i.pagos?.tipo_pago_id != 5 && i.pagos?.tipo_pago_id != 1"></td>
-                        <td>{{o.created_at | date : 'YYYY-MM-dd'}}</td>
-                        <td>{{o.id}}</td>
-                        <td>{{i.pagos.montobs}}</td>
-                    </tr> 
-                </tbody>-->
-                <!-- <tbody *ngFor="let o of detallesfac">
-                    <tr  *ngFor="let i of o.pagos_servicios">
-                        <td>{{o.pagos_cuotas.pagos.tipo_pago}}</td>
-                        <td>{{o.pagos_cuotas.pagos.banco}}</td>
-                        <td>{{o.created_at | date : 'YYYY-MM-dd'}}</td>
-                        <td>{{o.id}}</td>
-                        <td>{{o.montobs}}</td>
-                    </tr>
-                </tbody> -->
-              
-            </table>
-            <div style="margin-top: 20px;margin-left: 5px">
-                Saldo deudor: 0,00 <br>
-                Descueto: {{viewFacture?.descuento}}
-                <div style="text-align: right;">
-                    <span style="margin-right: 200px;">Firma y Sello:</span>
-                </div>
-            </div>
-            <div style="margin-top: 50px;margin-bottom: 20px;">
-                <span style="margin-left: 100px;">
-                    Usuario:    {{viewFacture?.userbyfactura.nombre}}
-                </span>
-            </div>
-        </div>
-    </div>
-    
-    <!-- <p>
-        Para información sobre su solicitud, envíe un correo electrónico a consultapagouft@gmail.com
-    </p> -->
-    
-</body>
-</html>
   </div>
