@@ -11,6 +11,14 @@
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Nuevo
                     </button>
+                    <button class="btn btn-primary float-right btn-sm mt-1 mr-1" (click)="facturar_pagos()" *ngIf="!isForm && !isEdit">
+                        <i class="fa fa-chart" aria-hidden="true"></i>
+                        Conciliar Pagos
+                    </button>
+                    <button class="btn btn-primary float-right btn-sm mt-1 mr-1" (click)="openmodal_cierre()" *ngIf="!isForm && !isEdit">
+                        <i class="fa fa-chart" aria-hidden="true"></i>
+                        Hacer Cierre
+                    </button>
                     <button class="btn btn-primary float-right btn-sm mt-1 mr-1" (click)="openmodal()" *ngIf="!isForm && !isEdit">
                         <i class="fa fa-chart" aria-hidden="true"></i>
                         Exportar Facturas
@@ -129,6 +137,35 @@
         </div>
     </div>
 </div>
+
+<div class="hdmodal hdmodal-md" id="modal-view-cierre">
+    <div class="hdmodal-content">
+        <div class="card p-0">
+            <h5 class="py-2 px-3 modal-title flex">
+                Cierres
+            </h5>
+            <div class="container p-3">            
+                <div class="row d-flex">
+                 <div class="col-12 col-lg-12">
+                    <small>Seleccione una fecha</small>
+                    <input type="date" class="form-control" [(ngModel)]="cierrefecha">
+
+                 </div>
+              </div>
+            </div>
+            <div class="hdmodal-footer">
+              <div class="row mt-2">
+                <div class="col-md-12">
+                  <div class="d-flex flex-row-reverse">
+                    <button class="btn btn-primary" [disabled]="cierrefecha === ''" (click)="getcierre()">Procesar</button>
+                    <button class="btn btn-secoundary" (click)="closemodal_cierre()">Cerrar</button>
+                  </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+  </div>
 
 <div class="hdmodal hdmodal-md" id="modal-view-report">
     <div class="hdmodal-content">

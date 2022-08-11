@@ -62,6 +62,7 @@ export class FacturasComponent implements OnInit {
   fj: boolean = false;
   razonsocialfj: any;
   riffj: any;
+  igtf: any;
   
 
   compareFun = (o1: Option | string, o2: Option) => {
@@ -73,6 +74,7 @@ export class FacturasComponent implements OnInit {
     }
   };
   montotaluserpagad: number;
+  cierrefecha: any;
 
   constructor(
     public system: SystemService
@@ -174,11 +176,42 @@ export class FacturasComponent implements OnInit {
   }
   }
 
+  async getcierre(){
+    const q = {fecha:this.cierrefecha}
+   // window.open(this.system.reendpoint()+'api/facturas/export_factura');
+    await this.system.getDownloadFilePDF('api/pagos/cierre_caja?fecha='+this.cierrefecha,{},true).then(res => {
+      try {
+        //console.log(res.url);
+        
+      } catch (error) { 
+        console.log(error);
+      }
+    })
+  }
+
+  facturar_pagos() {
+    this.system.loading = true;
+    this.system.getDownloadFilePDF('api/pagos/facturar_pagos' , {}).then(res => {
+      try {
+        this.system.loading = false;
+      } catch (error) {
+        return false;
+      }
+    });
+  }
+
   openmodal(){
     displayModal('modal-view-report');
   }
+
+  openmodal_cierre(){
+    displayModal('modal-view-cierre');
+  }
   closemodal(){
     hideModal('modal-view-report');
+  }
+  closemodal_cierre(){
+    hideModal('modal-view-cierre');
   }
   async goPage(page, ctrl = '') {
     this.pagination.page = ctrl === '+' ? page + 1 > this.pagination.last_page ? page : page + 1 : ctrl === '-' ? page - 1 < 1 ? 1 : page -1 : page;
@@ -392,6 +425,9 @@ export class FacturasComponent implements OnInit {
       i.monto = this.system.toD(i.monto);
     }
     //this.pagos_refresh();
+    if(this.instrumento_pago.addpay == '7'){
+      igtf: this.system.igtf(this.system.toBs(this.total))
+    }
     const body = {
       estudiante_cedula: this.inputValue.cedula,
       sede: this.sede,
@@ -404,6 +440,8 @@ export class FacturasComponent implements OnInit {
       monto_total: this.system.toBs(this.total),
       sub_total: this.sub_total,
       iva: this.iva,
+      igtf: this.igtf,
+      igtfdolar: this.system.toD(this.igtf),
       saldo : saldo.toFixed(2),
       descuento: this.descuento,
       fj: this.fj,

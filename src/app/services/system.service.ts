@@ -475,6 +475,22 @@ toD(bs) {
     return bs;
   }
 }
+
+async igtf(total_:any) {
+  try {
+    return await this.post('api/facturas/get_igtf', {}, true).then(res => {
+      try {
+        if (res.status === 200) {
+          return (total_*res/100);
+        }
+      } catch (error) {
+        return 0;
+      }
+    });
+  } catch (error) {
+    return 0;
+  }
+}
 toPetro(dolar) {
   try {
     return (dolar / this.dolar.petro).toFixed(2);
