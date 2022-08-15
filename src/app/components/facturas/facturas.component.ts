@@ -186,7 +186,7 @@ export class FacturasComponent implements OnInit {
   async getcierre(){
     const q = {fecha:this.cierrefecha}
    // window.open(this.system.reendpoint()+'api/facturas/export_factura');
-    await this.system.getDownloadFilePDF('api/pagos/cierre_caja?fecha='+this.cierrefecha,{},true).then(res => {
+    await this.system.getDownloadFilePDFCierre('api/pagos/cierre_caja?fecha='+this.cierrefecha,{},true).then(res => {
       try {
         //console.log(res.url);
         
