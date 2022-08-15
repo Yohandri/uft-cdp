@@ -11,13 +11,17 @@
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Nuevo
                     </button>
+                    <button class="btn btn-primary float-right btn-sm mt-1 mr-1" (click)="reporte_igtf()" *ngIf="!isForm && !isEdit">
+                        <i class="fa fa-chart" aria-hidden="true"></i>
+                        Reporte IGTF
+                    </button>
                     <button class="btn btn-primary float-right btn-sm mt-1 mr-1" (click)="facturar_pagos()" *ngIf="!isForm && !isEdit">
                         <i class="fa fa-chart" aria-hidden="true"></i>
-                        Conciliar Pagos
+                        Facturar Pagos
                     </button>
                     <button class="btn btn-primary float-right btn-sm mt-1 mr-1" (click)="openmodal_cierre()" *ngIf="!isForm && !isEdit">
                         <i class="fa fa-chart" aria-hidden="true"></i>
-                        Hacer Cierre
+                        Reporte de Cierre
                     </button>
                     <button class="btn btn-primary float-right btn-sm mt-1 mr-1" (click)="openmodal()" *ngIf="!isForm && !isEdit">
                         <i class="fa fa-chart" aria-hidden="true"></i>
@@ -75,13 +79,13 @@
                                 <th>Fecha</th>
                                 <th>Cedula</th>
                                 <th>Estado</th>
-                                <th class="text-right">Monto</th>
+                                <th class="text-right">Monto {{loadData}}</th>
                             </tr>
                             <tr *ngIf="data.length === 0">
-                                <td class="text-center" colspan="6" *ngIf="!loadData">
+                                <td class="text-center" colspan="6" *ngIf="!loadData && data.length === 0">
                                     <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
                                 </td>
-                                <td class="text-center" colspan="6" *ngIf="loadData">
+                                <td class="text-center" colspan="6" *ngIf="loadData && data.length === 0">
                                     No hay registros
                                 </td>
                             </tr>

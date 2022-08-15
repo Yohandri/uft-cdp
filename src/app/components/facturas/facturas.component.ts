@@ -94,7 +94,7 @@ export class FacturasComponent implements OnInit {
   getaccount(){
     return this.system.post('api/facturas/cuentas' , { }).then(res => {
       try {
-        this.loadData = true;
+        //this.loadData = true;
         if (res.status === 200) {
           this.account = res.object;
         } else {
@@ -110,7 +110,7 @@ export class FacturasComponent implements OnInit {
   typepay(){
     return this.system.post('api/facturas/tipospago' , { }).then(res => {
       try {
-        this.loadData = true;
+        //this.loadData = true;
         if (res.status === 200) {
           this.type = res.object;
         } else {
@@ -122,7 +122,7 @@ export class FacturasComponent implements OnInit {
     });
 
   }
-  refreshData() {
+  async refreshData() {
     this.anuladas = false;
     this.correlativo = '';
     this.data = [];
@@ -130,13 +130,15 @@ export class FacturasComponent implements OnInit {
     this.notasdecredito_selected = [];
     this.listPagos = [];
     this.notasdecredito = [];
-    this.loadData = false;
+    this.system.loading = true;
     this.selected.reset();
     this.getaccount();
     this.typepay();
-    return this.system.post('api/facturas?page=' + this.pagination.page, {pagination: this.pagination, filter: this.filter }).then(res => {
+    this.loadData = false;
+    await this.system.post('api/facturas?page=' + this.pagination.page, {pagination: this.pagination, filter: this.filter }).then(res => {
       try {
         this.loadData = true;
+        this.system.loading = false;
         if (res.status === 200) {
           this.pagination.init(res.object);
           this.selected.init(res.object.data);
@@ -580,7 +582,16 @@ export class FacturasComponent implements OnInit {
     this.instrumento_pago.push(pago);
   }
 
-                                    
+  reporte_igtf() {
+    this.system.loading = true;
+    this.system.getDownloadFilePDF('api/facturas/igtfReporte' , {}).then(res => {
+      try {
+        this.system.loading = false;
+      } catch (error) {
+        return false;
+      }
+    });
+  }                                  
 
   reportarPago(is) {
     if (is) {
