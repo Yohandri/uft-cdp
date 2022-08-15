@@ -343,7 +343,7 @@ public async getDownloadFilePDFCierreFacturar(path: string = '',body: any, loadi
   const headers = new HttpHeaders().append('Authorization', 'Bearer ' + localStorage.getItem('access_token')).append('Accept','application/pdf').append('responseType','blob');
   this.http.get(`${this.settingsService.Settings.endpoint + path}`,{
     responseType: 'arraybuffer', headers:headers} 
-   ).subscribe(response => this.downLoadFilePDFCierre(response, "application/pdf", path));
+   ).subscribe(response => this.downLoadFilePDFFacturar(response, "application/pdf", path));
 }
 downLoadFilePDFFacturar(data: any, type: string, body) {
   this.loading = false;
