@@ -249,6 +249,16 @@ downLoadFile(data: any, type: string, body) {
   // }
 }
 
+
+
+public async getDownloadFilePDFIGTF(path: string = '',body: any, loading = true) {
+  this.loading = loading ? true : false;
+  const headers = new HttpHeaders().append('Authorization', 'Bearer ' + localStorage.getItem('access_token')).append('Accept','application/pdf').append('responseType','blob');
+  this.http.get(`${this.settingsService.Settings.endpoint + path}`,{
+    responseType: 'arraybuffer', headers:headers} 
+   ).subscribe(response => this.downLoadFilePDFIGTF(response, "application/pdf", path));
+}
+
 public async getDownloadFilePDF(path: string = '',body: any, loading = true) {
   this.loading = loading ? true : false;
   const headers = new HttpHeaders().append('Authorization', 'Bearer ' + localStorage.getItem('access_token')).append('Accept','application/pdf').append('responseType','blob');
@@ -293,6 +303,25 @@ downLoadFilePDF(data: any, type: string, body) {
   var link=document.createElement('a');
   link.href=window.URL.createObjectURL(blob);
   link.download="Reporte_"+namedoc +new Date().getTime()+ '_' + ".pdf";
+  link.click();
+
+  
+
+  // if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
+  //     alert( 'Please disable your Pop-up blocker and try again.');
+  // }
+}
+
+downLoadFilePDFIGTF(data: any, type: string, body) {
+  this.loading = false;
+  console.log("P",body);
+  if(body.includes('diario')){var namedoc="Diario";}else{var namedoc = "Mensual";}
+  let blob = new Blob([data], { type: type});
+  // let url = window.URL.createObjectURL(blob);
+  // let pwa = window.open(url);
+  var link=document.createElement('a');
+  link.href=window.URL.createObjectURL(blob);
+  link.download="Reporte_IGTF" +new Date().getTime()+ '_' + ".pdf";
   link.click();
 
   
@@ -476,21 +505,6 @@ toD(bs) {
   }
 }
 
-async igtf(total_:any) {
-  try {
-    return await this.post('api/facturas/get_igtf', {}, true).then(res => {
-      try {
-        if (res.status === 200) {
-          return (total_*res/100);
-        }
-      } catch (error) {
-        return 0;
-      }
-    });
-  } catch (error) {
-    return 0;
-  }
-}
 toPetro(dolar) {
   try {
     return (dolar / this.dolar.petro).toFixed(2);

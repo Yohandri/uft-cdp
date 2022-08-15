@@ -142,6 +142,34 @@
     </div>
 </div>
 
+<div class="hdmodal hdmodal-md" id="modal-view-igtf">
+    <div class="hdmodal-content">
+        <div class="card p-0">
+            <h5 class="py-2 px-3 modal-title flex">
+                IGTF
+            </h5>
+            <div class="container p-3">            
+                <div class="row d-flex">
+                 <div class="col-12 col-lg-12">
+                    <small>Seleccione una fecha</small>
+                    <input type="date" class="form-control" [(ngModel)]="igtffecha">
+
+                 </div>
+              </div>
+            </div>
+            <div class="hdmodal-footer">
+              <div class="row mt-2">
+                <div class="col-md-12">
+                  <div class="d-flex flex-row-reverse">
+                    <button class="btn btn-primary" [disabled]="cierrefecha === ''" (click)="reporte_igtf()">Procesar</button>
+                    <button class="btn btn-secoundary" (click)="closemodal_igtf()">Cerrar</button>
+                  </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+  </div>
 <div class="hdmodal hdmodal-md" id="modal-view-cierre">
     <div class="hdmodal-content">
         <div class="card p-0">

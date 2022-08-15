@@ -62,8 +62,11 @@ export class FacturasComponent implements OnInit {
   fj: boolean = false;
   razonsocialfj: any;
   riffj: any;
-  igtf: any;
-  
+  igtf: any=0;
+  igtftotal: number=0;
+  montobstotal: any = 0;
+  igtffecha:any;
+
 
   compareFun = (o1: Option | string, o2: Option) => {
     if (o1) {
@@ -75,6 +78,7 @@ export class FacturasComponent implements OnInit {
   };
   montotaluserpagad: number;
   cierrefecha: any;
+
 
   constructor(
     public system: SystemService
@@ -134,6 +138,7 @@ export class FacturasComponent implements OnInit {
     this.selected.reset();
     this.getaccount();
     this.typepay();
+    this.get_igtf();
     this.loadData = false;
     await this.system.post('api/facturas?page=' + this.pagination.page, {pagination: this.pagination, filter: this.filter }).then(res => {
       try {
@@ -211,6 +216,10 @@ export class FacturasComponent implements OnInit {
   }
   closemodal(){
     hideModal('modal-view-report');
+  }
+  closemodal_igtf(){
+    this.igtffecha = '';
+    hideModal('modal-view-igtf');
   }
   closemodal_cierre(){
     hideModal('modal-view-cierre');
@@ -397,7 +406,8 @@ export class FacturasComponent implements OnInit {
     }
     return Number(val);
   }
-  save() {
+  async save() {
+    console.log("LA<MINICIO",this.igtf);
     //let saldo = Math.abs(this.resta_pagando).toFixed(2);
     let saldo = 0;
     let index = 0;
@@ -424,12 +434,14 @@ export class FacturasComponent implements OnInit {
     }
 
     for (let i of this.instrumento_pago) {
+      if(i.addpay == 7){
+        this.igtftotal += (i.monto*this.igtf/100);
+        this.montobstotal += (i.monto);
+      } 
       i.monto = this.system.toD(i.monto);
-    }
+    }    
     //this.pagos_refresh();
-    if(this.instrumento_pago.addpay == '7'){
-      igtf: this.system.igtf(this.system.toBs(this.total))
-    }
+
     const body = {
       estudiante_cedula: this.inputValue.cedula,
       sede: this.sede,
@@ -442,8 +454,10 @@ export class FacturasComponent implements OnInit {
       monto_total: this.system.toBs(this.total),
       sub_total: this.sub_total,
       iva: this.iva,
-      igtf: this.igtf,
-      igtfdolar: this.system.toD(this.igtf),
+      igtf: this.igtftotal,
+      igtfdolar: this.system.toD(this.igtftotal),
+      montobstotal: this.montobstotal,
+      montototaligtf: this.system.toD(this.montobstotal),
       saldo : saldo.toFixed(2),
       descuento: this.descuento,
       fj: this.fj,
@@ -583,15 +597,30 @@ export class FacturasComponent implements OnInit {
   }
 
   reporte_igtf() {
+    if(!this.igtffecha){
+      displayModal('modal-view-igtf');
+    }else{
     this.system.loading = true;
-    this.system.getDownloadFilePDF('api/facturas/igtfReporte' , {}).then(res => {
+    //const q = {fecha:this.cierrefecha}
+    this.system.getDownloadFilePDFIGTF('api/facturas/igtfReporte?fecha='+this.igtffecha , {}).then(res => {
       try {
         this.system.loading = false;
       } catch (error) {
         return false;
       }
     });
-  }                                  
+  }   
+}       
+  
+  get_igtf() {
+    this.system.get('api/facturas/get_igtf' , {}).then(res => {
+      try {
+      this.igtf =  res.object;    
+      } catch (error) {
+        console.log(error);
+      }
+    })
+  }
 
   reportarPago(is) {
     if (is) {
