@@ -199,7 +199,7 @@ export class PlanesComponent implements OnInit {
     if (!gopage && this.filter.isFilter) {
       this.pagination.page = 1;
     }
-    return this.system.post('api/users?page=' + this.pagination.page, {pagination: this.pagination, filter: this.filter }).then(res => {
+    return this.system.post('api/planes?page=' + this.pagination.page, {pagination: this.pagination, filter: this.filter }).then(res => {
       try {
         this.loadData = true;
         if (res.status === 200) {
