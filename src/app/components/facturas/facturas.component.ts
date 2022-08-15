@@ -707,7 +707,7 @@ export class FacturasComponent implements OnInit {
     try {
       let val = 0;
       for (let i of this.viewFacture?.detalles) {
-        val += Number(i.monto);
+        val += Number(i.montobs);
       }
       return val + Number(this.viewFacture?.iva);
     } catch (error) {
@@ -718,7 +718,7 @@ export class FacturasComponent implements OnInit {
     try {
       let val = 0;
       for (let i of this.viewFacture?.detalles) {
-        val += Number(i.monto);
+        val += Number(i.montobs);
       }
       return val;
     } catch (error) {
