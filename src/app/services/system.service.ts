@@ -317,7 +317,7 @@ public async getDownloadFilePDFCierre(path: string = '',body: any, loading = tru
   const headers = new HttpHeaders().append('Authorization', 'Bearer ' + localStorage.getItem('access_token')).append('Accept','application/pdf').append('responseType','blob');
   this.http.get(`${this.settingsService.Settings.endpoint + path}`,{
     responseType: 'arraybuffer', headers:headers} 
-   ).subscribe(response => this.downLoadFilePDF(response, "application/pdf", path));
+   ).subscribe(response => this.downLoadFilePDFCierre(response, "application/pdf", path));
 }
 downLoadFilePDFCierre(data: any, type: string, body) {
   this.loading = false;
@@ -329,6 +329,32 @@ downLoadFilePDFCierre(data: any, type: string, body) {
   var link=document.createElement('a');
   link.href=window.URL.createObjectURL(blob);
   link.download="Reporte_Cierre" +new Date().getTime()+ '_' + ".pdf";
+  link.click();
+
+  
+
+  // if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
+  //     alert( 'Please disable your Pop-up blocker and try again.');
+  // }
+}
+
+public async getDownloadFilePDFCierreFacturar(path: string = '',body: any, loading = true) {
+  this.loading = loading ? true : false;
+  const headers = new HttpHeaders().append('Authorization', 'Bearer ' + localStorage.getItem('access_token')).append('Accept','application/pdf').append('responseType','blob');
+  this.http.get(`${this.settingsService.Settings.endpoint + path}`,{
+    responseType: 'arraybuffer', headers:headers} 
+   ).subscribe(response => this.downLoadFilePDFCierre(response, "application/pdf", path));
+}
+downLoadFilePDFFacturar(data: any, type: string, body) {
+  this.loading = false;
+  console.log("P",body);
+  if(body.includes('diario')){var namedoc="Diario";}else{var namedoc = "Mensual";}
+  let blob = new Blob([data], { type: type});
+  // let url = window.URL.createObjectURL(blob);
+  // let pwa = window.open(url);
+  var link=document.createElement('a');
+  link.href=window.URL.createObjectURL(blob);
+  link.download="Reporte_Facturas" +new Date().getTime()+ '_' + ".pdf";
   link.click();
 
   

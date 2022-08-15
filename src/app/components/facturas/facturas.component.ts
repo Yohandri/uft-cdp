@@ -198,7 +198,7 @@ export class FacturasComponent implements OnInit {
 
   facturar_pagos() {
     this.system.loading = true;
-    this.system.getDownloadFilePDF('api/pagos/facturar_pagos' , {}).then(res => {
+    this.system.getDownloadFilePDFCierreFacturar('api/pagos/facturar_pagos' , {}).then(res => {
       try {
         this.system.loading = false;
       } catch (error) {
