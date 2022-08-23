@@ -432,7 +432,7 @@ export class FacturasComponent implements OnInit {
     }
     
     }
-
+    this.igtftotal = 0;
     for (let i of this.instrumento_pago) {
       if(i.addpay == 7){
         this.igtftotal += (i.monto*this.igtf/100);
