@@ -66,6 +66,7 @@ export class FacturasComponent implements OnInit {
   igtftotal: number=0;
   montobstotal: any = 0;
   igtffecha:any;
+  isInvalidReferencia = false;
 
 
   compareFun = (o1: Option | string, o2: Option) => {
@@ -461,22 +462,30 @@ export class FacturasComponent implements OnInit {
       saldo : saldo.toFixed(2),
       descuento: this.descuento,
       fj: this.fj,
-      razonsocial_fj: this.razonsocialfj,
-      rif_fj: this.riffj
+      razonsocial_fj: this.razonsocialfj === undefined ? null : this.razonsocialfj,
+      rif_fj: this.riffj === undefined ? null : this.riffj
     };
     
     console.log(body);
-   this.system.post('api/facturas/create', body, true).then(res => {
-     try {
-       console.log(res);
-       if (res.status === 200) {
-         this.modalFactureClose();
-         this.refreshData();
-       }
-     } catch (error) {
-       console.log(error);
+     this.system.post('api/facturas/create', body, true).then(res => {
+       try {
+         console.log(res);
+         if (res.status === 200) {
+           this.modalFactureClose();
+           this.refreshData();
+         }
+       } catch (error) {
+         console.log(error);
+    }
+    });
   }
-  });
+  isInvalid(obj, ref) {
+    try {
+      this.isInvalidReferencia = obj.filter(x => x.referencia === ref)?.length > 1;
+      return obj.filter(x => x.referencia === ref)?.length > 1;
+    } catch (error) {
+      console.log(error);
+    }
   }
   anular() {
     this.esAnular = true;
@@ -600,11 +609,9 @@ export class FacturasComponent implements OnInit {
     if(!this.igtffecha){
       displayModal('modal-view-igtf');
     }else{
-    this.system.loading = true;
     //const q = {fecha:this.cierrefecha}
     this.system.getDownloadFilePDFIGTF('api/facturas/igtfReporte?fecha='+this.igtffecha , {}).then(res => {
       try {
-        this.system.loading = false;
       } catch (error) {
         return false;
       }

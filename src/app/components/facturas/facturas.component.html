@@ -822,7 +822,7 @@
                         </select>
                      </td>
                       <td class="cursorPointer2">
-                          <input type="text" class="form-control form-control-sm" [(ngModel)]="i.referencia">
+                          <input type="text" class="form-control form-control-sm" [ngClass]="{'is-invalid': isInvalid(instrumento_pago, i.referencia)}" [(ngModel)]="i.referencia">
                       </td>
                       <!-- <td *ngIf="!formaddpaydebito" class="cursorPointer2">
                         <input type="number" class="form-control form-control-sm" [(ngModel)]="i.titular_cedula">
@@ -834,7 +834,7 @@
                       </td>
                     </tr>
                   </table>
-                  <button class="btn btn-primary btn-sm" (click)="agregar_pago_instrumento()">Agregar pago</button>
+                  <button class="btn btn-primary btn-sm" [disabled]="resta_pagando <= 0 || isInvalidReferencia" (click)="agregar_pago_instrumento()">Agregar pago</button>
                   <div *ngIf="pagos.length > 1">
                      <b class="float-right">Monto: {{getTotalPagado(pagos) | currency: '': ''}} Bs</b>
                   </div>
