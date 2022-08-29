@@ -362,8 +362,8 @@ export class FacturasComponent implements OnInit {
   onSelectServicio() {
     this.pagosxc = '';
     let obj = JSON.parse(JSON.stringify(this.servicioSelect));
-    this.optionsServicios = this.optionsServicios.filter(item => item !== this.servicioSelect);
-    //console.log("onSelectServicio",this.system.dolar.valor);
+    this.optionCuotas = this.optionCuotas.filter(item => item?.id !== this.servicioSelect?.id);
+    console.log("onSelectServicio",this.servicioSelect);
     obj.id = obj.id + '.' + makeguid();
     obj.isPay = this.isPay;
     for (let i of obj.pagos_confirm) {
