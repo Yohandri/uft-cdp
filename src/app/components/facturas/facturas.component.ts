@@ -67,6 +67,8 @@ export class FacturasComponent implements OnInit {
   montobstotal: any = 0;
   igtffecha:any;
   isInvalidReferencia = false;
+  activesaia:any;
+  cedulasaia:any;
 
 
   compareFun = (o1: Option | string, o2: Option) => {
@@ -247,6 +249,20 @@ export class FacturasComponent implements OnInit {
   modalViewFactureClose() {
     this.printer=false;
     hideModal('modal-view-facture');
+  }
+  searchsaia() {
+    console.log("saia");
+     //this.loadData = false;
+     this.activesaia = setTimeout(function(){
+       true
+     },4000)
+  }
+
+  modalSaia() {
+    displayModal('modal-saia');
+  }
+  closemodalSaia() {
+    hideModal('modal-saia');
   }
   toFixed(mon) {
     try {
