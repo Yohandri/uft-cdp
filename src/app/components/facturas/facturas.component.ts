@@ -254,7 +254,7 @@ export class FacturasComponent implements OnInit {
     console.log("saia");
      //this.loadData = false;
      this.activesaia = setTimeout(function(){
-       true
+       return true
      },4000)
   }
 
@@ -263,6 +263,8 @@ export class FacturasComponent implements OnInit {
   }
   closemodalSaia() {
     hideModal('modal-saia');
+    this.activesaia = false;
+    this.cedulasaia = '';
   }
   toFixed(mon) {
     try {
