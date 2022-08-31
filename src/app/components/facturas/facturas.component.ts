@@ -94,9 +94,13 @@ export class FacturasComponent implements OnInit {
     if (this.system.isMobile) {
       this.system.module.name = 'Facturas';
     }
-    await this.refreshData();
+    this.data = await this.refreshData();
   }
   cancelar() {}
+
+  async refresh() {
+    this.data = await this.refreshData();
+  }
 
   getaccount(){
     return this.system.post('api/facturas/cuentas' , { }).then(res => {
@@ -143,14 +147,14 @@ export class FacturasComponent implements OnInit {
     this.typepay();
     this.get_igtf();
     this.loadData = false;
-    await this.system.post('api/facturas?page=' + this.pagination.page, {pagination: this.pagination, filter: this.filter }).then(res => {
+    return await this.system.post('api/facturas?page=' + this.pagination.page, {pagination: this.pagination, filter: this.filter }).then(res => {
       try {
         this.loadData = true;
         this.system.loading = false;
         if (res.status === 200) {
           this.pagination.init(res.object);
           this.selected.init(res.object.data);
-          this.data = res.object.data;
+          //this.data = res.object.data;
           this.istrue_correlativo = res.object.data;
           return res.object.data;
         } else {
@@ -231,9 +235,9 @@ export class FacturasComponent implements OnInit {
     this.pagination.page = ctrl === '+' ? page + 1 > this.pagination.last_page ? page : page + 1 : ctrl === '-' ? page - 1 < 1 ? 1 : page -1 : page;
     this.data = await this.refreshData();
   }
-  resetFilter() {
+  async resetFilter() {
     this.filter = new FormFactura();
-    this.refreshData();
+    this.data = await this.refreshData();
   }
   async edit(obj = null) {
     this.viewEstudiante = null;
@@ -365,7 +369,6 @@ export class FacturasComponent implements OnInit {
     this.pagosxc = '';
     let obj = JSON.parse(JSON.stringify(this.servicioSelect));
     this.optionCuotas = this.optionCuotas.filter(item => item?.id !== this.servicioSelect?.id);
-    this.optionsServicios = this.optionsServicios.filter(item => item !== this.servicioSelect);
     console.log("onSelectServicio",this.servicioSelect);
     obj.id = obj.id + '.' + makeguid();
     obj.isPay = this.isPay;
