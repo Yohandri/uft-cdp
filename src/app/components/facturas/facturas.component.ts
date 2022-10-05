@@ -446,13 +446,11 @@ export class FacturasComponent implements OnInit {
     return Number(val);
   }
   async save() {
-    console.log("LA<MINICIO",this.igtf);
     //let saldo = Math.abs(this.resta_pagando).toFixed(2);
     let saldo = 0;
     let index = 0;
     for (let i of this.listService) {
       i.id = i.id.split('.')[0];
-      console.log('save',i);
       let monto = Number(i?.plan?.mon_total ? i?.plan?.mon_total : i?.monto);
       i['monto_pagado'] = 0;
       for(let j of i.pagos_confirm) {
@@ -510,7 +508,7 @@ export class FacturasComponent implements OnInit {
          console.log(res);
          if (res.status === 200) {
            this.modalFactureClose();
-           this.refreshData();
+           this.refresh();
          }
        } catch (error) {
          console.log(error);
