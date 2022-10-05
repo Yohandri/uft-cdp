@@ -94,11 +94,14 @@ export class FacturasComponent implements OnInit {
     if (this.system.isMobile) {
       this.system.module.name = 'Facturas';
     }
-     await this.refreshData();
+    this.data = await this.refreshData();
   }
   cancelar() {}
 
 
+  async refresh() {
+    this.data = await this.refreshData();
+  }
 
   getaccount(){
     return this.system.post('api/facturas/cuentas' , { }).then(res => {
