@@ -4,10 +4,14 @@
             <div class="col">
                 <h3 class="mt-2 mb-4" style="height: 28px;"><span *ngIf="!system.isMobile">Factura<span *ngIf="!isForm">s</span></span>
                     
-                    <button class="btn btn-primary float-right btn-sm ml-2 mt-1" (click)="refreshData()" [ngStyle]="{'opacity': filter.isFilter ? .6 : 1}" *ngIf="!isForm">
+                    <button class="btn btn-primary float-right btn-sm ml-2 mt-1" (click)="refresh()" [ngStyle]="{'opacity': filter.isFilter ? .6 : 1}" *ngIf="!isForm">
                         <i class="fa fa-refresh" aria-hidden="true"></i>
                     </button>
+<<<<<<< HEAD
                    <!-- <button class="btn btn-primary float-right btn-sm mt-1" (click)="modalSaia()" *ngIf="!isForm && !isEdit">
+=======
+                    <button class="btn btn-primary float-right btn-sm ml-2 mt-1" (click)="modalSaia()" *ngIf="!isForm && !isEdit">
+>>>>>>> be21df5ed0faeebc26e415451b2af85d4d93de84
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Consultas SAIA
                     </button>-->
@@ -37,7 +41,7 @@
                         Regresar
                     </button>
                     <div class="btn-group btn-group-sm float-right mr-2 mt-1" role="group">
-                        <button class="btn btn-primary btn-sm" (click)="refreshData()" *ngIf="!isForm && filter.isFilter">
+                        <button class="btn btn-primary btn-sm" (click)="refresh()" *ngIf="!isForm && filter.isFilter">
                             <i class="fa fa-search" aria-hidden="true"></i>
                             Buscar
                         </button>
@@ -53,25 +57,25 @@
                             <tr class="inputFilter head">
                                 <th></th>
                                 <th>
-                                    <input class="if" placeholder="Búsqueda por codigo"  tabindex="-1" (change)="refreshData()" type="search" [(ngModel)]="filter.codigo">
+                                    <input class="if" placeholder="Búsqueda por codigo"  tabindex="-1" (change)="refresh()" type="search" [(ngModel)]="filter.codigo">
                                 </th>
                                 <th>
-                                    <input class="if" placeholder="Búsqueda por fecha"  tabindex="-1" (change)="refreshData()" type="date" [(ngModel)]="filter.created_at">
+                                    <input class="if" placeholder="Búsqueda por fecha"  tabindex="-1" (change)="refresh()" type="date" [(ngModel)]="filter.created_at">
                                 </th>
                                 <th>
-                                    <input class="if" placeholder="Búsqueda por cedula" tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.cedula">
+                                    <input class="if" placeholder="Búsqueda por cedula" tabindex="-1" (keyup.enter)="refresh()" type="search" [(ngModel)]="filter.cedula">
                                 </th>
                                 
                                 <th>
-                                    <input class="if" placeholder="Búsqueda por estado" tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.estado">
+                                    <input class="if" placeholder="Búsqueda por estado" tabindex="-1" (keyup.enter)="refresh()" type="search" [(ngModel)]="filter.estado">
                                 </th>
                                 
                                 
                                 <!-- <th>
-                                    <input class="if" placeholder="Búsqueda por usuario"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.user_id">
+                                    <input class="if" placeholder="Búsqueda por usuario"  tabindex="-1" (keyup.enter)="refresh()" type="search" [(ngModel)]="filter.user_id">
                                 </th> -->
                                 <th>
-                                    <input class="if" placeholder="Búsqueda por monto"  tabindex="-1" (keyup.enter)="refreshData()" type="search" [(ngModel)]="filter.monto">
+                                    <input class="if" placeholder="Búsqueda por monto"  tabindex="-1" (keyup.enter)="refresh()" type="search" [(ngModel)]="filter.monto">
                                 </th>
                             </tr>
                             <tr class="head">
@@ -85,11 +89,11 @@
                                 <th>Estado</th>
                                 <th class="text-right">Monto </th>
                             </tr>
-                            <tr *ngIf="data.length === 0">
-                                <td class="text-center" colspan="6" *ngIf="!loadData && data.length === 0">
+                            <tr >
+                                <td class="text-center" colspan="6" *ngIf="!loadData && data?.length === 0">
                                     <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
                                 </td>
-                                <td class="text-center" colspan="6" *ngIf="loadData && data.length === 0">
+                                <td class="text-center" colspan="6" *ngIf="loadData && data?.length === 0">
                                     No hay registros
                                 </td>
                             </tr>
@@ -113,7 +117,7 @@
                             
                             <ul class="pagination justify-content-end" >
                               <li> Registros por pagina
-                                <select (change)="refreshData()" [(ngModel)]="pagination.per_page">
+                                <select (change)="refresh()" [(ngModel)]="pagination.per_page">
                                     <option value="5">5</option>
                                     <option value="10">10</option>
                                     <option value="15">15</option>
