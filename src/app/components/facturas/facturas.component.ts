@@ -345,6 +345,7 @@ export class FacturasComponent implements OnInit {
   }
   onChangeServicios(value: any): void {
     typeof value === 'string' ? value = value : value = value.nombre;
+
     if (this.isPay) {
       this.filteredOptionsServicios = this.optionCuotas.filter(option => option.nombre.toLowerCase().indexOf(value.toLowerCase()) !== -1);
     } else {
@@ -359,6 +360,19 @@ export class FacturasComponent implements OnInit {
   // onSelectEstudiante(value) {
   //   this.dataOptionServicios(value.cedula);
   // }
+  isSelectDisabled(_obj) {
+    console.log(_obj);
+    try {
+      if(_obj.tipo != 'cuota') {return false};
+      if(this.filteredOptionsServicios[0].nombre == _obj.nombre){
+        return false;
+      }else{
+        return true;
+      }
+    } catch (error) {
+      return true;
+    }
+  }
   onSelectServicio() {
     this.pagosxc = '';
     let obj = JSON.parse(JSON.stringify(this.servicioSelect));

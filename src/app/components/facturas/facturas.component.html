@@ -7,10 +7,10 @@
                     <button class="btn btn-primary float-right btn-sm ml-2 mt-1" (click)="refreshData()" [ngStyle]="{'opacity': filter.isFilter ? .6 : 1}" *ngIf="!isForm">
                         <i class="fa fa-refresh" aria-hidden="true"></i>
                     </button>
-                    <button class="btn btn-primary float-right btn-sm mt-1" (click)="modalSaia()" *ngIf="!isForm && !isEdit">
+                   <!-- <button class="btn btn-primary float-right btn-sm mt-1" (click)="modalSaia()" *ngIf="!isForm && !isEdit">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Consultas SAIA
-                    </button>
+                    </button>-->
                     <button class="btn btn-primary float-right btn-sm mt-1" (click)="new()" *ngIf="!isForm && !isEdit">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Nuevo
@@ -388,7 +388,7 @@
                                         <input type="text" *ngIf="istrue_correlativo.length == 0 && !filter.isFilter" class="form-control mr-2" placeholder="Correlativo sede {{system.decodedToken.user.sede}}" [(ngModel)]="correlativo">
                                         <input type="search" placeholder="Buscar servicios" (keyup.enter)="onSelectServicio()" nz-input [(ngModel)]="servicioSelect" [nzAutocomplete]="autoServicios2" (ngModelChange)="onChangeServicios($event)"  class="form-control"  >
                                         <nz-autocomplete #autoServicios2 >
-                                            <nz-auto-option *ngFor="let option of filteredOptionsServicios" [nzValue]="option" [nzLabel]="option.nombre">
+                                            <nz-auto-option *ngFor="let option of filteredOptionsServicios" [nzValue]="option" [nzLabel]="option.nombre" [nzDisabled]="isSelectDisabled(option)">
                                             {{ option.nombre }}
                                             </nz-auto-option>
                                         </nz-autocomplete>
@@ -715,7 +715,7 @@
                   <div class="d-flex flex-row-reverse">
                     <button *ngIf="viewFacture?.estado !== 'anulado' && viewFacture?.estado !== 'reintegro'" (click)="imprimirback()" class="btn btn-primary ml-2">Imprimir</button>
                     <!--<button *ngIf="viewFacture?.estado !== 'anulado' && viewFacture?.estado !== 'reintegro'" class="btn btn-primary ml-2">Reverso</button>-->
-                    <button *ngIf="viewFacture?.estado !== 'anulado' && viewFacture?.estado !== 'reintegro'" class="btn btn-primary ml-2" (click)="anular()">Reverso</button>
+                    <!--<button *ngIf="viewFacture?.estado !== 'anulado' && viewFacture?.estado !== 'reintegro'" class="btn btn-primary ml-2" (click)="anular()">Reverso</button>-->
                     <button *ngIf="viewFacture?.estado !== 'anulado' && viewFacture?.estado !== 'reintegro'" class="btn btn-primary ml-2" (click)="reintegro()">Reintegro</button>
                     <button class="btn btn-secoundary" (click)="modalViewFactureClose()">Cerrar</button>
                   </div>
@@ -774,7 +774,7 @@
   <div class="hdmodal hdmodal-sm" id="modal-saia">
     <div class="hdmodal-content">
         <div class="card p-0">
-            <h5 class="py-2 px-3 modal-title flex">
+         <h5 class="py-2 px-3 modal-title flex">
                 Consultas SAIA
                 <i class="fa fa-times ml-auto closer" (click)="closemodalSaia()"></i>
             </h5>
@@ -866,7 +866,8 @@
                       </td>
                     </tr>
                   </table>
-                  <button class="btn btn-primary btn-sm" [disabled]="resta_pagando <= 0 || isInvalidReferencia" (click)="agregar_pago_instrumento()">Agregar pago</button>
+                  <!-- [disabled]="resta_pagando <= 0 || isInvalidReferencia" -->
+                  <button class="btn btn-primary btn-sm"  (click)="agregar_pago_instrumento()">Agregar pago</button>
                   <div *ngIf="pagos.length > 1">
                      <b class="float-right">Monto: {{getTotalPagado(pagos) | currency: '': ''}} Bs</b>
                   </div>
