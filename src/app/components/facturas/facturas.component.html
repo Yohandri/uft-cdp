@@ -482,11 +482,11 @@
                                     
                                     <tr>
                                         <td>Total:</td>
-                                        <th>{{system.toBs(sub_total)}}</th>
+                                        <th>{{system.toFixed(system.toBs(sub_total))}}</th>
                                     </tr>
                                     <tr>
                                         <td>Pagado:</td>
-                                        <th>{{pagado_instrumento}}</th>
+                                        <th>{{system.toFixed(pagado_instrumento)}}</th>
                                     </tr>
                                     <tr>
                                         <td>Total por pagar:</td>

@@ -920,6 +920,7 @@ interface Option {
   apellidos: string;
 }
 interface Servicio {
+  id:any;
   nombre: string;
   description: string;
 }
