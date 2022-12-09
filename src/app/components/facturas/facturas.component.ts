@@ -81,6 +81,7 @@ export class FacturasComponent implements OnInit {
   };
   montotaluserpagad: number;
   cierrefecha: any;
+  monNoteCredito: any;
 
 
   constructor(
@@ -340,8 +341,8 @@ export class FacturasComponent implements OnInit {
           console.log(res);
           if (res.status === 200) {
             this.filteredOptions = res.object;
-            this.riffj = res.object[0].factura_juridica.rif;
-            this.razonsocialfj = res.object[0].factura_juridica.nombre;
+            this.riffj = res.object[0].factura_juridica?.rif;
+            this.razonsocialfj = res.object[0].factura_juridica?.nombre;
           }
         } catch (error) { 
           console.log(error);
@@ -555,20 +556,24 @@ export class FacturasComponent implements OnInit {
     //this.refreshData();
   }
   reintegroConfirm() {
-    console.log(this.viewFacture);
-    const body = {factura: this.viewFacture};
-    this.system.post('api/facturas/reintegro', body, true).then(res => {
-      try {
-        console.log(res);
-        if (res.status === 200) {
-          this.system.message(res.message, 'success', 5000);
+    console.log(this.viewFacture.mon_total,this.monNoteCredito);
+    if(this.monNoteCredito > this.viewFacture.mon_total){
+      this.system.message("El monto del reintegro no puede ser mayor a la factura","danger");
+    }else{
+
+      this.viewFacture.mon_total = this.monNoteCredito;
+      const body = {viewFacture: this.viewFacture};
+      this.system.getDownloadFilePDFFACTURA('api/facturas/reintegro', body, true).then(res => {
+        try {
+          console.log(res);
           this.modalReintegroClose();
           this.refreshData();
+          this.modalViewFactureClose();
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
-      }
-    });
+      });
+  }
   }
   anularConfirm() {
     console.log(this.viewFacture);
@@ -898,13 +903,13 @@ export class FacturasComponent implements OnInit {
   addpagonotacredito(i){
     let myDate = new Date();
     let p = new FormPago;
-    p.referencia = i.pago_id;
+    p.referencia = i.id;
     this.notasdecredito_selected.push(i);
     this.notasdecredito = this.notasdecredito.filter(item => item !== i);
 
     for (let index = 0; index <this.instrumento_pago.length; index++) {
       if (this.instrumento_pago[index].referencia === "") {
-        this.instrumento_pago[index].referencia = i.pago_id; 
+        this.instrumento_pago[index].referencia = i.id; 
         this.instrumento_pago[index].monto = Number(i.montobs).toFixed(2);
         this.instrumento_pago[index].tipo_pago_id = 2;
         this.instrumento_pago[index].fecha = dateToStr(myDate,false); 

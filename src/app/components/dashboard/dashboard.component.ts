@@ -14,7 +14,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.system.showIn(true, 'Administrador', 'Administracion')) {
-      this.system.goto('gp/facturas');
+      this.system.goto('gp/users');
     }
     if (this.system.showIn(true, 'Caja')) {
       this.system.goto('gp/estudiantes');

@@ -490,11 +490,18 @@
                                     </tr>
                                     <tr>
                                         <td>Total por pagar:</td>
-                                        <th>{{system.toFixed(resta)}}</th>
+                                        <th *ngIf="resta >= 0">{{system.toFixed(resta)}}</th>
+                                        <th *ngIf="resta < 0">0</th>
                                     </tr>
                                     <tr>
                                         <td>Resta:</td>
-                                        <th>{{system.toFixed(resta_pagando)}}</th>
+                                        <th *ngIf="resta >= 0">{{system.toFixed(resta_pagando)}}</th>
+                                        <th *ngIf="resta < 0">0</th>
+                                    </tr>
+                                    <tr *ngIf="resta < -0.00001">
+                                        <td>Se generara nota de credito: </td>
+                                        <th>{{system.toFixed(resta)*-1}}</th>
+                                        
                                     </tr>
                                 </table>
                                 <!-- <b>sub total: {{sub_total}}</b> <br>
@@ -716,7 +723,7 @@
                     <button *ngIf="viewFacture?.estado !== 'anulado' && viewFacture?.estado !== 'reintegro'" (click)="imprimirback()" class="btn btn-primary ml-2">Imprimir</button>
                     <!--<button *ngIf="viewFacture?.estado !== 'anulado' && viewFacture?.estado !== 'reintegro'" class="btn btn-primary ml-2">Reverso</button>-->
                     <!--<button *ngIf="viewFacture?.estado !== 'anulado' && viewFacture?.estado !== 'reintegro'" class="btn btn-primary ml-2" (click)="anular()">Reverso</button>-->
-                    <button *ngIf="viewFacture?.estado !== 'anulado' && viewFacture?.estado !== 'reintegro'" class="btn btn-primary ml-2" (click)="reintegro()">Reintegro</button>
+                    <button *ngIf="viewFacture?.guid != '1' " class="btn btn-primary ml-2" (click)="reintegro()">Reintegro</button>
                     <button class="btn btn-secoundary" (click)="modalViewFactureClose()">Cerrar</button>
                   </div>
                 </div>
@@ -757,6 +764,7 @@
             </h5>
             <div class="container p-3">
               <h4 class="mb-0">¿Desea hacer reintegro de la factura?</h4>
+              <input type="number"[(ngModel)]="monNoteCredito"  class="form-control" placeholder="Ingrese el monto a reintegrar">
             </div>
             <div class="hdmodal-footer">
               <div class="row mt-2">
