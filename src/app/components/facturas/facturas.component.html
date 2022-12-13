@@ -233,11 +233,13 @@
                  <div class="col-12 col-lg-3">
                     <small>Sede</small>
                     <select name="sede" id="sede" [(ngModel)]="sede" class="form-control">
-                        <option value="Ujano">Ujano</option>
+                        <!-- <option value="Ujano">Ujano</option>
                         <option value="Cabudare">Cabudare</option>
                         <option value="Acarigua">Acarigua</option>
                         <option value="Barinas">Barinas</option>
-                        <option value="CABUDARE - UJANO"> CABUDARE - UJANO</option>
+                        <option value="CABUDARE - UJANO"> CABUDARE - UJANO</option> -->
+                        <option value=""></option>
+                        <option  *ngFor="let i of datasede"  value="{{i}}">{{i}}</option>
                     </select>
                  </div>
                  <div class="col-2" *ngIf="rtipo == 'diario'">

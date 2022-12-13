@@ -69,6 +69,7 @@ export class FacturasComponent implements OnInit {
   isInvalidReferencia = false;
   activesaia:any;
   cedulasaia:any;
+  datasede: any[] = [];
 
 
   compareFun = (o1: Option | string, o2: Option) => {
@@ -95,9 +96,29 @@ export class FacturasComponent implements OnInit {
     if (this.system.isMobile) {
       this.system.module.name = 'Facturas';
     }
+    this.getsedes();
     this.data = await this.refreshData();
   }
   cancelar() {}
+
+  getsedes(){
+ 
+    this.system.post('api/facturas/sedes', {},true).then(res => {
+      try {
+        this.system.loading = false;
+        if (res.status === 200) {
+          this.datasede = res.object;
+          return res;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        return false;
+      }
+    });
+
+
+  }
 
 
   async refresh() {
