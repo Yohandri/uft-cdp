@@ -23,6 +23,7 @@ export class CuentaCarrerasComponent implements OnInit {
   test: number = 0;
   selectNotaCredito: number = 0;
   nota_credito: any = [];
+  disableReportar = true;
   constructor(
     public system: SystemService
   ) { }
@@ -57,16 +58,29 @@ export class CuentaCarrerasComponent implements OnInit {
     this.tipospago = await this.getTiposDePago();
     console.log(this.cuotas);
   }
-  showConfirm() {
+  get showConfirm() {
     try {
       if (this.form.tipo_pago_id === '2') {
         return this.n_c_pagar >= this.system.toBs(this.monto_pagar);
       } else {
-        return true;
+        return this.totalPagar <= this.form.montobs && this.form.fecha != '' && !this.disableReportar;
       }
     } catch (error) {
       return false;
     }
+  }
+  changeFecha() {
+    console.log(this.form.fecha);
+    this.disableReportar = true;
+    this.system.get('api/dolars?fecha=' + this.form.fecha, {}, true).then(res => {
+      if (res.length > 0) {
+        console.log(res, parseFloat(res[0].valor));
+        this.system.dolar.setUSD(parseFloat(res[0].valor));
+        this.disableReportar = false;
+      } else {
+        this.system.message('No hay datos para recalcular', 'warning');
+      }
+    })
   }
   async refreshData() {
     this.displayCuotas = false;
@@ -126,6 +140,7 @@ export class CuentaCarrerasComponent implements OnInit {
       });
   }
   async getCuotas() {
+    this.pagination.per_page = 20;
     return await this.system.post('api/estudiante/cuotas?page=' + this.pagination.page, {pagination: this.pagination}).then(res => {
        try {
          if (res.status === 200) {
@@ -267,7 +282,7 @@ operarResta(i) {
     if (montobs !== 0 && montobs !== null ) {
       this.form.addCuota(this.selectCuota);
       this.form.monto = this.system.toD(this.form.montobs);
-      this.form.montobs_cambio = this.system.dolar.valor;
+      this.form.montobs_cambio = this.system.dolar.v;
       this.form.nota_creditos = this.nota_credito;
       //this.form.c_c_e_lapso = [this.form.c_c_e_lapso];
       console.log(this.form);
@@ -520,6 +535,22 @@ operarResta(i) {
     } catch (error) {
       return 0;
     }
+  }
+
+  get totalPagar() {
+    const array = this.cuotas.filter(x => this.selected.selected.filter(z => z == x.id).length == 1);
+    const val = array
+  .map(obj => obj.monto)
+  .reduce((accumulator, current) => accumulator + current, 0);
+    return this.system.toBs(val);
+  }
+
+  get fechaActual() {
+    const fechaActual = new Date();
+    const year = new Date(fechaActual).getFullYear();
+    const month = ('0' + (fechaActual.getMonth() + 1)).slice(-2);
+    const day = ('0' + fechaActual.getDate()).slice(-2);
+    return year + '-' + month + '-' + day;
   }
 }
 class FormRePago {

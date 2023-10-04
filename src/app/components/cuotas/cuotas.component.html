@@ -81,12 +81,12 @@
                                 <td>
                                     <input [disabled]="i.estado === 'pagado' || i.estado === 'anulado' ? '' : null" type="checkbox" [(ngModel)]="selected.value[i.id].value">
                                 </td>
-                                <td class="" (click)="edit(i)">{{i.fecha_vencimiento}}</td>
-                                <td class="" (click)="edit(i)">{{i.cedula}} </td>
-                                <td class="" (click)="edit(i)">{{i.nombre}} </td>
-                                <td>{{i?.c_e_lapso?.carrera?.nombre}}</td>
-                                <td class="" (click)="edit(i)">{{i.estado}} </td>
-                                <td class=" text-right"  (click)="edit(i)">{{ toFixed(i.monto) }} $ / {{system.toPetro(toFixed(i.monto))}} (P)</td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.fecha_vencimiento}}</td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.cedula}} </td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.nombre}} </td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i?.c_e_lapso?.carrera?.nombre}}</td>
+                                <td class="cursorPointer" (click)="edit(i)">{{i.estado}} </td>
+                                <td class="cursorPointer text-right"  (click)="edit(i)">{{ toFixed(i.monto) }} $ / {{system.toPetro(toFixed(i.monto))}} (P)</td>
                             </tr>
                             <tr *ngIf="data.length === 0">
                                 <td class="text-center" colspan="10" *ngIf="!loadData">
@@ -127,9 +127,85 @@
                           </nav>
                     </div>
                 </div>
-                <div *ngIf="isForm && false">
+                <div *ngIf="isForm">
                     <div class="row mb-2">
-                     
+                        <div class="col-md-6">
+                            <div>
+                                Carrera: <b>{{objedit?.c_e_lapso?.carrera?.nombre}}</b>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div>
+                                Tipo de cuota: <b>{{objedit?.tipo}}</b>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div>
+                                Cuota: <b>{{objedit?.nombre}}</b>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div>
+                                Monto de cuota: <b>{{objedit?.monto}} $</b>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div>
+                                Fecha de vencimiento: <b>{{objedit?.fecha_vencimiento}}</b>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div *ngIf="objedit?.estado == 'anulado'">
+                                Estado de la cuota: <b>{{objedit?.estado}} en {{objedit?.updated_at | date}}</b>
+                            </div>
+                            <div *ngIf="objedit?.estado !== 'anulado'">
+                                Estado de la cuota: <b>{{objedit?.estado}}</b>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div>
+                                Estudiante: <b>{{objedit?.c_e_lapso?.estudiante}}</b>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div>
+                                Lapso: <b>{{objedit?.c_e_lapso?.lapso}}</b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12" *ngIf="pagos.length == 0">
+                            <h5><b class="text-danger">Pagos no encontrados</b></h5>
+                        </div>
+                        <div class="col-md-12" *ngIf="pagos.length > 0">
+                            <h4>Pagos</h4>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">Fecha</th>
+                                        <th>Tipo</th>
+                                        <th>Descripcion</th>
+                                        <th class="text-right">Monto servicio</th>
+                                        <th class="text-right">Monto del pago ($)</th>
+                                        <th class="text-right">Monto del pago (Bs)</th>
+                                        <th class="text-right">Dolar</th>
+                                        <th class="text-center">Confirmado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let i of pagos">
+                                        <td class="text-left">{{i.created_at | date}}</td>
+                                        <td>{{i.pagos?.tipo_pago?.nombre}}</td>
+                                        <td>{{i.pagos?.description}}</td>
+                                        <td class="text-right">{{i.monto}} $</td>
+                                        <td class="text-right">{{i.pagos?.monto}} $</td>
+                                        <td class="text-right">{{i.pagos?.montobs}} bs</td>
+                                        <td class="text-right">{{i.pagos?.montobs_cambio}} Bs</td>
+                                        <td class="text-center">{{i.pagos?.montobs_confirm !== '' && i.pagos?.montobs_confirm !== null ? 'Si' : 'no' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -23,6 +23,7 @@ export class CuentaIntensivosComponent implements OnInit {
   PagosSelected = new SelectItem();
   selectNotaCredito: number = 0;
   nota_credito: any = [];
+  disableReportar = true;
   constructor(
     public system: SystemService
   ) { }
@@ -45,16 +46,29 @@ export class CuentaIntensivosComponent implements OnInit {
   selectTab(tab) {
     this.tabSelect = tab;
   }
-  showConfirm() {
+  get showConfirm() {
     try {
       if (this.form.tipo_pago_id === '2') {
         return this.n_c_pagar >= this.system.toBs(this.monto_pagar);
       } else {
-        return this.form.isValidated;
+        return this.form.isValidated && this.totalPagar <= this.form.montobs && this.form.fecha != '' && !this.disableReportar;
       }
     } catch (error) {
       return false;
     }
+  }
+  changeFecha() {
+    console.log(this.form.fecha);
+    this.disableReportar = true;
+    this.system.get('api/dolars?fecha=' + this.form.fecha, {}, true).then(res => {
+      if (res.length > 0) {
+        console.log(res, parseFloat(res[0].valor));
+        this.system.dolar.setUSD(parseFloat(res[0].valor));
+        this.disableReportar = false;
+      } else {
+        this.system.message('No hay datos para recalcular', 'warning');
+      }
+    })
   }
   restarSaldo(saldo) {
     try {
@@ -425,6 +439,22 @@ get n_c_pagar() {
      return 0
    }
  }
+
+ get totalPagar() {
+  const array = this.cuotas.filter(x => this.selected.selected.filter(z => z == x.id).length == 1);
+  const val = array
+.map(obj => obj.monto)
+.reduce((accumulator, current) => accumulator + current, 0);
+  return this.system.toBs(val);
+}
+
+get fechaActual() {
+  const fechaActual = new Date();
+  const year = new Date(fechaActual).getFullYear();
+  const month = ('0' + (fechaActual.getMonth() + 1)).slice(-2);
+  const day = ('0' + fechaActual.getDate()).slice(-2);
+  return year + '-' + month + '-' + day;
+}
 }
 class FormRePago {
   id = '';

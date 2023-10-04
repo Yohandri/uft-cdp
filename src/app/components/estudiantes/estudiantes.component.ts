@@ -29,6 +29,7 @@ export class EstudiantesComponent implements OnInit {
   btnConfirm = false;
   formCuota = new FormCuota();
   today = null;
+  c_e_lapso = [];
   constructor(
     public system: SystemService
   ) { }
@@ -58,7 +59,7 @@ export class EstudiantesComponent implements OnInit {
           this.selectedCuotasPendientes.init(res.object.cuotas_pendientes);
           this.solvente = res.object.solvente;
           this.cuotas_pendientes = res.object.cuotas_pendientes;
-
+          this.c_e_lapso =[{id: res.object?.c_e_lapso?.id, lapso: res.object?.c_e_lapso?.lapso}];
           for (let i = 0;i < this.cuotas.length;i++) {
             //this.cuotas[i].pagos = await this.getPagos(this.cuotas[i].id);
             let montopagado = 0;
@@ -253,6 +254,7 @@ class FormCuota {
     try {
       return this.nombre !== '' && this.monto !== '' && this.monto !== null && this.description !== '' && this.fecha_vencimiento !== '' && this.cedula !== '';
     } catch (error) {
+      console.log(error);
       return false;
     }
   }

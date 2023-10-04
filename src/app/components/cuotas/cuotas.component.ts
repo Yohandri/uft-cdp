@@ -42,6 +42,7 @@ export class CuotasComponent implements OnInit {
   isNew = false;
   selected = new SelectItem();
   isEdit = false;
+  objedit: any = {};
   constructor(
     public system: SystemService
   ) { }
@@ -119,9 +120,10 @@ export class CuotasComponent implements OnInit {
     await this.refreshData();
   }
   edit(user) {
-    //this.form.edit(user);
-    //this.isForm = true;
-    //this.isNew = false;
+    this.form.edit(user);
+    this.objedit = user;
+    this.isForm = true;
+    this.isNew = false;
   }
   async goPage(page, ctrl = '') {
     this.pagination.page = ctrl === '+' ? page + 1 > this.pagination.last_page ? page : page + 1 : ctrl === '-' ? page - 1 < 1 ? 1 : page -1 : page;
@@ -142,6 +144,14 @@ export class CuotasComponent implements OnInit {
       return parseFloat(mon).toFixed(2);
     } catch (error) {
       return mon;
+    }
+  }
+
+  get pagos() {
+    try {
+      return this.objedit?.pagos_3 || [];
+    } catch (error) {
+      return [];
     }
   }
 

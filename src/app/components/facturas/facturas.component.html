@@ -19,7 +19,7 @@
                         <i class="fa fa-chart" aria-hidden="true"></i>
                         Reporte IGTF
                     </button>
-                    <button class="btn btn-primary float-right btn-sm mt-1 mr-1" (click)="facturar_pagos()" *ngIf="!isForm && !isEdit">
+                    <button class="btn btn-primary float-right btn-sm mt-1 mr-1" (click)="facturar_pagos()" *ngIf="!isForm && !isEdit && system.showIn(true, 'Administrador', 'Administracion')">
                         <i class="fa fa-chart" aria-hidden="true"></i>
                         Facturar Pagos
                     </button>
@@ -27,7 +27,7 @@
                         <i class="fa fa-chart" aria-hidden="true"></i>
                         Reporte de Cierre
                     </button>
-                    <button class="btn btn-primary float-right btn-sm mt-1 mr-1" (click)="openmodal()" *ngIf="!isForm && !isEdit">
+                    <button class="btn btn-primary float-right btn-sm mt-1 mr-1" (click)="openmodal()" *ngIf="!isForm && !isEdit && system.showIn(true, 'Administrador', 'Administracion')">
                         <i class="fa fa-chart" aria-hidden="true"></i>
                         Exportar Facturas
                     </button>

@@ -22,6 +22,7 @@ import { CuotasServiciosComponent } from './components/cuotas-servicios/cuotas-s
 import { ActiveComponent } from './components/login/active/active.component';
 import { FacturasComponent } from './components/facturas/facturas.component';
 import { LibroVentaComponent } from './components/libro-venta/libro-venta.component';
+import { NotaCreditoComponent } from './components/nota-credito/nota-credito.component';
 
 const routes: Routes = [
   {path: 'gp', component: ContainerComponent, canActivate: [SessionGuard],
@@ -42,7 +43,8 @@ const routes: Routes = [
     {path: 'cuotasServicios', component: CuotasServiciosComponent, canActivate: [AdminGuard]},
     {path: 'profile', component: ProfileComponent},
     {path: 'facturas', component: FacturasComponent},
-    {path: 'libroVenta', component: LibroVentaComponent}
+    {path: 'libroVenta', component: LibroVentaComponent},
+    {path: 'notacredito', component: NotaCreditoComponent}
   ]
   },
   {path: '', component: LoginComponent, canActivate: [LoginGuard]},

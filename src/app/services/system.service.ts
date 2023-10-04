@@ -543,14 +543,14 @@ private calculateRequest(res: any) {
 }
 toBs(dolar) {
   try {
-    return (this.dolar.valor * dolar);
+    return (this.dolar.v * dolar);
   } catch (error) {
     return dolar;
   }
 }
 toD(bs) {
   try {
-    return (bs / this.dolar.valor);
+    return (bs / this.dolar.v);
   } catch (error) {
     return bs;
   }
@@ -675,5 +675,8 @@ class DolarStatus {
       this.USD = 0;
       this.valor = 0;
     }
+  }
+  get v() {
+    return this.valor;
   }
 }

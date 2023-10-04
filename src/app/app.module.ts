@@ -40,6 +40,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { FacturasComponent } from './components/facturas/facturas.component';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { LibroVentaComponent } from './components/libro-venta/libro-venta.component';
+import { NotaCreditoComponent } from './components/nota-credito/nota-credito.component';
 // import localeVe from '@angular/common/locales/es-VE';
 // import { registerLocaleData } from '@angular/common';
 export function loadConfig(config: SettingsService) {
@@ -72,7 +73,8 @@ export function tokenGetter() {
     CuotasServiciosComponent,
     ActiveComponent,
     FacturasComponent,
-    LibroVentaComponent
+    LibroVentaComponent,
+    NotaCreditoComponent
   ],
   imports: [
     BrowserModule,

@@ -73,7 +73,8 @@ export class FacturasComponent implements OnInit {
   cedulasaia:any;
   datasede: any[] = [];
   showAmount = true;
-
+  carrera = '';
+  sedeUser = null;
 
   compareFun = (o1: Option | string, o2: Option) => {
     if (o1) {
@@ -93,6 +94,8 @@ export class FacturasComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    console.log(this.system.decodedToken?.user?.sede);
+    this.sedeUser = this.system.decodedToken?.user?.sede;
     this.notasdecredito_selected = [];
     this.system.module.name = 'Facturas';
     this.system.module.icon = 'file-text-o';
@@ -320,7 +323,7 @@ export class FacturasComponent implements OnInit {
     hideModal('modal-edit-facture');
   }
   async dataOption(load = false, search = '') {
-    await this.system.post('api/facturas/options', {search}, load).then(res => {
+    await this.system.post('api/facturas/options', {search, sede: this.sedeUser}, load).then(res => {
       try {
         console.log(res);
         if (res.status === 200) {
@@ -363,13 +366,17 @@ export class FacturasComponent implements OnInit {
     }
 
     if(value.length > 3){
-      await this.system.post('api/facturas/options', {search: value}, false).then(res => {
+      await this.system.post('api/facturas/options', {search: value, sede: this.sedeUser}, false).then(res => {
         try {
           console.log(res);
           if (res.status === 200) {
             this.filteredOptions = res.object;
-            this.riffj = res.object[0].factura_juridica?.rif;
-            this.razonsocialfj = res.object[0].factura_juridica?.nombre;
+            this.riffj = res.object[0]?.factura_juridica?.rif;
+            this.razonsocialfj = res.object[0]?.factura_juridica?.nombre;
+            this.carrera = res.object[0]?.c_e_lapso[0]?.carrera_estudiante || null;
+          }
+          if (this.filteredOptions.length == 0) {
+            this.system.message('Estudiante no encontrado. puede estar con diferente sede', 'warning', 3000);
           }
         } catch (error) { 
           console.log(error);
@@ -416,6 +423,7 @@ export class FacturasComponent implements OnInit {
     console.log("onSelectServicio",this.servicioSelect);
     obj.id = obj.id + '.' + makeguid();
     obj.isPay = this.isPay;
+    obj.carrera_estudiante = this.carrera;
     obj.montovirtual = obj?.plan?.mon_total ? this.system.toFixed(this.system.toBs(obj?.plan?.mon_total)) : this.system.toFixed(this.system.toBs(obj.monto));
     for (let i of obj.pagos_confirm) {
       i['plan'] = {mon_total: i.monto};
@@ -695,14 +703,14 @@ export class FacturasComponent implements OnInit {
     this.dataOptionServicios(this.viewFacture?.estudiante?.cedula);
     this.saldo_estudiante = await this.system.getSaldoCedula(this.viewFacture?.estudiante?.cedula);
 
-     await this.system.post('api/facturas/options', {search: this.inputValue}, false).then(res => {
+     await this.system.post('api/facturas/options', {search: this.inputValue, sede: this.sedeUser}, false).then(res => {
        try {
          console.log(res);
          if (res.status === 200) {
            this.filteredOptions = res.object;
            this.riffj = res.object[0].factura_juridica?.rif;
            this.razonsocialfj = res.object[0].factura_juridica?.nombre;
-           this.inputValue = this.filteredOptions.find(x => x.cedula == this.inputValue)
+           this.inputValue = this.filteredOptions.find(x => x.cedula == this.inputValue);
          }
        } catch (error) { 
          console.log(error);

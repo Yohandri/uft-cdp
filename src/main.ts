@@ -9,6 +9,9 @@ window.console.error = () => {};
 window.console.warn = () => {};
 if (environment.production) {
   enableProdMode();
+  // window.console.log = () => {};
+  // window.console.error = () => {};
+  // window.console.warn = () => {};
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule)
